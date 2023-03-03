@@ -1,0 +1,70 @@
+Analysis of Wolf by Lucas0001
+
+  As mentioned in the author's description of the binary it contains a few
+"traps." The first of which are the strings that are instantiated before main
+in the _initterm method. A few message strings are instantiated and the
+interesting "HackingIsCool" string is instantiated as well. The "HackingIsCool"
+string is close the eventual correct password. A reverser naively relying on
+the strings program may use that hit the trap.
+
+  In main a 4 byte block of memory is allocated on the heap. This is used as
+the argument list for a function that will be passed as a function pointer to
+the _beginthreadex function. The _beginthreadex function creates a thread.
+The function takes six parameters. The function pointer and its argument list
+are the third and fourth arguments. The first argument is a pointer to a
+SECURITY_ATTRIBUTES structure. NULL was passed in this case which indicates
+the handle returned can't be inherited.
+
+  The second argument is the stack size. A zero was passed in for the function.
+The fifth argument controls the initial state of the new thread. The 0 passed
+in indicates to run immediately. The sixth and last argument is a pointer to
+a 32 bit variable that will get the thread identifier. This is an address on
+the stack in main that is the next 4 bytes after the address the thread handle
+is stored at.
+
+  The argument list for the function pointer contains another function pointer.
+Inside the first function pointer (third argument to _beginthreadex) the second
+function pointer is called. After it returns the
+_Cnd_do_broadcast_at_thread_exit is called. The last thing that is performed
+is the freeing of the memory allocated for the argument list.
+
+  The argument list function pointer checks three bytes in the .data section
+for being 0. The first byte at 0x743c is compared once. The other two at 
+0x7438 and 0x743a are run in loop until either one of them are no longer zero.
+If one of the three are not zero, a function is called that outputs
+"\n\nOh no that aint correct.\n"
+
+  After the _beginthreadex function returns the handle is assigned to an
+address on the stack. The value is also checked for the error value that
+could be returned (0). The address passed in as the sixth argument is also 
+checked for a nonzero value. If the handle is not zero and the bytes at the
+address are not zero, the _Thrd_detach function is called.
+
+  The user is then prompted for a key. A function is entered that checks the
+user input key. The function first creates a copy of the key string. One of the
+bytes being checked for a nonzero value in the thread argument list function,
+(0x7438) has zero moved to it. Two sixteen byte strings are placed on the
+stack. The first is moved to the XMM1 register. The second has a xmmword
+pointer pointing to its address. The two are then used in the PXOR instruction
+with the result stored back in the XMM1 register. The XMM1 register value is
+then moved to the first string's stack area. The PXOR instruction performs a
+bitwise XOR on two 16 byte values.
+
+  The string after the PXOR operation is "SmokingIsCool." If you remember
+from the introduction this is very close to the "HackingIsCool" string.
+
+  The key is then compared to the "SmokingIsCool" string. If they are found
+to be the same length with same bytes, the key is copied again to another
+string object. The byte at 0x743d is also set to 1. The copied string is
+strangely compared to itself for length and the same bytes. If those two checks
+pass, and they should, another function is entered. Before the function is
+entered the byte at 0x7439 is set to 1.
+
+  The function will check a couple bytes to determine one of two messages to 
+output. The two bytes of interest are 0x7439 and 0x743d. Both are required to
+be nonzero to print the "success" message. The function sets the byte at 0x743b
+before printing the message.
+
+  Back in main, the byte at 0x743b is checked for a nonzero value. If it is
+another "success" message is printed.
+
