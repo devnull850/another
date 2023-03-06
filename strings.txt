@@ -1,0 +1,40 @@
+!This program cannot be run in DOS mode.
+.text
+`.data
+Congrats,you have found the way
+Invalid Key
+7777777777777777777777777777 TTTTTTTTTTTTTTTTTTTTTTTTTTTT 7777777777777777777777777777
+777777777777777777777777777  TTTTTTTTTTTTTTTTTTTTTTTTTTTT 777777777777777777777777777
+77777777777777777777777777   TTTTTTTTTTTTTTTTTTTTTTTTTTTT 77777777777777777777777777
+                 77777777              TTTTTTTT                            77777777
+                77777777               TTTTTTTT                           77777777
+               77777777                TTTTTTTT                          77777777
+              77777777                 TTTTTTTT                         77777777
+             77777777                  TTTTTTTT                        77777777
+            77777777                   TTTTTTTT                       77777777
+           77777777                    TTTTTTTT                      77777777
+          77777777                     TTTTTTTT                     77777777
+         77777777                      TTTTTTTT                    77777777
+        77777777                       TTTTTTTT                   77777777
+       77777777                        TTTTTTTT                  77777777
+                                                                         CrackMe#2
+key.7t7
+Invalid key length.Memory exceeded. Don't sink this crack me with buffer overflow  
+Ooops.. You have missed your first step 
+msvcrt.dll
+strlen
+memset
+printf
+fopen
+fgets
+exit
+fclose
+__set_app_type
+_controlfp
+__argc
+__argv
+_environ
+__getmainargs
+_XcptFilter
+_exit
+_except_handler3

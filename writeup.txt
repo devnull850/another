@@ -1,0 +1,42 @@
+Analysis of CrackMe#2_By_7T7
+
+  Really intriguing binary because of the use of the Tiny C compiler. The
+binary is a little different than a MSVC compiled binary.
+
+  Inside main some messages are printed to the terminal. A file that is titled
+"key.7t7" is opened in read only mode. If a nonzero file descripter is
+returned from fopen, the function continues execution. A buffer is populated
+with bytes from the file opened until a newline character, NULL, or EOF is
+encountered. The fgets function used to read the bytes has a limit of 5000
+bytes. A zero return value is checked to ensure an error did not occur. If that
+value is not zero, execution continues.
+
+  The length of the buffer is taken and compared to 12. If the length is less
+than or equal to 12, execution will continue. If it is not, an invalid message
+will be printed to the terminal and the program exits.
+
+  The buffer is then passed as a parameter to a function and the function is
+entered. Inside the function, the buffer's length is taken and multipled by
+four. That value is passed into a weird function that essentially creates space
+on the stack based on the length times 4 passed in.
+
+  With the stack space increased, a pointer is set to the new top of the stack.
+This will eventually hold a copy of the string populated from the file read. A
+twelve element integer (4 byte) array is then populated with values. This array
+will eventually be compared with the buffer populated from the file. A block of
+memory on the stack is then zero filled immediately following the integer array
+just populated. This block of memory is 152 bytes in length.
+
+  A loop copies the bytes from the buffer from the file read and populates an
+integer array starting at the address at the top of the stack. After completing
+the byte copying loop, another loop checks that the buffer bytes are equal
+to the bytes in the integer array populated earlier in this function. Two
+counters keep track of correct and incorrect byte comparisons from the arrays.
+At the conclusion of the loop, the correct counter is compared to 12. If it is
+equal, the incorrect counter is compared to 0. If that is equal, the
+"Congrats..." message is output. If either one of those are not equal, the
+"Invalid key\n" message it output.
+
+  The key "AAAABBBBAAAA" must be in a file named "key.7t7." If this is true,
+the crackme is solved.
+
