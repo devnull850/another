@@ -1,0 +1,310 @@
+Analysis of "crackme v1.0 by bkah"
+
+  Inside main, the program checks for the presence of debugger in the current
+process. The user is then prompted for a username. The format specifier "%s"
+indicates a string. The length is taken with the do while loop shown below.
+
+  lea	0x70(%rsp),%rcx
+  mov	$0xffffffffffffffff,%rax
+.L0:
+  inc	%rax
+  cmp	%dil,0x0(%rcx,%rax,1)
+  jne	.L0
+
+  The pseudo C code translation is roughly,
+
+  int i = -1;
+
+  do { ++i; } while (user[i]);
+
+  assuming user is the array starting address RSP + 0x70.
+
+  After calculating the length of the input string, the value is subtracted by
+5 and compared to 25. If the length minus 5 is less than or equal to 25,
+execution continues.
+
+  A function is then entered that has the username input string and an address
+on the stack as its two parameters. The second parameter, the stack address, is
+moved to the RSI register. The first parameter, the username address, is moved
+to the RBX register. The function does the same debugging checks as in main.
+A 0x30 is moved to an address on the stack. The memset function is called with
+another stack address to zero out 144 bytes on the stack. The function is a bit
+obfuscated with its stack use. The addresses below helped with my analysis for
+the remainder of the function. All the addresses are in reference to the stack
+pointer address as it is in main before calling the current function.
+
+-0x150	current function RSP
+-0x130	memset string start, 0xf0 bytes zero filled
+- 0x40	0x30
+- 0x36	zero filled area to -0x1a
+- 0x18	stack canary
+- 0x10	RSI entering current function
+-  0x8	return address in main
+   0x0  main RSP
++ 0x10	0
++ 0x18	argv
++ 0x20  the address on the stack passed as the 2nd parameter
++ 0x70	username input string
+
+  The same do while loop used in main to caclulate the string length is
+encountered.
+
+  mov	$0xffffffffffffffff,%r8
+  xor	%edx,%edx
+  mov	%r8,%rax
+.L0:
+  inc	%rax
+  cmp	%dl,0x0(%rbx,%rax,1)
+  jne	.L0
+
+  (pseudo C translation)
+
+  int i = -1;
+
+  do { ++i; } while (user[i]);
+
+  After the string length is calculated, a loop is entered to add the result of
+48 XOR the loop index plus one to the byte at the loop index.
+
+  # %edx is still zero
+.L0:
+  lea	0x1(%rdx),%eax
+  xor	$0x30,%al
+  add	%al,0x0(%rcx,%rbx,1)
+  mov	%r8,%rax
+  inc	%edx
+  movsx	%edx,%rcx
+.L1:
+  inc	%rax
+  cmp	$0x0,0x0(%rbx,%rax,1)
+  jne	.L1
+  cmp	%rax,%rcx
+  jl	.L0
+
+  (pseudo C translation)
+
+  int j = 0;
+  int k = 0;
+
+  do {
+    user[k] = user[k] + (0x30 ^ (j + 1));
+    i = -1;
+    ++j;
+    k = j;
+
+    do { ++i; } while (user[i]);
+  } while (k < i);
+
+  After the applied modification to the user string, its length is taken again
+using the do while loop. Another loop is entered that adds the loop iteration
+index AND 16 to string byte at the iteration index.
+
+  # EDX and ECX are 0
+.L0:
+  movzx	%cl,%eax
+  and	$0x10,%al
+  add	%al,0x0(%rdx,%rbx,1)
+  mov	%r8,%rax
+  inc	%ecx
+  movsx	%ecx,%rdx
+.L1:
+  inc	%rax
+  cmp	$0x0,0x0(%rbx,%rax,1)
+  jne	.L1
+  cmp	%rax,%rdx
+  jl	.L0
+
+  (pseudo C)
+
+  // j -> EDX, k -> ECX, i -> EAX
+  do {
+    i = k & 0xff;
+    i &= 0x10;
+    user[j] = user[j] + (i & 0xff);
+    i = -1;
+    ++k;
+    j = k;
+    do { ++i; } while (user[i]);
+  } while (j < i);
+
+  The username string has its length taken after the loop completes. Another
+loop is entered that adds 126 to each byte in the username string.
+
+.L0:
+  addb	$0x7e,(%rdx)
+  lea	0x1(%rdx),%rdx
+  inc	%r9d
+  mov	%r8,%rcx
+.L1:
+  inc	%rcx
+  cmp	$0x0,0x0(%rbx,%rcx,1)
+  jne	.L1
+  movsx	%r9d,%rax
+  cmp	%rcx,%rax
+  jl	.L0
+
+  (pseudo C)
+
+  // j -> R9D, p -> username address -> RDX, k -> ECX, i -> EAX
+  // j = 0;
+  do {
+    *p += 0x7e;
+    p += 1;
+    ++j;
+    k = -1;
+    do { ++k; } while (user[k]);
+    i = j;
+  } while (i < k);
+
+  As with the previous two loops, the username string has its length taken
+after the loop completes. Some really cool pointer math happens that attempts
+to hide the username string address from direct disassembly reference.
+
+  lea	0x118(%rsp),%rax
+  mov	%rbx,%r11		# RBX contains address of username
+  sub	%rax,%r11
+  lea	0x118(%rsp),%r9
+
+  The address at 0x118 bytes from RSP in the current function is minus 0x38
+bytes from main's RSP address when entering the function. The username string
+address is at 0x70 bytes from main's RSP. The difference caculated in the
+subtraction is 0xa8. When this value is added to address in R9, 0x118 bytes
+from the current function's RSP, it will reference the bytes of the username
+string. That will occur in the loop below. It will smoothly take the base
+address without the offset as the address of a string that will be populated
+with the bytes calculated for each iteration in the loop. This is a really cool
+way to code this in assembly!
+
+.L0:
+  movzx	0x0(%r11,%r9,1),%ecx
+  lea	0x1(%r9),%r9
+  movzx	%cl,%eax
+  inc	%r10d
+  shl	$0x2,%al
+  add	%al,%cl
+  movsx	%r10d,%rax
+  movb	%cl,(%r9)
+  cmp	%rdx,%rax
+  jl	.L0
+
+  (pseudo C)
+
+  // p -> username address, i -> EAX, j -> R10, k -> ECX
+  // username length -> RDX
+  // j = 0;
+
+  do {
+    k = *p & 0xff;
+    p += 1;
+    i = k & 0xff;
+    ++j;
+    i *= 4;
+    k += i;
+    i = j;
+    *(p - 1) = k & 0xff;
+  } while (i < username_length);
+
+  The username has a pointer to its address and the pointer is incremented
+until the NULL byte is encountered. This is important because the next loop
+will effectively concatenate the string populated in the previous loop to the
+original username string.
+
+.L0:
+  movzx	0x0(%r9,%rdx,1),%eax
+  mov	%al,0x0(%rcx,%rdx,1)
+  lea	0x1(%rdx),%rdx
+  test	%al,%al
+  jne	.L0
+
+  (psuedo C)
+
+  // p  -> NULL byte of username string
+  // p1 -> current function RSP + 0x118
+  // j -> EDX, j = 0;
+  do {
+    i = p1[j] & 0xff;
+    p[j] = i;
+    j += 1;
+  } while (i);
+
+  The new username string length is taken. A loop is entered that will
+calculate a value with each iteration and sum it to an 8 byte memory location
+on the stack that is initially zero.
+
+.L0:
+  movsx	(%rbx),%eax
+  lea	0x1(%rbx),%rbx
+  mov	%edx,%ecx
+  imul	%edx,%ecx
+  inc	%edx
+  add	%ecx,%eax
+  cdqe
+  add	%rax,%rdi
+  movsx	%edx,%rax
+  cmp	%r8,%rax
+  jl	.L0
+
+  (pseudo C)
+
+  // j = 0;
+
+  do {
+    i = *username;
+    username += 1;
+    k = j;
+    k *= j;
+    ++j;
+    i += k;
+    x += i;
+    i = j;
+  } while (i < username_length);
+
+  The function then checks for the presence of a debugger again. The 8 byte
+memory addres value from the previous loop has some operations performed on it
+before setting that final value as a quad word pointer (8 bytes) at the address
+passed in as the second parameter to the current function.
+
+  mov	%rdi,%rax
+  mov	$0xbf58476d1ce4e5b9,%rcx
+  shr	$0x1e,%rax
+  xor	%rdi,%rax
+  mov	0x160(%rsp),%rdi
+  imul	%rcx,%rax
+  mov	%rax,%rcx
+  shr	$0x1b,%rcx
+  xor	%rax,%rcx
+  mov	$0x94d049bb133111eb,%rax
+  imul	%rax,%rcx
+  mov	%rcx,%rax
+  shr	$0x1f,%rax
+  xor	%rcx,%rax
+  mov	%rax,(%rsi)
+
+  (pseudo C)
+
+  y = x;
+  y >>= 0x1e;
+  y ^= x;
+  y *= 0xbf58476d1ce4e5b9;
+  x = y;
+  x >>= 0x1b;
+  x ^= y;
+  x *= 0x94d049bb133111eb;
+  y = x;
+  y >>= 0x1f;
+  y ^= x;
+  password = y;
+
+  The function then returns after checking the stack canary value.
+
+  Back in main, the presence of a debugger is checked again. The user is then
+prompted to enter a password. The format specifier "%llu" as the first
+parameter to scanf indicates the password is an unsigned long (8 byte value).
+The presence of a debugger is checked again. The user input password is then
+compared for equality against the value caculated from the function described
+above. If they are equal, the "Nice one!..." message is output. If they are not,
+equal the "Wrong Key!\n" message is output.
+
+  The file keygen.c is my implementation of a key generator using the algorithm
+reversed from analysis.
+

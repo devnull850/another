@@ -1,0 +1,1418 @@
+
+crackme.exe:     file format pei-x86-64
+
+
+Disassembly of section .text:
+
+0000000140001000 <.text>:
+   140001000:	48 8d 05 21 46 00 00 	lea    0x4621(%rip),%rax        # 0x140005628
+   140001007:	c3                   	ret
+   140001008:	cc                   	int3
+   140001009:	cc                   	int3
+   14000100a:	cc                   	int3
+   14000100b:	cc                   	int3
+   14000100c:	cc                   	int3
+   14000100d:	cc                   	int3
+   14000100e:	cc                   	int3
+   14000100f:	cc                   	int3
+   140001010:	48 8d 05 19 46 00 00 	lea    0x4619(%rip),%rax        # 0x140005630
+   140001017:	c3                   	ret
+   140001018:	cc                   	int3
+   140001019:	cc                   	int3
+   14000101a:	cc                   	int3
+   14000101b:	cc                   	int3
+   14000101c:	cc                   	int3
+   14000101d:	cc                   	int3
+   14000101e:	cc                   	int3
+   14000101f:	cc                   	int3
+   140001020:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+   140001025:	48 89 54 24 10       	mov    %rdx,0x10(%rsp)
+   14000102a:	4c 89 44 24 18       	mov    %r8,0x18(%rsp)
+   14000102f:	4c 89 4c 24 20       	mov    %r9,0x20(%rsp)
+   140001034:	53                   	push   %rbx
+   140001035:	56                   	push   %rsi
+   140001036:	57                   	push   %rdi
+   140001037:	48 83 ec 30          	sub    $0x30,%rsp
+   14000103b:	48 8b f9             	mov    %rcx,%rdi
+   14000103e:	48 8d 74 24 58       	lea    0x58(%rsp),%rsi
+   140001043:	b9 01 00 00 00       	mov    $0x1,%ecx
+   140001048:	ff 15 5a 21 00 00    	call   *0x215a(%rip)        # 0x1400031a8
+   14000104e:	48 8b d8             	mov    %rax,%rbx
+   140001051:	e8 aa ff ff ff       	call   0x140001000
+   140001056:	45 33 c9             	xor    %r9d,%r9d
+   140001059:	48 89 74 24 20       	mov    %rsi,0x20(%rsp)
+   14000105e:	4c 8b c7             	mov    %rdi,%r8
+   140001061:	48 8b d3             	mov    %rbx,%rdx
+   140001064:	48 8b 08             	mov    (%rax),%rcx
+   140001067:	ff 15 2b 21 00 00    	call   *0x212b(%rip)        # 0x140003198
+   14000106d:	48 83 c4 30          	add    $0x30,%rsp
+   140001071:	5f                   	pop    %rdi
+   140001072:	5e                   	pop    %rsi
+   140001073:	5b                   	pop    %rbx
+   140001074:	c3                   	ret
+   140001075:	cc                   	int3
+   140001076:	cc                   	int3
+   140001077:	cc                   	int3
+   140001078:	cc                   	int3
+   140001079:	cc                   	int3
+   14000107a:	cc                   	int3
+   14000107b:	cc                   	int3
+   14000107c:	cc                   	int3
+   14000107d:	cc                   	int3
+   14000107e:	cc                   	int3
+   14000107f:	cc                   	int3
+   140001080:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+   140001085:	48 89 54 24 10       	mov    %rdx,0x10(%rsp)
+   14000108a:	4c 89 44 24 18       	mov    %r8,0x18(%rsp)
+   14000108f:	4c 89 4c 24 20       	mov    %r9,0x20(%rsp)
+   140001094:	53                   	push   %rbx
+   140001095:	56                   	push   %rsi
+   140001096:	57                   	push   %rdi
+   140001097:	48 83 ec 30          	sub    $0x30,%rsp
+   14000109b:	48 8b f9             	mov    %rcx,%rdi
+   14000109e:	48 8d 74 24 58       	lea    0x58(%rsp),%rsi
+   1400010a3:	33 c9                	xor    %ecx,%ecx
+   1400010a5:	ff 15 fd 20 00 00    	call   *0x20fd(%rip)        # 0x1400031a8
+   1400010ab:	48 8b d8             	mov    %rax,%rbx
+   1400010ae:	e8 5d ff ff ff       	call   0x140001010
+   1400010b3:	45 33 c9             	xor    %r9d,%r9d
+   1400010b6:	48 89 74 24 20       	mov    %rsi,0x20(%rsp)
+   1400010bb:	4c 8b c7             	mov    %rdi,%r8
+   1400010be:	48 8b d3             	mov    %rbx,%rdx
+   1400010c1:	48 8b 08             	mov    (%rax),%rcx
+   1400010c4:	ff 15 ee 20 00 00    	call   *0x20ee(%rip)        # 0x1400031b8
+   1400010ca:	48 83 c4 30          	add    $0x30,%rsp
+   1400010ce:	5f                   	pop    %rdi
+   1400010cf:	5e                   	pop    %rsi
+   1400010d0:	5b                   	pop    %rbx
+   1400010d1:	c3                   	ret
+   1400010d2:	cc                   	int3
+   1400010d3:	cc                   	int3
+   1400010d4:	cc                   	int3
+   1400010d5:	cc                   	int3
+   1400010d6:	cc                   	int3
+   1400010d7:	cc                   	int3
+   1400010d8:	cc                   	int3
+   1400010d9:	cc                   	int3
+   1400010da:	cc                   	int3
+   1400010db:	cc                   	int3
+   1400010dc:	cc                   	int3
+   1400010dd:	cc                   	int3
+   1400010de:	cc                   	int3
+   1400010df:	cc                   	int3
+   1400010e0:	40 57                	rex push %rdi
+   1400010e2:	48 81 ec a0 00 00 00 	sub    $0xa0,%rsp
+   1400010e9:	48 8b 05 18 3f 00 00 	mov    0x3f18(%rip),%rax        # 0x140005008
+   1400010f0:	48 33 c4             	xor    %rsp,%rax
+   1400010f3:	48 89 84 24 98 00 00 	mov    %rax,0x98(%rsp)
+   1400010fa:	00 
+   1400010fb:	33 ff                	xor    %edi,%edi
+   1400010fd:	89 7c 24 28          	mov    %edi,0x28(%rsp)
+   140001101:	ff 15 f9 1e 00 00    	call   *0x1ef9(%rip)        # 0x140003000
+   140001107:	48 8b c8             	mov    %rax,%rcx
+   14000110a:	48 8d 54 24 28       	lea    0x28(%rsp),%rdx
+   14000110f:	ff 15 03 1f 00 00    	call   *0x1f03(%rip)        # 0x140003018
+   140001115:	85 c0                	test   %eax,%eax
+   140001117:	0f 84 a0 01 00 00    	je     0x1400012bd
+   14000111d:	ff 15 ed 1e 00 00    	call   *0x1eed(%rip)        # 0x140003010
+   140001123:	85 c0                	test   %eax,%eax
+   140001125:	0f 85 92 01 00 00    	jne    0x1400012bd
+   14000112b:	48 8d 0d 4e 21 00 00 	lea    0x214e(%rip),%rcx        # 0x140003280
+   140001132:	48 89 7c 24 20       	mov    %rdi,0x20(%rsp)
+   140001137:	48 89 7c 24 30       	mov    %rdi,0x30(%rsp)
+   14000113c:	e8 df fe ff ff       	call   0x140001020
+   140001141:	48 8d 54 24 70       	lea    0x70(%rsp),%rdx
+   140001146:	48 8d 0d 4b 21 00 00 	lea    0x214b(%rip),%rcx        # 0x140003298
+   14000114d:	e8 2e ff ff ff       	call   0x140001080
+   140001152:	48 8d 4c 24 70       	lea    0x70(%rsp),%rcx
+   140001157:	48 c7 c0 ff ff ff ff 	mov    $0xffffffffffffffff,%rax
+   14000115e:	66 90                	xchg   %ax,%ax
+   140001160:	48 ff c0             	inc    %rax
+   140001163:	40 38 3c 01          	cmp    %dil,(%rcx,%rax,1)
+   140001167:	75 f7                	jne    0x140001160
+   140001169:	48 83 e8 05          	sub    $0x5,%rax
+   14000116d:	48 83 f8 19          	cmp    $0x19,%rax
+   140001171:	0f 87 32 01 00 00    	ja     0x1400012a9
+   140001177:	48 8d 54 24 20       	lea    0x20(%rsp),%rdx
+   14000117c:	48 8d 4c 24 70       	lea    0x70(%rsp),%rcx
+   140001181:	e8 4a 01 00 00       	call   0x1400012d0
+   140001186:	89 7c 24 28          	mov    %edi,0x28(%rsp)
+   14000118a:	ff 15 70 1e 00 00    	call   *0x1e70(%rip)        # 0x140003000
+   140001190:	48 8b c8             	mov    %rax,%rcx
+   140001193:	48 8d 54 24 28       	lea    0x28(%rsp),%rdx
+   140001198:	ff 15 7a 1e 00 00    	call   *0x1e7a(%rip)        # 0x140003018
+   14000119e:	85 c0                	test   %eax,%eax
+   1400011a0:	0f 84 23 01 00 00    	je     0x1400012c9
+   1400011a6:	ff 15 64 1e 00 00    	call   *0x1e64(%rip)        # 0x140003010
+   1400011ac:	85 c0                	test   %eax,%eax
+   1400011ae:	0f 85 15 01 00 00    	jne    0x1400012c9
+   1400011b4:	48 8d 0d 0d 21 00 00 	lea    0x210d(%rip),%rcx        # 0x1400032c8
+   1400011bb:	48 89 9c 24 b0 00 00 	mov    %rbx,0xb0(%rsp)
+   1400011c2:	00 
+   1400011c3:	e8 58 fe ff ff       	call   0x140001020
+   1400011c8:	48 8d 54 24 30       	lea    0x30(%rsp),%rdx
+   1400011cd:	48 8d 0d 0c 21 00 00 	lea    0x210c(%rip),%rcx        # 0x1400032e0
+   1400011d4:	e8 a7 fe ff ff       	call   0x140001080
+   1400011d9:	48 8b 5c 24 30       	mov    0x30(%rsp),%rbx
+   1400011de:	89 7c 24 28          	mov    %edi,0x28(%rsp)
+   1400011e2:	ff 15 18 1e 00 00    	call   *0x1e18(%rip)        # 0x140003000
+   1400011e8:	48 8b c8             	mov    %rax,%rcx
+   1400011eb:	48 8d 54 24 28       	lea    0x28(%rsp),%rdx
+   1400011f0:	ff 15 22 1e 00 00    	call   *0x1e22(%rip)        # 0x140003018
+   1400011f6:	85 c0                	test   %eax,%eax
+   1400011f8:	0f 84 c5 00 00 00    	je     0x1400012c3
+   1400011fe:	ff 15 0c 1e 00 00    	call   *0x1e0c(%rip)        # 0x140003010
+   140001204:	85 c0                	test   %eax,%eax
+   140001206:	0f 85 b7 00 00 00    	jne    0x1400012c3
+   14000120c:	48 3b 5c 24 20       	cmp    0x20(%rsp),%rbx
+   140001211:	75 3d                	jne    0x140001250
+   140001213:	8b 05 ef 20 00 00    	mov    0x20ef(%rip),%eax        # 0x140003308
+   140001219:	0f 10 05 d0 20 00 00 	movups 0x20d0(%rip),%xmm0        # 0x1400032f0
+   140001220:	89 44 24 50          	mov    %eax,0x50(%rsp)
+   140001224:	0f b7 05 e1 20 00 00 	movzwl 0x20e1(%rip),%eax        # 0x14000330c
+   14000122b:	f2 0f 10 0d cd 20 00 	movsd  0x20cd(%rip),%xmm1        # 0x140003300
+   140001232:	00 
+   140001233:	66 89 44 24 54       	mov    %ax,0x54(%rsp)
+   140001238:	0f b6 05 cf 20 00 00 	movzbl 0x20cf(%rip),%eax        # 0x14000330e
+   14000123f:	88 44 24 56          	mov    %al,0x56(%rsp)
+   140001243:	0f 11 44 24 38       	movups %xmm0,0x38(%rsp)
+   140001248:	f2 0f 11 4c 24 48    	movsd  %xmm1,0x48(%rsp)
+   14000124e:	eb 18                	jmp    0x140001268
+   140001250:	f2 0f 10 05 b8 20 00 	movsd  0x20b8(%rip),%xmm0        # 0x140003310
+   140001257:	00 
+   140001258:	8b 05 ba 20 00 00    	mov    0x20ba(%rip),%eax        # 0x140003318
+   14000125e:	f2 0f 11 44 24 38    	movsd  %xmm0,0x38(%rsp)
+   140001264:	89 44 24 40          	mov    %eax,0x40(%rsp)
+   140001268:	48 8d 54 24 38       	lea    0x38(%rsp),%rdx
+   14000126d:	48 8d 0d 24 20 00 00 	lea    0x2024(%rip),%rcx        # 0x140003298
+   140001274:	e8 a7 fd ff ff       	call   0x140001020
+   140001279:	48 8d 0d 68 20 00 00 	lea    0x2068(%rip),%rcx        # 0x1400032e8
+   140001280:	ff 15 7a 1e 00 00    	call   *0x1e7a(%rip)        # 0x140003100
+   140001286:	48 8b 9c 24 b0 00 00 	mov    0xb0(%rsp),%rbx
+   14000128d:	00 
+   14000128e:	33 c0                	xor    %eax,%eax
+   140001290:	48 8b 8c 24 98 00 00 	mov    0x98(%rsp),%rcx
+   140001297:	00 
+   140001298:	48 33 cc             	xor    %rsp,%rcx
+   14000129b:	e8 30 03 00 00       	call   0x1400015d0
+   1400012a0:	48 81 c4 a0 00 00 00 	add    $0xa0,%rsp
+   1400012a7:	5f                   	pop    %rdi
+   1400012a8:	c3                   	ret
+   1400012a9:	48 8d 0d f0 1f 00 00 	lea    0x1ff0(%rip),%rcx        # 0x1400032a0
+   1400012b0:	ff 15 ea 1e 00 00    	call   *0x1eea(%rip)        # 0x1400031a0
+   1400012b6:	b8 01 00 00 00       	mov    $0x1,%eax
+   1400012bb:	eb d3                	jmp    0x140001290
+   1400012bd:	e8 be 02 00 00       	call   0x140001580
+   1400012c2:	cc                   	int3
+   1400012c3:	e8 b8 02 00 00       	call   0x140001580
+   1400012c8:	cc                   	int3
+   1400012c9:	e8 b2 02 00 00       	call   0x140001580
+   1400012ce:	cc                   	int3
+   1400012cf:	cc                   	int3
+   1400012d0:	48 89 5c 24 20       	mov    %rbx,0x20(%rsp)
+   1400012d5:	56                   	push   %rsi
+   1400012d6:	48 81 ec 40 01 00 00 	sub    $0x140,%rsp
+   1400012dd:	48 8b 05 24 3d 00 00 	mov    0x3d24(%rip),%rax        # 0x140005008
+   1400012e4:	48 33 c4             	xor    %rsp,%rax
+   1400012e7:	48 89 84 24 38 01 00 	mov    %rax,0x138(%rsp)
+   1400012ee:	00 
+   1400012ef:	48 8b f2             	mov    %rdx,%rsi
+   1400012f2:	c7 84 24 10 01 00 00 	movl   $0x0,0x110(%rsp)
+   1400012f9:	00 00 00 00 
+   1400012fd:	48 8b d9             	mov    %rcx,%rbx
+   140001300:	ff 15 fa 1c 00 00    	call   *0x1cfa(%rip)        # 0x140003000
+   140001306:	48 8b c8             	mov    %rax,%rcx
+   140001309:	48 8d 94 24 10 01 00 	lea    0x110(%rsp),%rdx
+   140001310:	00 
+   140001311:	ff 15 01 1d 00 00    	call   *0x1d01(%rip)        # 0x140003018
+   140001317:	85 c0                	test   %eax,%eax
+   140001319:	0f 84 54 02 00 00    	je     0x140001573
+   14000131f:	ff 15 eb 1c 00 00    	call   *0x1ceb(%rip)        # 0x140003010
+   140001325:	85 c0                	test   %eax,%eax
+   140001327:	0f 85 46 02 00 00    	jne    0x140001573
+   14000132d:	b8 30 00 00 00       	mov    $0x30,%eax
+   140001332:	48 8d 4c 24 20       	lea    0x20(%rsp),%rcx
+   140001337:	66 89 84 24 18 01 00 	mov    %ax,0x118(%rsp)
+   14000133e:	00 
+   14000133f:	0f 57 c0             	xorps  %xmm0,%xmm0
+   140001342:	33 c0                	xor    %eax,%eax
+   140001344:	33 d2                	xor    %edx,%edx
+   140001346:	41 b8 f0 00 00 00    	mov    $0xf0,%r8d
+   14000134c:	48 89 84 24 2a 01 00 	mov    %rax,0x12a(%rsp)
+   140001353:	00 
+   140001354:	89 84 24 32 01 00 00 	mov    %eax,0x132(%rsp)
+   14000135b:	0f 11 84 24 1a 01 00 	movups %xmm0,0x11a(%rsp)
+   140001362:	00 
+   140001363:	e8 3a 0e 00 00       	call   0x1400021a2
+   140001368:	49 c7 c0 ff ff ff ff 	mov    $0xffffffffffffffff,%r8
+   14000136f:	33 d2                	xor    %edx,%edx
+   140001371:	49 8b c0             	mov    %r8,%rax
+   140001374:	48 ff c0             	inc    %rax
+   140001377:	38 14 03             	cmp    %dl,(%rbx,%rax,1)
+   14000137a:	75 f8                	jne    0x140001374
+   14000137c:	48 85 c0             	test   %rax,%rax
+   14000137f:	74 20                	je     0x1400013a1
+   140001381:	33 c9                	xor    %ecx,%ecx
+   140001383:	8d 42 01             	lea    0x1(%rdx),%eax
+   140001386:	34 30                	xor    $0x30,%al
+   140001388:	00 04 19             	add    %al,(%rcx,%rbx,1)
+   14000138b:	49 8b c0             	mov    %r8,%rax
+   14000138e:	ff c2                	inc    %edx
+   140001390:	48 63 ca             	movslq %edx,%rcx
+   140001393:	48 ff c0             	inc    %rax
+   140001396:	80 3c 03 00          	cmpb   $0x0,(%rbx,%rax,1)
+   14000139a:	75 f7                	jne    0x140001393
+   14000139c:	48 3b c8             	cmp    %rax,%rcx
+   14000139f:	72 e2                	jb     0x140001383
+   1400013a1:	33 c9                	xor    %ecx,%ecx
+   1400013a3:	49 8b c0             	mov    %r8,%rax
+   1400013a6:	48 ff c0             	inc    %rax
+   1400013a9:	38 0c 03             	cmp    %cl,(%rbx,%rax,1)
+   1400013ac:	75 f8                	jne    0x1400013a6
+   1400013ae:	48 85 c0             	test   %rax,%rax
+   1400013b1:	74 2b                	je     0x1400013de
+   1400013b3:	33 d2                	xor    %edx,%edx
+   1400013b5:	66 66 66 0f 1f 84 00 	data16 data16 nopw 0x0(%rax,%rax,1)
+   1400013bc:	00 00 00 00 
+   1400013c0:	0f b6 c1             	movzbl %cl,%eax
+   1400013c3:	24 10                	and    $0x10,%al
+   1400013c5:	00 04 1a             	add    %al,(%rdx,%rbx,1)
+   1400013c8:	49 8b c0             	mov    %r8,%rax
+   1400013cb:	ff c1                	inc    %ecx
+   1400013cd:	48 63 d1             	movslq %ecx,%rdx
+   1400013d0:	48 ff c0             	inc    %rax
+   1400013d3:	80 3c 03 00          	cmpb   $0x0,(%rbx,%rax,1)
+   1400013d7:	75 f7                	jne    0x1400013d0
+   1400013d9:	48 3b d0             	cmp    %rax,%rdx
+   1400013dc:	72 e2                	jb     0x1400013c0
+   1400013de:	45 33 c9             	xor    %r9d,%r9d
+   1400013e1:	49 8b c0             	mov    %r8,%rax
+   1400013e4:	48 ff c0             	inc    %rax
+   1400013e7:	44 38 0c 03          	cmp    %r9b,(%rbx,%rax,1)
+   1400013eb:	75 f7                	jne    0x1400013e4
+   1400013ed:	48 85 c0             	test   %rax,%rax
+   1400013f0:	74 2f                	je     0x140001421
+   1400013f2:	48 8b d3             	mov    %rbx,%rdx
+   1400013f5:	66 66 66 0f 1f 84 00 	data16 data16 nopw 0x0(%rax,%rax,1)
+   1400013fc:	00 00 00 00 
+   140001400:	80 02 7e             	addb   $0x7e,(%rdx)
+   140001403:	48 8d 52 01          	lea    0x1(%rdx),%rdx
+   140001407:	41 ff c1             	inc    %r9d
+   14000140a:	49 8b c8             	mov    %r8,%rcx
+   14000140d:	0f 1f 00             	nopl   (%rax)
+   140001410:	48 ff c1             	inc    %rcx
+   140001413:	80 3c 0b 00          	cmpb   $0x0,(%rbx,%rcx,1)
+   140001417:	75 f7                	jne    0x140001410
+   140001419:	49 63 c1             	movslq %r9d,%rax
+   14000141c:	48 3b c1             	cmp    %rcx,%rax
+   14000141f:	72 df                	jb     0x140001400
+   140001421:	49 8b d0             	mov    %r8,%rdx
+   140001424:	48 ff c2             	inc    %rdx
+   140001427:	80 3c 13 00          	cmpb   $0x0,(%rbx,%rdx,1)
+   14000142b:	75 f7                	jne    0x140001424
+   14000142d:	45 33 d2             	xor    %r10d,%r10d
+   140001430:	48 85 d2             	test   %rdx,%rdx
+   140001433:	74 3b                	je     0x140001470
+   140001435:	48 8d 84 24 18 01 00 	lea    0x118(%rsp),%rax
+   14000143c:	00 
+   14000143d:	4c 8b db             	mov    %rbx,%r11
+   140001440:	4c 2b d8             	sub    %rax,%r11
+   140001443:	4c 8d 8c 24 18 01 00 	lea    0x118(%rsp),%r9
+   14000144a:	00 
+   14000144b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+   140001450:	43 0f b6 0c 0b       	movzbl (%r11,%r9,1),%ecx
+   140001455:	4d 8d 49 01          	lea    0x1(%r9),%r9
+   140001459:	0f b6 c1             	movzbl %cl,%eax
+   14000145c:	41 ff c2             	inc    %r10d
+   14000145f:	c0 e0 02             	shl    $0x2,%al
+   140001462:	02 c8                	add    %al,%cl
+   140001464:	49 63 c2             	movslq %r10d,%rax
+   140001467:	41 88 49 ff          	mov    %cl,-0x1(%r9)
+   14000146b:	48 3b c2             	cmp    %rdx,%rax
+   14000146e:	72 e0                	jb     0x140001450
+   140001470:	48 8d 4b ff          	lea    -0x1(%rbx),%rcx
+   140001474:	80 79 01 00          	cmpb   $0x0,0x1(%rcx)
+   140001478:	48 8d 49 01          	lea    0x1(%rcx),%rcx
+   14000147c:	75 f6                	jne    0x140001474
+   14000147e:	4c 8d 8c 24 18 01 00 	lea    0x118(%rsp),%r9
+   140001485:	00 
+   140001486:	33 d2                	xor    %edx,%edx
+   140001488:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+   14000148f:	00 
+   140001490:	41 0f b6 04 11       	movzbl (%r9,%rdx,1),%eax
+   140001495:	88 04 11             	mov    %al,(%rcx,%rdx,1)
+   140001498:	48 8d 52 01          	lea    0x1(%rdx),%rdx
+   14000149c:	84 c0                	test   %al,%al
+   14000149e:	75 f0                	jne    0x140001490
+   1400014a0:	49 ff c0             	inc    %r8
+   1400014a3:	42 80 3c 03 00       	cmpb   $0x0,(%rbx,%r8,1)
+   1400014a8:	75 f6                	jne    0x1400014a0
+   1400014aa:	33 d2                	xor    %edx,%edx
+   1400014ac:	48 89 bc 24 60 01 00 	mov    %rdi,0x160(%rsp)
+   1400014b3:	00 
+   1400014b4:	48 8b 7c 24 20       	mov    0x20(%rsp),%rdi
+   1400014b9:	4d 85 c0             	test   %r8,%r8
+   1400014bc:	74 1f                	je     0x1400014dd
+   1400014be:	66 90                	xchg   %ax,%ax
+   1400014c0:	0f be 03             	movsbl (%rbx),%eax
+   1400014c3:	48 8d 5b 01          	lea    0x1(%rbx),%rbx
+   1400014c7:	8b ca                	mov    %edx,%ecx
+   1400014c9:	0f af ca             	imul   %edx,%ecx
+   1400014cc:	ff c2                	inc    %edx
+   1400014ce:	03 c1                	add    %ecx,%eax
+   1400014d0:	48 98                	cltq
+   1400014d2:	48 03 f8             	add    %rax,%rdi
+   1400014d5:	48 63 c2             	movslq %edx,%rax
+   1400014d8:	49 3b c0             	cmp    %r8,%rax
+   1400014db:	72 e3                	jb     0x1400014c0
+   1400014dd:	c7 84 24 10 01 00 00 	movl   $0x0,0x110(%rsp)
+   1400014e4:	00 00 00 00 
+   1400014e8:	ff 15 12 1b 00 00    	call   *0x1b12(%rip)        # 0x140003000
+   1400014ee:	48 8b c8             	mov    %rax,%rcx
+   1400014f1:	48 8d 94 24 10 01 00 	lea    0x110(%rsp),%rdx
+   1400014f8:	00 
+   1400014f9:	ff 15 19 1b 00 00    	call   *0x1b19(%rip)        # 0x140003018
+   1400014ff:	85 c0                	test   %eax,%eax
+   140001501:	74 76                	je     0x140001579
+   140001503:	ff 15 07 1b 00 00    	call   *0x1b07(%rip)        # 0x140003010
+   140001509:	85 c0                	test   %eax,%eax
+   14000150b:	75 6c                	jne    0x140001579
+   14000150d:	48 8b c7             	mov    %rdi,%rax
+   140001510:	48 b9 b9 e5 e4 1c 6d 	movabs $0xbf58476d1ce4e5b9,%rcx
+   140001517:	47 58 bf 
+   14000151a:	48 c1 e8 1e          	shr    $0x1e,%rax
+   14000151e:	48 33 c7             	xor    %rdi,%rax
+   140001521:	48 8b bc 24 60 01 00 	mov    0x160(%rsp),%rdi
+   140001528:	00 
+   140001529:	48 0f af c1          	imul   %rcx,%rax
+   14000152d:	48 8b c8             	mov    %rax,%rcx
+   140001530:	48 c1 e9 1b          	shr    $0x1b,%rcx
+   140001534:	48 33 c8             	xor    %rax,%rcx
+   140001537:	48 b8 eb 11 31 13 bb 	movabs $0x94d049bb133111eb,%rax
+   14000153e:	49 d0 94 
+   140001541:	48 0f af c8          	imul   %rax,%rcx
+   140001545:	48 8b c1             	mov    %rcx,%rax
+   140001548:	48 c1 e8 1f          	shr    $0x1f,%rax
+   14000154c:	48 33 c1             	xor    %rcx,%rax
+   14000154f:	48 89 06             	mov    %rax,(%rsi)
+   140001552:	48 8b 8c 24 38 01 00 	mov    0x138(%rsp),%rcx
+   140001559:	00 
+   14000155a:	48 33 cc             	xor    %rsp,%rcx
+   14000155d:	e8 6e 00 00 00       	call   0x1400015d0
+   140001562:	48 8b 9c 24 68 01 00 	mov    0x168(%rsp),%rbx
+   140001569:	00 
+   14000156a:	48 81 c4 40 01 00 00 	add    $0x140,%rsp
+   140001571:	5e                   	pop    %rsi
+   140001572:	c3                   	ret
+   140001573:	e8 08 00 00 00       	call   0x140001580
+   140001578:	cc                   	int3
+   140001579:	e8 02 00 00 00       	call   0x140001580
+   14000157e:	cc                   	int3
+   14000157f:	cc                   	int3
+   140001580:	48 83 ec 28          	sub    $0x28,%rsp
+   140001584:	48 8d 0d 91 1d 00 00 	lea    0x1d91(%rip),%rcx        # 0x14000331c
+   14000158b:	ff 15 6f 1b 00 00    	call   *0x1b6f(%rip)        # 0x140003100
+   140001591:	48 8d 0d 88 1d 00 00 	lea    0x1d88(%rip),%rcx        # 0x140003320
+   140001598:	e8 83 fa ff ff       	call   0x140001020
+   14000159d:	48 8d 0d 44 1d 00 00 	lea    0x1d44(%rip),%rcx        # 0x1400032e8
+   1400015a4:	ff 15 56 1b 00 00    	call   *0x1b56(%rip)        # 0x140003100
+   1400015aa:	b9 ff ff ff ff       	mov    $0xffffffff,%ecx
+   1400015af:	ff 15 53 1a 00 00    	call   *0x1a53(%rip)        # 0x140003008
+   1400015b5:	cc                   	int3
+   1400015b6:	cc                   	int3
+   1400015b7:	cc                   	int3
+   1400015b8:	cc                   	int3
+   1400015b9:	cc                   	int3
+   1400015ba:	cc                   	int3
+   1400015bb:	cc                   	int3
+   1400015bc:	cc                   	int3
+   1400015bd:	cc                   	int3
+   1400015be:	cc                   	int3
+   1400015bf:	cc                   	int3
+   1400015c0:	cc                   	int3
+   1400015c1:	cc                   	int3
+   1400015c2:	cc                   	int3
+   1400015c3:	cc                   	int3
+   1400015c4:	cc                   	int3
+   1400015c5:	cc                   	int3
+   1400015c6:	66 66 0f 1f 84 00 00 	data16 nopw 0x0(%rax,%rax,1)
+   1400015cd:	00 00 00 
+   1400015d0:	48 3b 0d 31 3a 00 00 	cmp    0x3a31(%rip),%rcx        # 0x140005008
+   1400015d7:	75 10                	jne    0x1400015e9
+   1400015d9:	48 c1 c1 10          	rol    $0x10,%rcx
+   1400015dd:	66 f7 c1 ff ff       	test   $0xffff,%cx
+   1400015e2:	75 01                	jne    0x1400015e5
+   1400015e4:	c3                   	ret
+   1400015e5:	48 c1 c9 10          	ror    $0x10,%rcx
+   1400015e9:	e9 aa 02 00 00       	jmp    0x140001898
+   1400015ee:	cc                   	int3
+   1400015ef:	cc                   	int3
+   1400015f0:	40 53                	rex push %rbx
+   1400015f2:	48 83 ec 20          	sub    $0x20,%rsp
+   1400015f6:	b9 01 00 00 00       	mov    $0x1,%ecx
+   1400015fb:	e8 ae 0b 00 00       	call   0x1400021ae
+   140001600:	e8 e3 06 00 00       	call   0x140001ce8
+   140001605:	8b c8                	mov    %eax,%ecx
+   140001607:	e8 d8 0b 00 00       	call   0x1400021e4
+   14000160c:	e8 cb 06 00 00       	call   0x140001cdc
+   140001611:	8b d8                	mov    %eax,%ebx
+   140001613:	e8 fc 0b 00 00       	call   0x140002214
+   140001618:	b9 01 00 00 00       	mov    $0x1,%ecx
+   14000161d:	89 18                	mov    %ebx,(%rax)
+   14000161f:	e8 44 04 00 00       	call   0x140001a68
+   140001624:	84 c0                	test   %al,%al
+   140001626:	74 73                	je     0x14000169b
+   140001628:	e8 2f 09 00 00       	call   0x140001f5c
+   14000162d:	48 8d 0d 64 09 00 00 	lea    0x964(%rip),%rcx        # 0x140001f98
+   140001634:	e8 df 05 00 00       	call   0x140001c18
+   140001639:	e8 a2 06 00 00       	call   0x140001ce0
+   14000163e:	8b c8                	mov    %eax,%ecx
+   140001640:	e8 75 0b 00 00       	call   0x1400021ba
+   140001645:	85 c0                	test   %eax,%eax
+   140001647:	75 52                	jne    0x14000169b
+   140001649:	e8 a2 06 00 00       	call   0x140001cf0
+   14000164e:	e8 d1 06 00 00       	call   0x140001d24
+   140001653:	85 c0                	test   %eax,%eax
+   140001655:	74 0c                	je     0x140001663
+   140001657:	48 8d 0d 7e 06 00 00 	lea    0x67e(%rip),%rcx        # 0x140001cdc
+   14000165e:	e8 51 0b 00 00       	call   0x1400021b4
+   140001663:	e8 9c 06 00 00       	call   0x140001d04
+   140001668:	e8 97 06 00 00       	call   0x140001d04
+   14000166d:	e8 6a 06 00 00       	call   0x140001cdc
+   140001672:	8b c8                	mov    %eax,%ecx
+   140001674:	e8 8f 0b 00 00       	call   0x140002208
+   140001679:	e8 82 06 00 00       	call   0x140001d00
+   14000167e:	84 c0                	test   %al,%al
+   140001680:	74 05                	je     0x140001687
+   140001682:	e8 39 0b 00 00       	call   0x1400021c0
+   140001687:	e8 50 06 00 00       	call   0x140001cdc
+   14000168c:	e8 03 08 00 00       	call   0x140001e94
+   140001691:	85 c0                	test   %eax,%eax
+   140001693:	75 06                	jne    0x14000169b
+   140001695:	48 83 c4 20          	add    $0x20,%rsp
+   140001699:	5b                   	pop    %rbx
+   14000169a:	c3                   	ret
+   14000169b:	b9 07 00 00 00       	mov    $0x7,%ecx
+   1400016a0:	e8 a3 06 00 00       	call   0x140001d48
+   1400016a5:	cc                   	int3
+   1400016a6:	cc                   	int3
+   1400016a7:	cc                   	int3
+   1400016a8:	48 83 ec 28          	sub    $0x28,%rsp
+   1400016ac:	e8 57 06 00 00       	call   0x140001d08
+   1400016b1:	33 c0                	xor    %eax,%eax
+   1400016b3:	48 83 c4 28          	add    $0x28,%rsp
+   1400016b7:	c3                   	ret
+   1400016b8:	48 83 ec 28          	sub    $0x28,%rsp
+   1400016bc:	e8 2f 08 00 00       	call   0x140001ef0
+   1400016c1:	e8 16 06 00 00       	call   0x140001cdc
+   1400016c6:	8b c8                	mov    %eax,%ecx
+   1400016c8:	48 83 c4 28          	add    $0x28,%rsp
+   1400016cc:	e9 3d 0b 00 00       	jmp    0x14000220e
+   1400016d1:	cc                   	int3
+   1400016d2:	cc                   	int3
+   1400016d3:	cc                   	int3
+   1400016d4:	48 89 5c 24 08       	mov    %rbx,0x8(%rsp)
+   1400016d9:	48 89 74 24 10       	mov    %rsi,0x10(%rsp)
+   1400016de:	57                   	push   %rdi
+   1400016df:	48 83 ec 30          	sub    $0x30,%rsp
+   1400016e3:	b9 01 00 00 00       	mov    $0x1,%ecx
+   1400016e8:	e8 2f 03 00 00       	call   0x140001a1c
+   1400016ed:	84 c0                	test   %al,%al
+   1400016ef:	0f 84 36 01 00 00    	je     0x14000182b
+   1400016f5:	40 32 f6             	xor    %sil,%sil
+   1400016f8:	40 88 74 24 20       	mov    %sil,0x20(%rsp)
+   1400016fd:	e8 de 02 00 00       	call   0x1400019e0
+   140001702:	8a d8                	mov    %al,%bl
+   140001704:	8b 0d a6 3e 00 00    	mov    0x3ea6(%rip),%ecx        # 0x1400055b0
+   14000170a:	83 f9 01             	cmp    $0x1,%ecx
+   14000170d:	0f 84 23 01 00 00    	je     0x140001836
+   140001713:	85 c9                	test   %ecx,%ecx
+   140001715:	75 4a                	jne    0x140001761
+   140001717:	c7 05 8f 3e 00 00 01 	movl   $0x1,0x3e8f(%rip)        # 0x1400055b0
+   14000171e:	00 00 00 
+   140001721:	48 8d 15 08 1b 00 00 	lea    0x1b08(%rip),%rdx        # 0x140003230
+   140001728:	48 8d 0d e9 1a 00 00 	lea    0x1ae9(%rip),%rcx        # 0x140003218
+   14000172f:	e8 9e 0a 00 00       	call   0x1400021d2
+   140001734:	85 c0                	test   %eax,%eax
+   140001736:	74 0a                	je     0x140001742
+   140001738:	b8 ff 00 00 00       	mov    $0xff,%eax
+   14000173d:	e9 d9 00 00 00       	jmp    0x14000181b
+   140001742:	48 8d 15 c7 1a 00 00 	lea    0x1ac7(%rip),%rdx        # 0x140003210
+   140001749:	48 8d 0d b0 1a 00 00 	lea    0x1ab0(%rip),%rcx        # 0x140003200
+   140001750:	e8 77 0a 00 00       	call   0x1400021cc
+   140001755:	c7 05 51 3e 00 00 02 	movl   $0x2,0x3e51(%rip)        # 0x1400055b0
+   14000175c:	00 00 00 
+   14000175f:	eb 08                	jmp    0x140001769
+   140001761:	40 b6 01             	mov    $0x1,%sil
+   140001764:	40 88 74 24 20       	mov    %sil,0x20(%rsp)
+   140001769:	8a cb                	mov    %bl,%cl
+   14000176b:	e8 1c 04 00 00       	call   0x140001b8c
+   140001770:	e8 bb 05 00 00       	call   0x140001d30
+   140001775:	48 8b d8             	mov    %rax,%rbx
+   140001778:	48 83 38 00          	cmpq   $0x0,(%rax)
+   14000177c:	74 1e                	je     0x14000179c
+   14000177e:	48 8b c8             	mov    %rax,%rcx
+   140001781:	e8 6e 03 00 00       	call   0x140001af4
+   140001786:	84 c0                	test   %al,%al
+   140001788:	74 12                	je     0x14000179c
+   14000178a:	45 33 c0             	xor    %r8d,%r8d
+   14000178d:	41 8d 50 02          	lea    0x2(%r8),%edx
+   140001791:	33 c9                	xor    %ecx,%ecx
+   140001793:	48 8b 03             	mov    (%rbx),%rax
+   140001796:	ff 15 3c 1a 00 00    	call   *0x1a3c(%rip)        # 0x1400031d8
+   14000179c:	e8 97 05 00 00       	call   0x140001d38
+   1400017a1:	48 8b d8             	mov    %rax,%rbx
+   1400017a4:	48 83 38 00          	cmpq   $0x0,(%rax)
+   1400017a8:	74 14                	je     0x1400017be
+   1400017aa:	48 8b c8             	mov    %rax,%rcx
+   1400017ad:	e8 42 03 00 00       	call   0x140001af4
+   1400017b2:	84 c0                	test   %al,%al
+   1400017b4:	74 08                	je     0x1400017be
+   1400017b6:	48 8b 0b             	mov    (%rbx),%rcx
+   1400017b9:	e8 44 0a 00 00       	call   0x140002202
+   1400017be:	e8 03 0a 00 00       	call   0x1400021c6
+   1400017c3:	48 8b f8             	mov    %rax,%rdi
+   1400017c6:	e8 25 0a 00 00       	call   0x1400021f0
+   1400017cb:	48 8b 18             	mov    (%rax),%rbx
+   1400017ce:	e8 17 0a 00 00       	call   0x1400021ea
+   1400017d3:	4c 8b c7             	mov    %rdi,%r8
+   1400017d6:	48 8b d3             	mov    %rbx,%rdx
+   1400017d9:	8b 08                	mov    (%rax),%ecx
+   1400017db:	e8 00 f9 ff ff       	call   0x1400010e0
+   1400017e0:	8b d8                	mov    %eax,%ebx
+   1400017e2:	e8 b5 06 00 00       	call   0x140001e9c
+   1400017e7:	84 c0                	test   %al,%al
+   1400017e9:	74 55                	je     0x140001840
+   1400017eb:	40 84 f6             	test   %sil,%sil
+   1400017ee:	75 05                	jne    0x1400017f5
+   1400017f0:	e8 01 0a 00 00       	call   0x1400021f6
+   1400017f5:	33 d2                	xor    %edx,%edx
+   1400017f7:	b1 01                	mov    $0x1,%cl
+   1400017f9:	e8 b2 03 00 00       	call   0x140001bb0
+   1400017fe:	8b c3                	mov    %ebx,%eax
+   140001800:	eb 19                	jmp    0x14000181b
+   140001802:	8b d8                	mov    %eax,%ebx
+   140001804:	e8 93 06 00 00       	call   0x140001e9c
+   140001809:	84 c0                	test   %al,%al
+   14000180b:	74 3b                	je     0x140001848
+   14000180d:	80 7c 24 20 00       	cmpb   $0x0,0x20(%rsp)
+   140001812:	75 05                	jne    0x140001819
+   140001814:	e8 e3 09 00 00       	call   0x1400021fc
+   140001819:	8b c3                	mov    %ebx,%eax
+   14000181b:	48 8b 5c 24 40       	mov    0x40(%rsp),%rbx
+   140001820:	48 8b 74 24 48       	mov    0x48(%rsp),%rsi
+   140001825:	48 83 c4 30          	add    $0x30,%rsp
+   140001829:	5f                   	pop    %rdi
+   14000182a:	c3                   	ret
+   14000182b:	b9 07 00 00 00       	mov    $0x7,%ecx
+   140001830:	e8 13 05 00 00       	call   0x140001d48
+   140001835:	90                   	nop
+   140001836:	b9 07 00 00 00       	mov    $0x7,%ecx
+   14000183b:	e8 08 05 00 00       	call   0x140001d48
+   140001840:	8b cb                	mov    %ebx,%ecx
+   140001842:	e8 91 09 00 00       	call   0x1400021d8
+   140001847:	90                   	nop
+   140001848:	8b cb                	mov    %ebx,%ecx
+   14000184a:	e8 8f 09 00 00       	call   0x1400021de
+   14000184f:	90                   	nop
+   140001850:	48 83 ec 28          	sub    $0x28,%rsp
+   140001854:	e8 d7 03 00 00       	call   0x140001c30
+   140001859:	48 83 c4 28          	add    $0x28,%rsp
+   14000185d:	e9 72 fe ff ff       	jmp    0x1400016d4
+   140001862:	cc                   	int3
+   140001863:	cc                   	int3
+   140001864:	40 53                	rex push %rbx
+   140001866:	48 83 ec 20          	sub    $0x20,%rsp
+   14000186a:	48 8b d9             	mov    %rcx,%rbx
+   14000186d:	33 c9                	xor    %ecx,%ecx
+   14000186f:	ff 15 c3 17 00 00    	call   *0x17c3(%rip)        # 0x140003038
+   140001875:	48 8b cb             	mov    %rbx,%rcx
+   140001878:	ff 15 b2 17 00 00    	call   *0x17b2(%rip)        # 0x140003030
+   14000187e:	ff 15 7c 17 00 00    	call   *0x177c(%rip)        # 0x140003000
+   140001884:	48 8b c8             	mov    %rax,%rcx
+   140001887:	ba 09 04 00 c0       	mov    $0xc0000409,%edx
+   14000188c:	48 83 c4 20          	add    $0x20,%rsp
+   140001890:	5b                   	pop    %rbx
+   140001891:	48 ff 25 a8 17 00 00 	rex.W jmp *0x17a8(%rip)        # 0x140003040
+   140001898:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+   14000189d:	48 83 ec 38          	sub    $0x38,%rsp
+   1400018a1:	b9 17 00 00 00       	mov    $0x17,%ecx
+   1400018a6:	ff 15 9c 17 00 00    	call   *0x179c(%rip)        # 0x140003048
+   1400018ac:	85 c0                	test   %eax,%eax
+   1400018ae:	74 07                	je     0x1400018b7
+   1400018b0:	b9 02 00 00 00       	mov    $0x2,%ecx
+   1400018b5:	cd 29                	int    $0x29
+   1400018b7:	48 8d 0d 22 38 00 00 	lea    0x3822(%rip),%rcx        # 0x1400050e0
+   1400018be:	e8 a9 00 00 00       	call   0x14000196c
+   1400018c3:	48 8b 44 24 38       	mov    0x38(%rsp),%rax
+   1400018c8:	48 89 05 09 39 00 00 	mov    %rax,0x3909(%rip)        # 0x1400051d8
+   1400018cf:	48 8d 44 24 38       	lea    0x38(%rsp),%rax
+   1400018d4:	48 83 c0 08          	add    $0x8,%rax
+   1400018d8:	48 89 05 99 38 00 00 	mov    %rax,0x3899(%rip)        # 0x140005178
+   1400018df:	48 8b 05 f2 38 00 00 	mov    0x38f2(%rip),%rax        # 0x1400051d8
+   1400018e6:	48 89 05 63 37 00 00 	mov    %rax,0x3763(%rip)        # 0x140005050
+   1400018ed:	48 8b 44 24 40       	mov    0x40(%rsp),%rax
+   1400018f2:	48 89 05 67 38 00 00 	mov    %rax,0x3867(%rip)        # 0x140005160
+   1400018f9:	c7 05 3d 37 00 00 09 	movl   $0xc0000409,0x373d(%rip)        # 0x140005040
+   140001900:	04 00 c0 
+   140001903:	c7 05 37 37 00 00 01 	movl   $0x1,0x3737(%rip)        # 0x140005044
+   14000190a:	00 00 00 
+   14000190d:	c7 05 41 37 00 00 01 	movl   $0x1,0x3741(%rip)        # 0x140005058
+   140001914:	00 00 00 
+   140001917:	b8 08 00 00 00       	mov    $0x8,%eax
+   14000191c:	48 6b c0 00          	imul   $0x0,%rax,%rax
+   140001920:	48 8d 0d 39 37 00 00 	lea    0x3739(%rip),%rcx        # 0x140005060
+   140001927:	48 c7 04 01 02 00 00 	movq   $0x2,(%rcx,%rax,1)
+   14000192e:	00 
+   14000192f:	b8 08 00 00 00       	mov    $0x8,%eax
+   140001934:	48 6b c0 00          	imul   $0x0,%rax,%rax
+   140001938:	48 8b 0d c9 36 00 00 	mov    0x36c9(%rip),%rcx        # 0x140005008
+   14000193f:	48 89 4c 04 20       	mov    %rcx,0x20(%rsp,%rax,1)
+   140001944:	b8 08 00 00 00       	mov    $0x8,%eax
+   140001949:	48 6b c0 01          	imul   $0x1,%rax,%rax
+   14000194d:	48 8b 0d ac 36 00 00 	mov    0x36ac(%rip),%rcx        # 0x140005000
+   140001954:	48 89 4c 04 20       	mov    %rcx,0x20(%rsp,%rax,1)
+   140001959:	48 8d 0d 00 19 00 00 	lea    0x1900(%rip),%rcx        # 0x140003260
+   140001960:	e8 ff fe ff ff       	call   0x140001864
+   140001965:	48 83 c4 38          	add    $0x38,%rsp
+   140001969:	c3                   	ret
+   14000196a:	cc                   	int3
+   14000196b:	cc                   	int3
+   14000196c:	40 53                	rex push %rbx
+   14000196e:	56                   	push   %rsi
+   14000196f:	57                   	push   %rdi
+   140001970:	48 83 ec 40          	sub    $0x40,%rsp
+   140001974:	48 8b d9             	mov    %rcx,%rbx
+   140001977:	ff 15 03 17 00 00    	call   *0x1703(%rip)        # 0x140003080
+   14000197d:	48 8b b3 f8 00 00 00 	mov    0xf8(%rbx),%rsi
+   140001984:	33 ff                	xor    %edi,%edi
+   140001986:	45 33 c0             	xor    %r8d,%r8d
+   140001989:	48 8d 54 24 60       	lea    0x60(%rsp),%rdx
+   14000198e:	48 8b ce             	mov    %rsi,%rcx
+   140001991:	ff 15 89 16 00 00    	call   *0x1689(%rip)        # 0x140003020
+   140001997:	48 85 c0             	test   %rax,%rax
+   14000199a:	74 39                	je     0x1400019d5
+   14000199c:	48 83 64 24 38 00    	andq   $0x0,0x38(%rsp)
+   1400019a2:	48 8d 4c 24 68       	lea    0x68(%rsp),%rcx
+   1400019a7:	48 8b 54 24 60       	mov    0x60(%rsp),%rdx
+   1400019ac:	4c 8b c8             	mov    %rax,%r9
+   1400019af:	48 89 4c 24 30       	mov    %rcx,0x30(%rsp)
+   1400019b4:	4c 8b c6             	mov    %rsi,%r8
+   1400019b7:	48 8d 4c 24 70       	lea    0x70(%rsp),%rcx
+   1400019bc:	48 89 4c 24 28       	mov    %rcx,0x28(%rsp)
+   1400019c1:	33 c9                	xor    %ecx,%ecx
+   1400019c3:	48 89 5c 24 20       	mov    %rbx,0x20(%rsp)
+   1400019c8:	ff 15 5a 16 00 00    	call   *0x165a(%rip)        # 0x140003028
+   1400019ce:	ff c7                	inc    %edi
+   1400019d0:	83 ff 02             	cmp    $0x2,%edi
+   1400019d3:	7c b1                	jl     0x140001986
+   1400019d5:	48 83 c4 40          	add    $0x40,%rsp
+   1400019d9:	5f                   	pop    %rdi
+   1400019da:	5e                   	pop    %rsi
+   1400019db:	5b                   	pop    %rbx
+   1400019dc:	c3                   	ret
+   1400019dd:	cc                   	int3
+   1400019de:	cc                   	int3
+   1400019df:	cc                   	int3
+   1400019e0:	48 83 ec 28          	sub    $0x28,%rsp
+   1400019e4:	e8 97 07 00 00       	call   0x140002180
+   1400019e9:	85 c0                	test   %eax,%eax
+   1400019eb:	74 21                	je     0x140001a0e
+   1400019ed:	65 48 8b 04 25 30 00 	mov    %gs:0x30,%rax
+   1400019f4:	00 00 
+   1400019f6:	48 8b 48 08          	mov    0x8(%rax),%rcx
+   1400019fa:	eb 05                	jmp    0x140001a01
+   1400019fc:	48 3b c8             	cmp    %rax,%rcx
+   1400019ff:	74 14                	je     0x140001a15
+   140001a01:	33 c0                	xor    %eax,%eax
+   140001a03:	f0 48 0f b1 0d ac 3b 	lock cmpxchg %rcx,0x3bac(%rip)        # 0x1400055b8
+   140001a0a:	00 00 
+   140001a0c:	75 ee                	jne    0x1400019fc
+   140001a0e:	32 c0                	xor    %al,%al
+   140001a10:	48 83 c4 28          	add    $0x28,%rsp
+   140001a14:	c3                   	ret
+   140001a15:	b0 01                	mov    $0x1,%al
+   140001a17:	eb f7                	jmp    0x140001a10
+   140001a19:	cc                   	int3
+   140001a1a:	cc                   	int3
+   140001a1b:	cc                   	int3
+   140001a1c:	40 53                	rex push %rbx
+   140001a1e:	48 83 ec 20          	sub    $0x20,%rsp
+   140001a22:	0f b6 05 97 3b 00 00 	movzbl 0x3b97(%rip),%eax        # 0x1400055c0
+   140001a29:	85 c9                	test   %ecx,%ecx
+   140001a2b:	bb 01 00 00 00       	mov    $0x1,%ebx
+   140001a30:	0f 44 c3             	cmove  %ebx,%eax
+   140001a33:	88 05 87 3b 00 00    	mov    %al,0x3b87(%rip)        # 0x1400055c0
+   140001a39:	e8 96 05 00 00       	call   0x140001fd4
+   140001a3e:	e8 bd 02 00 00       	call   0x140001d00
+   140001a43:	84 c0                	test   %al,%al
+   140001a45:	75 04                	jne    0x140001a4b
+   140001a47:	32 c0                	xor    %al,%al
+   140001a49:	eb 14                	jmp    0x140001a5f
+   140001a4b:	e8 b0 02 00 00       	call   0x140001d00
+   140001a50:	84 c0                	test   %al,%al
+   140001a52:	75 09                	jne    0x140001a5d
+   140001a54:	33 c9                	xor    %ecx,%ecx
+   140001a56:	e8 a5 02 00 00       	call   0x140001d00
+   140001a5b:	eb ea                	jmp    0x140001a47
+   140001a5d:	8a c3                	mov    %bl,%al
+   140001a5f:	48 83 c4 20          	add    $0x20,%rsp
+   140001a63:	5b                   	pop    %rbx
+   140001a64:	c3                   	ret
+   140001a65:	cc                   	int3
+   140001a66:	cc                   	int3
+   140001a67:	cc                   	int3
+   140001a68:	40 53                	rex push %rbx
+   140001a6a:	48 83 ec 20          	sub    $0x20,%rsp
+   140001a6e:	80 3d 4c 3b 00 00 00 	cmpb   $0x0,0x3b4c(%rip)        # 0x1400055c1
+   140001a75:	8b d9                	mov    %ecx,%ebx
+   140001a77:	75 67                	jne    0x140001ae0
+   140001a79:	83 f9 01             	cmp    $0x1,%ecx
+   140001a7c:	77 6a                	ja     0x140001ae8
+   140001a7e:	e8 fd 06 00 00       	call   0x140002180
+   140001a83:	85 c0                	test   %eax,%eax
+   140001a85:	74 28                	je     0x140001aaf
+   140001a87:	85 db                	test   %ebx,%ebx
+   140001a89:	75 24                	jne    0x140001aaf
+   140001a8b:	48 8d 0d 36 3b 00 00 	lea    0x3b36(%rip),%rcx        # 0x1400055c8
+   140001a92:	e8 83 07 00 00       	call   0x14000221a
+   140001a97:	85 c0                	test   %eax,%eax
+   140001a99:	75 10                	jne    0x140001aab
+   140001a9b:	48 8d 0d 3e 3b 00 00 	lea    0x3b3e(%rip),%rcx        # 0x1400055e0
+   140001aa2:	e8 73 07 00 00       	call   0x14000221a
+   140001aa7:	85 c0                	test   %eax,%eax
+   140001aa9:	74 2e                	je     0x140001ad9
+   140001aab:	32 c0                	xor    %al,%al
+   140001aad:	eb 33                	jmp    0x140001ae2
+   140001aaf:	66 0f 6f 05 b9 17 00 	movdqa 0x17b9(%rip),%xmm0        # 0x140003270
+   140001ab6:	00 
+   140001ab7:	48 83 c8 ff          	or     $0xffffffffffffffff,%rax
+   140001abb:	f3 0f 7f 05 05 3b 00 	movdqu %xmm0,0x3b05(%rip)        # 0x1400055c8
+   140001ac2:	00 
+   140001ac3:	48 89 05 0e 3b 00 00 	mov    %rax,0x3b0e(%rip)        # 0x1400055d8
+   140001aca:	f3 0f 7f 05 0e 3b 00 	movdqu %xmm0,0x3b0e(%rip)        # 0x1400055e0
+   140001ad1:	00 
+   140001ad2:	48 89 05 17 3b 00 00 	mov    %rax,0x3b17(%rip)        # 0x1400055f0
+   140001ad9:	c6 05 e1 3a 00 00 01 	movb   $0x1,0x3ae1(%rip)        # 0x1400055c1
+   140001ae0:	b0 01                	mov    $0x1,%al
+   140001ae2:	48 83 c4 20          	add    $0x20,%rsp
+   140001ae6:	5b                   	pop    %rbx
+   140001ae7:	c3                   	ret
+   140001ae8:	b9 05 00 00 00       	mov    $0x5,%ecx
+   140001aed:	e8 56 02 00 00       	call   0x140001d48
+   140001af2:	cc                   	int3
+   140001af3:	cc                   	int3
+   140001af4:	48 83 ec 18          	sub    $0x18,%rsp
+   140001af8:	4c 8b c1             	mov    %rcx,%r8
+   140001afb:	b8 4d 5a 00 00       	mov    $0x5a4d,%eax
+   140001b00:	66 39 05 f9 e4 ff ff 	cmp    %ax,-0x1b07(%rip)        # 0x140000000
+   140001b07:	75 78                	jne    0x140001b81
+   140001b09:	48 63 0d 2c e5 ff ff 	movslq -0x1ad4(%rip),%rcx        # 0x14000003c
+   140001b10:	48 8d 15 e9 e4 ff ff 	lea    -0x1b17(%rip),%rdx        # 0x140000000
+   140001b17:	48 03 ca             	add    %rdx,%rcx
+   140001b1a:	81 39 50 45 00 00    	cmpl   $0x4550,(%rcx)
+   140001b20:	75 5f                	jne    0x140001b81
+   140001b22:	b8 0b 02 00 00       	mov    $0x20b,%eax
+   140001b27:	66 39 41 18          	cmp    %ax,0x18(%rcx)
+   140001b2b:	75 54                	jne    0x140001b81
+   140001b2d:	4c 2b c2             	sub    %rdx,%r8
+   140001b30:	0f b7 51 14          	movzwl 0x14(%rcx),%edx
+   140001b34:	48 83 c2 18          	add    $0x18,%rdx
+   140001b38:	48 03 d1             	add    %rcx,%rdx
+   140001b3b:	0f b7 41 06          	movzwl 0x6(%rcx),%eax
+   140001b3f:	48 8d 0c 80          	lea    (%rax,%rax,4),%rcx
+   140001b43:	4c 8d 0c ca          	lea    (%rdx,%rcx,8),%r9
+   140001b47:	48 89 14 24          	mov    %rdx,(%rsp)
+   140001b4b:	49 3b d1             	cmp    %r9,%rdx
+   140001b4e:	74 18                	je     0x140001b68
+   140001b50:	8b 4a 0c             	mov    0xc(%rdx),%ecx
+   140001b53:	4c 3b c1             	cmp    %rcx,%r8
+   140001b56:	72 0a                	jb     0x140001b62
+   140001b58:	8b 42 08             	mov    0x8(%rdx),%eax
+   140001b5b:	03 c1                	add    %ecx,%eax
+   140001b5d:	4c 3b c0             	cmp    %rax,%r8
+   140001b60:	72 08                	jb     0x140001b6a
+   140001b62:	48 83 c2 28          	add    $0x28,%rdx
+   140001b66:	eb df                	jmp    0x140001b47
+   140001b68:	33 d2                	xor    %edx,%edx
+   140001b6a:	48 85 d2             	test   %rdx,%rdx
+   140001b6d:	75 04                	jne    0x140001b73
+   140001b6f:	32 c0                	xor    %al,%al
+   140001b71:	eb 14                	jmp    0x140001b87
+   140001b73:	83 7a 24 00          	cmpl   $0x0,0x24(%rdx)
+   140001b77:	7d 04                	jge    0x140001b7d
+   140001b79:	32 c0                	xor    %al,%al
+   140001b7b:	eb 0a                	jmp    0x140001b87
+   140001b7d:	b0 01                	mov    $0x1,%al
+   140001b7f:	eb 06                	jmp    0x140001b87
+   140001b81:	32 c0                	xor    %al,%al
+   140001b83:	eb 02                	jmp    0x140001b87
+   140001b85:	32 c0                	xor    %al,%al
+   140001b87:	48 83 c4 18          	add    $0x18,%rsp
+   140001b8b:	c3                   	ret
+   140001b8c:	40 53                	rex push %rbx
+   140001b8e:	48 83 ec 20          	sub    $0x20,%rsp
+   140001b92:	8a d9                	mov    %cl,%bl
+   140001b94:	e8 e7 05 00 00       	call   0x140002180
+   140001b99:	33 d2                	xor    %edx,%edx
+   140001b9b:	85 c0                	test   %eax,%eax
+   140001b9d:	74 0b                	je     0x140001baa
+   140001b9f:	84 db                	test   %bl,%bl
+   140001ba1:	75 07                	jne    0x140001baa
+   140001ba3:	48 87 15 0e 3a 00 00 	xchg   %rdx,0x3a0e(%rip)        # 0x1400055b8
+   140001baa:	48 83 c4 20          	add    $0x20,%rsp
+   140001bae:	5b                   	pop    %rbx
+   140001baf:	c3                   	ret
+   140001bb0:	40 53                	rex push %rbx
+   140001bb2:	48 83 ec 20          	sub    $0x20,%rsp
+   140001bb6:	80 3d 03 3a 00 00 00 	cmpb   $0x0,0x3a03(%rip)        # 0x1400055c0
+   140001bbd:	8a d9                	mov    %cl,%bl
+   140001bbf:	74 04                	je     0x140001bc5
+   140001bc1:	84 d2                	test   %dl,%dl
+   140001bc3:	75 0c                	jne    0x140001bd1
+   140001bc5:	e8 36 01 00 00       	call   0x140001d00
+   140001bca:	8a cb                	mov    %bl,%cl
+   140001bcc:	e8 2f 01 00 00       	call   0x140001d00
+   140001bd1:	b0 01                	mov    $0x1,%al
+   140001bd3:	48 83 c4 20          	add    $0x20,%rsp
+   140001bd7:	5b                   	pop    %rbx
+   140001bd8:	c3                   	ret
+   140001bd9:	cc                   	int3
+   140001bda:	cc                   	int3
+   140001bdb:	cc                   	int3
+   140001bdc:	40 53                	rex push %rbx
+   140001bde:	48 83 ec 20          	sub    $0x20,%rsp
+   140001be2:	48 83 3d de 39 00 00 	cmpq   $0xffffffffffffffff,0x39de(%rip)        # 0x1400055c8
+   140001be9:	ff 
+   140001bea:	48 8b d9             	mov    %rcx,%rbx
+   140001bed:	75 07                	jne    0x140001bf6
+   140001bef:	e8 32 06 00 00       	call   0x140002226
+   140001bf4:	eb 0f                	jmp    0x140001c05
+   140001bf6:	48 8b d3             	mov    %rbx,%rdx
+   140001bf9:	48 8d 0d c8 39 00 00 	lea    0x39c8(%rip),%rcx        # 0x1400055c8
+   140001c00:	e8 1b 06 00 00       	call   0x140002220
+   140001c05:	33 d2                	xor    %edx,%edx
+   140001c07:	85 c0                	test   %eax,%eax
+   140001c09:	48 0f 44 d3          	cmove  %rbx,%rdx
+   140001c0d:	48 8b c2             	mov    %rdx,%rax
+   140001c10:	48 83 c4 20          	add    $0x20,%rsp
+   140001c14:	5b                   	pop    %rbx
+   140001c15:	c3                   	ret
+   140001c16:	cc                   	int3
+   140001c17:	cc                   	int3
+   140001c18:	48 83 ec 28          	sub    $0x28,%rsp
+   140001c1c:	e8 bb ff ff ff       	call   0x140001bdc
+   140001c21:	48 f7 d8             	neg    %rax
+   140001c24:	1b c0                	sbb    %eax,%eax
+   140001c26:	f7 d8                	neg    %eax
+   140001c28:	ff c8                	dec    %eax
+   140001c2a:	48 83 c4 28          	add    $0x28,%rsp
+   140001c2e:	c3                   	ret
+   140001c2f:	cc                   	int3
+   140001c30:	48 89 5c 24 20       	mov    %rbx,0x20(%rsp)
+   140001c35:	55                   	push   %rbp
+   140001c36:	48 8b ec             	mov    %rsp,%rbp
+   140001c39:	48 83 ec 20          	sub    $0x20,%rsp
+   140001c3d:	48 8b 05 c4 33 00 00 	mov    0x33c4(%rip),%rax        # 0x140005008
+   140001c44:	48 bb 32 a2 df 2d 99 	movabs $0x2b992ddfa232,%rbx
+   140001c4b:	2b 00 00 
+   140001c4e:	48 3b c3             	cmp    %rbx,%rax
+   140001c51:	75 74                	jne    0x140001cc7
+   140001c53:	48 83 65 18 00       	andq   $0x0,0x18(%rbp)
+   140001c58:	48 8d 4d 18          	lea    0x18(%rbp),%rcx
+   140001c5c:	ff 15 fe 13 00 00    	call   *0x13fe(%rip)        # 0x140003060
+   140001c62:	48 8b 45 18          	mov    0x18(%rbp),%rax
+   140001c66:	48 89 45 10          	mov    %rax,0x10(%rbp)
+   140001c6a:	ff 15 f8 13 00 00    	call   *0x13f8(%rip)        # 0x140003068
+   140001c70:	8b c0                	mov    %eax,%eax
+   140001c72:	48 31 45 10          	xor    %rax,0x10(%rbp)
+   140001c76:	ff 15 f4 13 00 00    	call   *0x13f4(%rip)        # 0x140003070
+   140001c7c:	8b c0                	mov    %eax,%eax
+   140001c7e:	48 8d 4d 20          	lea    0x20(%rbp),%rcx
+   140001c82:	48 31 45 10          	xor    %rax,0x10(%rbp)
+   140001c86:	ff 15 ec 13 00 00    	call   *0x13ec(%rip)        # 0x140003078
+   140001c8c:	8b 45 20             	mov    0x20(%rbp),%eax
+   140001c8f:	48 8d 4d 10          	lea    0x10(%rbp),%rcx
+   140001c93:	48 c1 e0 20          	shl    $0x20,%rax
+   140001c97:	48 33 45 20          	xor    0x20(%rbp),%rax
+   140001c9b:	48 33 45 10          	xor    0x10(%rbp),%rax
+   140001c9f:	48 33 c1             	xor    %rcx,%rax
+   140001ca2:	48 b9 ff ff ff ff ff 	movabs $0xffffffffffff,%rcx
+   140001ca9:	ff 00 00 
+   140001cac:	48 23 c1             	and    %rcx,%rax
+   140001caf:	48 b9 33 a2 df 2d 99 	movabs $0x2b992ddfa233,%rcx
+   140001cb6:	2b 00 00 
+   140001cb9:	48 3b c3             	cmp    %rbx,%rax
+   140001cbc:	48 0f 44 c1          	cmove  %rcx,%rax
+   140001cc0:	48 89 05 41 33 00 00 	mov    %rax,0x3341(%rip)        # 0x140005008
+   140001cc7:	48 8b 5c 24 48       	mov    0x48(%rsp),%rbx
+   140001ccc:	48 f7 d0             	not    %rax
+   140001ccf:	48 89 05 2a 33 00 00 	mov    %rax,0x332a(%rip)        # 0x140005000
+   140001cd6:	48 83 c4 20          	add    $0x20,%rsp
+   140001cda:	5d                   	pop    %rbp
+   140001cdb:	c3                   	ret
+   140001cdc:	33 c0                	xor    %eax,%eax
+   140001cde:	c3                   	ret
+   140001cdf:	cc                   	int3
+   140001ce0:	b8 01 00 00 00       	mov    $0x1,%eax
+   140001ce5:	c3                   	ret
+   140001ce6:	cc                   	int3
+   140001ce7:	cc                   	int3
+   140001ce8:	b8 00 40 00 00       	mov    $0x4000,%eax
+   140001ced:	c3                   	ret
+   140001cee:	cc                   	int3
+   140001cef:	cc                   	int3
+   140001cf0:	48 8d 0d 09 39 00 00 	lea    0x3909(%rip),%rcx        # 0x140005600
+   140001cf7:	48 ff 25 5a 13 00 00 	rex.W jmp *0x135a(%rip)        # 0x140003058
+   140001cfe:	cc                   	int3
+   140001cff:	cc                   	int3
+   140001d00:	b0 01                	mov    $0x1,%al
+   140001d02:	c3                   	ret
+   140001d03:	cc                   	int3
+   140001d04:	c2 00 00             	ret    $0x0
+   140001d07:	cc                   	int3
+   140001d08:	48 83 ec 28          	sub    $0x28,%rsp
+   140001d0c:	e8 ef f2 ff ff       	call   0x140001000
+   140001d11:	48 83 08 24          	orq    $0x24,(%rax)
+   140001d15:	e8 f6 f2 ff ff       	call   0x140001010
+   140001d1a:	48 83 08 02          	orq    $0x2,(%rax)
+   140001d1e:	48 83 c4 28          	add    $0x28,%rsp
+   140001d22:	c3                   	ret
+   140001d23:	cc                   	int3
+   140001d24:	33 c0                	xor    %eax,%eax
+   140001d26:	39 05 e8 32 00 00    	cmp    %eax,0x32e8(%rip)        # 0x140005014
+   140001d2c:	0f 94 c0             	sete   %al
+   140001d2f:	c3                   	ret
+   140001d30:	48 8d 05 e9 38 00 00 	lea    0x38e9(%rip),%rax        # 0x140005620
+   140001d37:	c3                   	ret
+   140001d38:	48 8d 05 d9 38 00 00 	lea    0x38d9(%rip),%rax        # 0x140005618
+   140001d3f:	c3                   	ret
+   140001d40:	83 25 c9 38 00 00 00 	andl   $0x0,0x38c9(%rip)        # 0x140005610
+   140001d47:	c3                   	ret
+   140001d48:	48 89 5c 24 08       	mov    %rbx,0x8(%rsp)
+   140001d4d:	55                   	push   %rbp
+   140001d4e:	48 8d ac 24 40 fb ff 	lea    -0x4c0(%rsp),%rbp
+   140001d55:	ff 
+   140001d56:	48 81 ec c0 05 00 00 	sub    $0x5c0,%rsp
+   140001d5d:	8b d9                	mov    %ecx,%ebx
+   140001d5f:	b9 17 00 00 00       	mov    $0x17,%ecx
+   140001d64:	ff 15 de 12 00 00    	call   *0x12de(%rip)        # 0x140003048
+   140001d6a:	85 c0                	test   %eax,%eax
+   140001d6c:	74 04                	je     0x140001d72
+   140001d6e:	8b cb                	mov    %ebx,%ecx
+   140001d70:	cd 29                	int    $0x29
+   140001d72:	b9 03 00 00 00       	mov    $0x3,%ecx
+   140001d77:	e8 c4 ff ff ff       	call   0x140001d40
+   140001d7c:	33 d2                	xor    %edx,%edx
+   140001d7e:	48 8d 4d f0          	lea    -0x10(%rbp),%rcx
+   140001d82:	41 b8 d0 04 00 00    	mov    $0x4d0,%r8d
+   140001d88:	e8 15 04 00 00       	call   0x1400021a2
+   140001d8d:	48 8d 4d f0          	lea    -0x10(%rbp),%rcx
+   140001d91:	ff 15 e9 12 00 00    	call   *0x12e9(%rip)        # 0x140003080
+   140001d97:	48 8b 9d e8 00 00 00 	mov    0xe8(%rbp),%rbx
+   140001d9e:	48 8d 95 d8 04 00 00 	lea    0x4d8(%rbp),%rdx
+   140001da5:	48 8b cb             	mov    %rbx,%rcx
+   140001da8:	45 33 c0             	xor    %r8d,%r8d
+   140001dab:	ff 15 6f 12 00 00    	call   *0x126f(%rip)        # 0x140003020
+   140001db1:	48 85 c0             	test   %rax,%rax
+   140001db4:	74 3c                	je     0x140001df2
+   140001db6:	48 83 64 24 38 00    	andq   $0x0,0x38(%rsp)
+   140001dbc:	48 8d 8d e0 04 00 00 	lea    0x4e0(%rbp),%rcx
+   140001dc3:	48 8b 95 d8 04 00 00 	mov    0x4d8(%rbp),%rdx
+   140001dca:	4c 8b c8             	mov    %rax,%r9
+   140001dcd:	48 89 4c 24 30       	mov    %rcx,0x30(%rsp)
+   140001dd2:	4c 8b c3             	mov    %rbx,%r8
+   140001dd5:	48 8d 8d e8 04 00 00 	lea    0x4e8(%rbp),%rcx
+   140001ddc:	48 89 4c 24 28       	mov    %rcx,0x28(%rsp)
+   140001de1:	48 8d 4d f0          	lea    -0x10(%rbp),%rcx
+   140001de5:	48 89 4c 24 20       	mov    %rcx,0x20(%rsp)
+   140001dea:	33 c9                	xor    %ecx,%ecx
+   140001dec:	ff 15 36 12 00 00    	call   *0x1236(%rip)        # 0x140003028
+   140001df2:	48 8b 85 c8 04 00 00 	mov    0x4c8(%rbp),%rax
+   140001df9:	48 8d 4c 24 50       	lea    0x50(%rsp),%rcx
+   140001dfe:	48 89 85 e8 00 00 00 	mov    %rax,0xe8(%rbp)
+   140001e05:	33 d2                	xor    %edx,%edx
+   140001e07:	48 8d 85 c8 04 00 00 	lea    0x4c8(%rbp),%rax
+   140001e0e:	41 b8 98 00 00 00    	mov    $0x98,%r8d
+   140001e14:	48 83 c0 08          	add    $0x8,%rax
+   140001e18:	48 89 85 88 00 00 00 	mov    %rax,0x88(%rbp)
+   140001e1f:	e8 7e 03 00 00       	call   0x1400021a2
+   140001e24:	48 8b 85 c8 04 00 00 	mov    0x4c8(%rbp),%rax
+   140001e2b:	48 89 44 24 60       	mov    %rax,0x60(%rsp)
+   140001e30:	c7 44 24 50 15 00 00 	movl   $0x40000015,0x50(%rsp)
+   140001e37:	40 
+   140001e38:	c7 44 24 54 01 00 00 	movl   $0x1,0x54(%rsp)
+   140001e3f:	00 
+   140001e40:	ff 15 ca 11 00 00    	call   *0x11ca(%rip)        # 0x140003010
+   140001e46:	83 f8 01             	cmp    $0x1,%eax
+   140001e49:	48 8d 44 24 50       	lea    0x50(%rsp),%rax
+   140001e4e:	48 89 44 24 40       	mov    %rax,0x40(%rsp)
+   140001e53:	48 8d 45 f0          	lea    -0x10(%rbp),%rax
+   140001e57:	0f 94 c3             	sete   %bl
+   140001e5a:	48 89 44 24 48       	mov    %rax,0x48(%rsp)
+   140001e5f:	33 c9                	xor    %ecx,%ecx
+   140001e61:	ff 15 d1 11 00 00    	call   *0x11d1(%rip)        # 0x140003038
+   140001e67:	48 8d 4c 24 40       	lea    0x40(%rsp),%rcx
+   140001e6c:	ff 15 be 11 00 00    	call   *0x11be(%rip)        # 0x140003030
+   140001e72:	85 c0                	test   %eax,%eax
+   140001e74:	75 0c                	jne    0x140001e82
+   140001e76:	84 db                	test   %bl,%bl
+   140001e78:	75 08                	jne    0x140001e82
+   140001e7a:	8d 48 03             	lea    0x3(%rax),%ecx
+   140001e7d:	e8 be fe ff ff       	call   0x140001d40
+   140001e82:	48 8b 9c 24 d0 05 00 	mov    0x5d0(%rsp),%rbx
+   140001e89:	00 
+   140001e8a:	48 81 c4 c0 05 00 00 	add    $0x5c0,%rsp
+   140001e91:	5d                   	pop    %rbp
+   140001e92:	c3                   	ret
+   140001e93:	cc                   	int3
+   140001e94:	e9 43 fe ff ff       	jmp    0x140001cdc
+   140001e99:	cc                   	int3
+   140001e9a:	cc                   	int3
+   140001e9b:	cc                   	int3
+   140001e9c:	48 83 ec 28          	sub    $0x28,%rsp
+   140001ea0:	33 c9                	xor    %ecx,%ecx
+   140001ea2:	ff 15 a8 11 00 00    	call   *0x11a8(%rip)        # 0x140003050
+   140001ea8:	48 85 c0             	test   %rax,%rax
+   140001eab:	74 39                	je     0x140001ee6
+   140001ead:	b9 4d 5a 00 00       	mov    $0x5a4d,%ecx
+   140001eb2:	66 39 08             	cmp    %cx,(%rax)
+   140001eb5:	75 2f                	jne    0x140001ee6
+   140001eb7:	48 63 48 3c          	movslq 0x3c(%rax),%rcx
+   140001ebb:	48 03 c8             	add    %rax,%rcx
+   140001ebe:	81 39 50 45 00 00    	cmpl   $0x4550,(%rcx)
+   140001ec4:	75 20                	jne    0x140001ee6
+   140001ec6:	b8 0b 02 00 00       	mov    $0x20b,%eax
+   140001ecb:	66 39 41 18          	cmp    %ax,0x18(%rcx)
+   140001ecf:	75 15                	jne    0x140001ee6
+   140001ed1:	83 b9 84 00 00 00 0e 	cmpl   $0xe,0x84(%rcx)
+   140001ed8:	76 0c                	jbe    0x140001ee6
+   140001eda:	83 b9 f8 00 00 00 00 	cmpl   $0x0,0xf8(%rcx)
+   140001ee1:	0f 95 c0             	setne  %al
+   140001ee4:	eb 02                	jmp    0x140001ee8
+   140001ee6:	32 c0                	xor    %al,%al
+   140001ee8:	48 83 c4 28          	add    $0x28,%rsp
+   140001eec:	c3                   	ret
+   140001eed:	cc                   	int3
+   140001eee:	cc                   	int3
+   140001eef:	cc                   	int3
+   140001ef0:	48 8d 0d 09 00 00 00 	lea    0x9(%rip),%rcx        # 0x140001f00
+   140001ef7:	48 ff 25 3a 11 00 00 	rex.W jmp *0x113a(%rip)        # 0x140003038
+   140001efe:	cc                   	int3
+   140001eff:	cc                   	int3
+   140001f00:	48 89 5c 24 08       	mov    %rbx,0x8(%rsp)
+   140001f05:	57                   	push   %rdi
+   140001f06:	48 83 ec 20          	sub    $0x20,%rsp
+   140001f0a:	48 8b 19             	mov    (%rcx),%rbx
+   140001f0d:	48 8b f9             	mov    %rcx,%rdi
+   140001f10:	81 3b 63 73 6d e0    	cmpl   $0xe06d7363,(%rbx)
+   140001f16:	75 1c                	jne    0x140001f34
+   140001f18:	83 7b 18 04          	cmpl   $0x4,0x18(%rbx)
+   140001f1c:	75 16                	jne    0x140001f34
+   140001f1e:	8b 53 20             	mov    0x20(%rbx),%edx
+   140001f21:	8d 82 e0 fa 6c e6    	lea    -0x19930520(%rdx),%eax
+   140001f27:	83 f8 02             	cmp    $0x2,%eax
+   140001f2a:	76 15                	jbe    0x140001f41
+   140001f2c:	81 fa 00 40 99 01    	cmp    $0x1994000,%edx
+   140001f32:	74 0d                	je     0x140001f41
+   140001f34:	48 8b 5c 24 30       	mov    0x30(%rsp),%rbx
+   140001f39:	33 c0                	xor    %eax,%eax
+   140001f3b:	48 83 c4 20          	add    $0x20,%rsp
+   140001f3f:	5f                   	pop    %rdi
+   140001f40:	c3                   	ret
+   140001f41:	e8 50 02 00 00       	call   0x140002196
+   140001f46:	48 89 18             	mov    %rbx,(%rax)
+   140001f49:	48 8b 5f 08          	mov    0x8(%rdi),%rbx
+   140001f4d:	e8 4a 02 00 00       	call   0x14000219c
+   140001f52:	48 89 18             	mov    %rbx,(%rax)
+   140001f55:	e8 d2 02 00 00       	call   0x14000222c
+   140001f5a:	cc                   	int3
+   140001f5b:	cc                   	int3
+   140001f5c:	48 89 5c 24 08       	mov    %rbx,0x8(%rsp)
+   140001f61:	57                   	push   %rdi
+   140001f62:	48 83 ec 20          	sub    $0x20,%rsp
+   140001f66:	48 8d 1d 63 19 00 00 	lea    0x1963(%rip),%rbx        # 0x1400038d0
+   140001f6d:	48 8d 3d 5c 19 00 00 	lea    0x195c(%rip),%rdi        # 0x1400038d0
+   140001f74:	eb 12                	jmp    0x140001f88
+   140001f76:	48 8b 03             	mov    (%rbx),%rax
+   140001f79:	48 85 c0             	test   %rax,%rax
+   140001f7c:	74 06                	je     0x140001f84
+   140001f7e:	ff 15 54 12 00 00    	call   *0x1254(%rip)        # 0x1400031d8
+   140001f84:	48 83 c3 08          	add    $0x8,%rbx
+   140001f88:	48 3b df             	cmp    %rdi,%rbx
+   140001f8b:	72 e9                	jb     0x140001f76
+   140001f8d:	48 8b 5c 24 30       	mov    0x30(%rsp),%rbx
+   140001f92:	48 83 c4 20          	add    $0x20,%rsp
+   140001f96:	5f                   	pop    %rdi
+   140001f97:	c3                   	ret
+   140001f98:	48 89 5c 24 08       	mov    %rbx,0x8(%rsp)
+   140001f9d:	57                   	push   %rdi
+   140001f9e:	48 83 ec 20          	sub    $0x20,%rsp
+   140001fa2:	48 8d 1d 37 19 00 00 	lea    0x1937(%rip),%rbx        # 0x1400038e0
+   140001fa9:	48 8d 3d 30 19 00 00 	lea    0x1930(%rip),%rdi        # 0x1400038e0
+   140001fb0:	eb 12                	jmp    0x140001fc4
+   140001fb2:	48 8b 03             	mov    (%rbx),%rax
+   140001fb5:	48 85 c0             	test   %rax,%rax
+   140001fb8:	74 06                	je     0x140001fc0
+   140001fba:	ff 15 18 12 00 00    	call   *0x1218(%rip)        # 0x1400031d8
+   140001fc0:	48 83 c3 08          	add    $0x8,%rbx
+   140001fc4:	48 3b df             	cmp    %rdi,%rbx
+   140001fc7:	72 e9                	jb     0x140001fb2
+   140001fc9:	48 8b 5c 24 30       	mov    0x30(%rsp),%rbx
+   140001fce:	48 83 c4 20          	add    $0x20,%rsp
+   140001fd2:	5f                   	pop    %rdi
+   140001fd3:	c3                   	ret
+   140001fd4:	48 89 5c 24 10       	mov    %rbx,0x10(%rsp)
+   140001fd9:	48 89 74 24 18       	mov    %rsi,0x18(%rsp)
+   140001fde:	57                   	push   %rdi
+   140001fdf:	48 83 ec 10          	sub    $0x10,%rsp
+   140001fe3:	33 c0                	xor    %eax,%eax
+   140001fe5:	33 c9                	xor    %ecx,%ecx
+   140001fe7:	0f a2                	cpuid
+   140001fe9:	44 8b c1             	mov    %ecx,%r8d
+   140001fec:	45 33 db             	xor    %r11d,%r11d
+   140001fef:	44 8b d2             	mov    %edx,%r10d
+   140001ff2:	41 81 f0 6e 74 65 6c 	xor    $0x6c65746e,%r8d
+   140001ff9:	41 81 f2 69 6e 65 49 	xor    $0x49656e69,%r10d
+   140002000:	44 8b cb             	mov    %ebx,%r9d
+   140002003:	8b f0                	mov    %eax,%esi
+   140002005:	33 c9                	xor    %ecx,%ecx
+   140002007:	41 8d 43 01          	lea    0x1(%r11),%eax
+   14000200b:	45 0b d0             	or     %r8d,%r10d
+   14000200e:	0f a2                	cpuid
+   140002010:	41 81 f1 47 65 6e 75 	xor    $0x756e6547,%r9d
+   140002017:	89 04 24             	mov    %eax,(%rsp)
+   14000201a:	45 0b d1             	or     %r9d,%r10d
+   14000201d:	89 5c 24 04          	mov    %ebx,0x4(%rsp)
+   140002021:	8b f9                	mov    %ecx,%edi
+   140002023:	89 4c 24 08          	mov    %ecx,0x8(%rsp)
+   140002027:	89 54 24 0c          	mov    %edx,0xc(%rsp)
+   14000202b:	75 5b                	jne    0x140002088
+   14000202d:	48 83 0d f3 2f 00 00 	orq    $0xffffffffffffffff,0x2ff3(%rip)        # 0x140005028
+   140002034:	ff 
+   140002035:	25 f0 3f ff 0f       	and    $0xfff3ff0,%eax
+   14000203a:	48 c7 05 db 2f 00 00 	movq   $0x8000,0x2fdb(%rip)        # 0x140005020
+   140002041:	00 80 00 00 
+   140002045:	3d c0 06 01 00       	cmp    $0x106c0,%eax
+   14000204a:	74 28                	je     0x140002074
+   14000204c:	3d 60 06 02 00       	cmp    $0x20660,%eax
+   140002051:	74 21                	je     0x140002074
+   140002053:	3d 70 06 02 00       	cmp    $0x20670,%eax
+   140002058:	74 1a                	je     0x140002074
+   14000205a:	05 b0 f9 fc ff       	add    $0xfffcf9b0,%eax
+   14000205f:	83 f8 20             	cmp    $0x20,%eax
+   140002062:	77 24                	ja     0x140002088
+   140002064:	48 b9 01 00 01 00 01 	movabs $0x100010001,%rcx
+   14000206b:	00 00 00 
+   14000206e:	48 0f a3 c1          	bt     %rax,%rcx
+   140002072:	73 14                	jae    0x140002088
+   140002074:	44 8b 05 99 35 00 00 	mov    0x3599(%rip),%r8d        # 0x140005614
+   14000207b:	41 83 c8 01          	or     $0x1,%r8d
+   14000207f:	44 89 05 8e 35 00 00 	mov    %r8d,0x358e(%rip)        # 0x140005614
+   140002086:	eb 07                	jmp    0x14000208f
+   140002088:	44 8b 05 85 35 00 00 	mov    0x3585(%rip),%r8d        # 0x140005614
+   14000208f:	b8 07 00 00 00       	mov    $0x7,%eax
+   140002094:	44 8d 48 fb          	lea    -0x5(%rax),%r9d
+   140002098:	3b f0                	cmp    %eax,%esi
+   14000209a:	7c 26                	jl     0x1400020c2
+   14000209c:	33 c9                	xor    %ecx,%ecx
+   14000209e:	0f a2                	cpuid
+   1400020a0:	89 04 24             	mov    %eax,(%rsp)
+   1400020a3:	44 8b db             	mov    %ebx,%r11d
+   1400020a6:	89 5c 24 04          	mov    %ebx,0x4(%rsp)
+   1400020aa:	89 4c 24 08          	mov    %ecx,0x8(%rsp)
+   1400020ae:	89 54 24 0c          	mov    %edx,0xc(%rsp)
+   1400020b2:	0f ba e3 09          	bt     $0x9,%ebx
+   1400020b6:	73 0a                	jae    0x1400020c2
+   1400020b8:	45 0b c1             	or     %r9d,%r8d
+   1400020bb:	44 89 05 52 35 00 00 	mov    %r8d,0x3552(%rip)        # 0x140005614
+   1400020c2:	c7 05 4c 2f 00 00 01 	movl   $0x1,0x2f4c(%rip)        # 0x140005018
+   1400020c9:	00 00 00 
+   1400020cc:	44 89 0d 49 2f 00 00 	mov    %r9d,0x2f49(%rip)        # 0x14000501c
+   1400020d3:	0f ba e7 14          	bt     $0x14,%edi
+   1400020d7:	0f 83 91 00 00 00    	jae    0x14000216e
+   1400020dd:	44 89 0d 34 2f 00 00 	mov    %r9d,0x2f34(%rip)        # 0x140005018
+   1400020e4:	bb 06 00 00 00       	mov    $0x6,%ebx
+   1400020e9:	89 1d 2d 2f 00 00    	mov    %ebx,0x2f2d(%rip)        # 0x14000501c
+   1400020ef:	0f ba e7 1b          	bt     $0x1b,%edi
+   1400020f3:	73 79                	jae    0x14000216e
+   1400020f5:	0f ba e7 1c          	bt     $0x1c,%edi
+   1400020f9:	73 73                	jae    0x14000216e
+   1400020fb:	33 c9                	xor    %ecx,%ecx
+   1400020fd:	0f 01 d0             	xgetbv
+   140002100:	48 c1 e2 20          	shl    $0x20,%rdx
+   140002104:	48 0b d0             	or     %rax,%rdx
+   140002107:	48 89 54 24 20       	mov    %rdx,0x20(%rsp)
+   14000210c:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   140002111:	22 c3                	and    %bl,%al
+   140002113:	3a c3                	cmp    %bl,%al
+   140002115:	75 57                	jne    0x14000216e
+   140002117:	8b 05 ff 2e 00 00    	mov    0x2eff(%rip),%eax        # 0x14000501c
+   14000211d:	83 c8 08             	or     $0x8,%eax
+   140002120:	c7 05 ee 2e 00 00 03 	movl   $0x3,0x2eee(%rip)        # 0x140005018
+   140002127:	00 00 00 
+   14000212a:	89 05 ec 2e 00 00    	mov    %eax,0x2eec(%rip)        # 0x14000501c
+   140002130:	41 f6 c3 20          	test   $0x20,%r11b
+   140002134:	74 38                	je     0x14000216e
+   140002136:	83 c8 20             	or     $0x20,%eax
+   140002139:	c7 05 d5 2e 00 00 05 	movl   $0x5,0x2ed5(%rip)        # 0x140005018
+   140002140:	00 00 00 
+   140002143:	89 05 d3 2e 00 00    	mov    %eax,0x2ed3(%rip)        # 0x14000501c
+   140002149:	b8 00 00 03 d0       	mov    $0xd0030000,%eax
+   14000214e:	44 23 d8             	and    %eax,%r11d
+   140002151:	44 3b d8             	cmp    %eax,%r11d
+   140002154:	75 18                	jne    0x14000216e
+   140002156:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   14000215b:	24 e0                	and    $0xe0,%al
+   14000215d:	3c e0                	cmp    $0xe0,%al
+   14000215f:	75 0d                	jne    0x14000216e
+   140002161:	83 0d b4 2e 00 00 40 	orl    $0x40,0x2eb4(%rip)        # 0x14000501c
+   140002168:	89 1d aa 2e 00 00    	mov    %ebx,0x2eaa(%rip)        # 0x140005018
+   14000216e:	48 8b 5c 24 28       	mov    0x28(%rsp),%rbx
+   140002173:	33 c0                	xor    %eax,%eax
+   140002175:	48 8b 74 24 30       	mov    0x30(%rsp),%rsi
+   14000217a:	48 83 c4 10          	add    $0x10,%rsp
+   14000217e:	5f                   	pop    %rdi
+   14000217f:	c3                   	ret
+   140002180:	33 c0                	xor    %eax,%eax
+   140002182:	39 05 a8 2e 00 00    	cmp    %eax,0x2ea8(%rip)        # 0x140005030
+   140002188:	0f 95 c0             	setne  %al
+   14000218b:	c3                   	ret
+   14000218c:	cc                   	int3
+   14000218d:	cc                   	int3
+   14000218e:	cc                   	int3
+   14000218f:	cc                   	int3
+   140002190:	ff 25 fa 0e 00 00    	jmp    *0xefa(%rip)        # 0x140003090
+   140002196:	ff 25 fc 0e 00 00    	jmp    *0xefc(%rip)        # 0x140003098
+   14000219c:	ff 25 fe 0e 00 00    	jmp    *0xefe(%rip)        # 0x1400030a0
+   1400021a2:	ff 25 00 0f 00 00    	jmp    *0xf00(%rip)        # 0x1400030a8
+   1400021a8:	ff 25 7a 0f 00 00    	jmp    *0xf7a(%rip)        # 0x140003128
+   1400021ae:	ff 25 cc 0f 00 00    	jmp    *0xfcc(%rip)        # 0x140003180
+   1400021b4:	ff 25 26 0f 00 00    	jmp    *0xf26(%rip)        # 0x1400030e0
+   1400021ba:	ff 25 b0 0f 00 00    	jmp    *0xfb0(%rip)        # 0x140003170
+   1400021c0:	ff 25 a2 0f 00 00    	jmp    *0xfa2(%rip)        # 0x140003168
+   1400021c6:	ff 25 94 0f 00 00    	jmp    *0xf94(%rip)        # 0x140003160
+   1400021cc:	ff 25 86 0f 00 00    	jmp    *0xf86(%rip)        # 0x140003158
+   1400021d2:	ff 25 78 0f 00 00    	jmp    *0xf78(%rip)        # 0x140003150
+   1400021d8:	ff 25 5a 0f 00 00    	jmp    *0xf5a(%rip)        # 0x140003138
+   1400021de:	ff 25 94 0f 00 00    	jmp    *0xf94(%rip)        # 0x140003178
+   1400021e4:	ff 25 c6 0f 00 00    	jmp    *0xfc6(%rip)        # 0x1400031b0
+   1400021ea:	ff 25 50 0f 00 00    	jmp    *0xf50(%rip)        # 0x140003140
+   1400021f0:	ff 25 12 0f 00 00    	jmp    *0xf12(%rip)        # 0x140003108
+   1400021f6:	ff 25 fc 0e 00 00    	jmp    *0xefc(%rip)        # 0x1400030f8
+   1400021fc:	ff 25 ee 0e 00 00    	jmp    *0xeee(%rip)        # 0x1400030f0
+   140002202:	ff 25 28 0f 00 00    	jmp    *0xf28(%rip)        # 0x140003130
+   140002208:	ff 25 c2 0e 00 00    	jmp    *0xec2(%rip)        # 0x1400030d0
+   14000220e:	ff 25 ac 0e 00 00    	jmp    *0xeac(%rip)        # 0x1400030c0
+   140002214:	ff 25 76 0f 00 00    	jmp    *0xf76(%rip)        # 0x140003190
+   14000221a:	ff 25 28 0f 00 00    	jmp    *0xf28(%rip)        # 0x140003148
+   140002220:	ff 25 ea 0e 00 00    	jmp    *0xeea(%rip)        # 0x140003110
+   140002226:	ff 25 ec 0e 00 00    	jmp    *0xeec(%rip)        # 0x140003118
+   14000222c:	ff 25 ee 0e 00 00    	jmp    *0xeee(%rip)        # 0x140003120
+   140002232:	cc                   	int3
+   140002233:	cc                   	int3
+   140002234:	48 83 ec 28          	sub    $0x28,%rsp
+   140002238:	4d 8b 41 38          	mov    0x38(%r9),%r8
+   14000223c:	48 8b ca             	mov    %rdx,%rcx
+   14000223f:	49 8b d1             	mov    %r9,%rdx
+   140002242:	e8 0d 00 00 00       	call   0x140002254
+   140002247:	b8 01 00 00 00       	mov    $0x1,%eax
+   14000224c:	48 83 c4 28          	add    $0x28,%rsp
+   140002250:	c3                   	ret
+   140002251:	cc                   	int3
+   140002252:	cc                   	int3
+   140002253:	cc                   	int3
+   140002254:	40 53                	rex push %rbx
+   140002256:	45 8b 18             	mov    (%r8),%r11d
+   140002259:	48 8b da             	mov    %rdx,%rbx
+   14000225c:	41 83 e3 f8          	and    $0xfffffff8,%r11d
+   140002260:	4c 8b c9             	mov    %rcx,%r9
+   140002263:	41 f6 00 04          	testb  $0x4,(%r8)
+   140002267:	4c 8b d1             	mov    %rcx,%r10
+   14000226a:	74 13                	je     0x14000227f
+   14000226c:	41 8b 40 08          	mov    0x8(%r8),%eax
+   140002270:	4d 63 50 04          	movslq 0x4(%r8),%r10
+   140002274:	f7 d8                	neg    %eax
+   140002276:	4c 03 d1             	add    %rcx,%r10
+   140002279:	48 63 c8             	movslq %eax,%rcx
+   14000227c:	4c 23 d1             	and    %rcx,%r10
+   14000227f:	49 63 c3             	movslq %r11d,%rax
+   140002282:	4a 8b 14 10          	mov    (%rax,%r10,1),%rdx
+   140002286:	48 8b 43 10          	mov    0x10(%rbx),%rax
+   14000228a:	8b 48 08             	mov    0x8(%rax),%ecx
+   14000228d:	48 8b 43 08          	mov    0x8(%rbx),%rax
+   140002291:	f6 44 01 03 0f       	testb  $0xf,0x3(%rcx,%rax,1)
+   140002296:	74 0b                	je     0x1400022a3
+   140002298:	0f b6 44 01 03       	movzbl 0x3(%rcx,%rax,1),%eax
+   14000229d:	83 e0 f0             	and    $0xfffffff0,%eax
+   1400022a0:	4c 03 c8             	add    %rax,%r9
+   1400022a3:	4c 33 ca             	xor    %rdx,%r9
+   1400022a6:	49 8b c9             	mov    %r9,%rcx
+   1400022a9:	5b                   	pop    %rbx
+   1400022aa:	e9 21 f3 ff ff       	jmp    0x1400015d0
+   1400022af:	ff 25 fb 0d 00 00    	jmp    *0xdfb(%rip)        # 0x1400030b0
+   1400022b5:	cc                   	int3
+   1400022b6:	cc                   	int3
+   1400022b7:	cc                   	int3
+   1400022b8:	cc                   	int3
+   1400022b9:	cc                   	int3
+   1400022ba:	cc                   	int3
+   1400022bb:	cc                   	int3
+   1400022bc:	cc                   	int3
+   1400022bd:	cc                   	int3
+   1400022be:	cc                   	int3
+   1400022bf:	cc                   	int3
+   1400022c0:	cc                   	int3
+   1400022c1:	cc                   	int3
+   1400022c2:	cc                   	int3
+   1400022c3:	cc                   	int3
+   1400022c4:	cc                   	int3
+   1400022c5:	cc                   	int3
+   1400022c6:	66 66 0f 1f 84 00 00 	data16 nopw 0x0(%rax,%rax,1)
+   1400022cd:	00 00 00 
+   1400022d0:	ff e0                	jmp    *%rax
+   1400022d2:	cc                   	int3
+   1400022d3:	cc                   	int3
+   1400022d4:	cc                   	int3
+   1400022d5:	cc                   	int3
+   1400022d6:	cc                   	int3
+   1400022d7:	cc                   	int3
+   1400022d8:	cc                   	int3
+   1400022d9:	cc                   	int3
+   1400022da:	cc                   	int3
+   1400022db:	cc                   	int3
+   1400022dc:	cc                   	int3
+   1400022dd:	cc                   	int3
+   1400022de:	cc                   	int3
+   1400022df:	cc                   	int3
+   1400022e0:	cc                   	int3
+   1400022e1:	cc                   	int3
+   1400022e2:	cc                   	int3
+   1400022e3:	cc                   	int3
+   1400022e4:	cc                   	int3
+   1400022e5:	cc                   	int3
+   1400022e6:	66 66 0f 1f 84 00 00 	data16 nopw 0x0(%rax,%rax,1)
+   1400022ed:	00 00 00 
+   1400022f0:	ff 25 e2 0e 00 00    	jmp    *0xee2(%rip)        # 0x1400031d8
+   1400022f6:	40 55                	rex push %rbp
+   1400022f8:	48 83 ec 20          	sub    $0x20,%rsp
+   1400022fc:	48 8b ea             	mov    %rdx,%rbp
+   1400022ff:	48 8b 01             	mov    (%rcx),%rax
+   140002302:	48 8b d1             	mov    %rcx,%rdx
+   140002305:	8b 08                	mov    (%rax),%ecx
+   140002307:	e8 9c fe ff ff       	call   0x1400021a8
+   14000230c:	90                   	nop
+   14000230d:	48 83 c4 20          	add    $0x20,%rsp
+   140002311:	5d                   	pop    %rbp
+   140002312:	c3                   	ret
+   140002313:	cc                   	int3
+   140002314:	40 55                	rex push %rbp
+   140002316:	48 8b ea             	mov    %rdx,%rbp
+   140002319:	48 8b 01             	mov    (%rcx),%rax
+   14000231c:	33 c9                	xor    %ecx,%ecx
+   14000231e:	81 38 05 00 00 c0    	cmpl   $0xc0000005,(%rax)
+   140002324:	0f 94 c1             	sete   %cl
+   140002327:	8b c1                	mov    %ecx,%eax
+   140002329:	5d                   	pop    %rbp
+   14000232a:	c3                   	ret
+   14000232b:	cc                   	int3
