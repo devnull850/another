@@ -1,0 +1,61 @@
+Analysis of Keygen
+
+  The main function simply prompts the user to enter a key, allocate a string,
+and populate that string with the user input key. The c_str() method is called
+on the string object and passed as a parameter to a function that checks if
+the user input key is valid. If the function returns a non zero value, the
+message "Valid Key" is output. If the function returns a zero, the message
+"Invalid key" is output.
+
+  Inside the string validation function, the length of the key string is taken.
+It is then compared to 13. If it is not equal to 13, the function returns with
+a zero. The fourth character, index 3, of the string must be equal to 45 or the
+'-' character.
+
+  A function is entered that takes three parameters: the key string, a start
+index, and the number of characters. The function contains a loop index that is
+initialized to the second parameter. The loop increments the index by one with
+each iteration and continues until the index is greater than or equal to the
+second parameter plus the third parameter.
+
+  Inside the loop, the byte at the index in the key string is passed to a
+function that checks if the byte's value is between 48 and 57, inclusive. If
+the value is in the range, the value is subtracted by 48 and returned. If it is
+not, a -1 is returned. The function is converting the ASCII reprensentation of
+a decimal number to its numerical value.
+
+  The value returned from the above function is added to a four byte value
+(initialized to zero before the loop) with each iteration. After the loop
+completes, that sum is returned from the function.
+
+  Back in the key string validation function, the returned sum is assigned to
+a 4 byte local (stack) variable. The local variable has a modulo 3 operation 
+performed and the result is stored back in the variable. For the purposes of
+analysis, I will consider this variable x going forward.
+
+  A loop is entered that has its index initialized to 4, incremented by 3 each
+iteration, and continues until the index is greater than 12. The function that
+converts the ASCII representation of the bytes to their numerical value and
+sums their values over a range is entered. The function is passed the key
+string, the current loop index, and a 3. If you recall, the function contains
+a loop with an index initialized to the second parameter and continues until
+its loop index is greater than or eqaual to the second parameter plus the third
+parameter. The result of the function is assigned to another 4 byte local
+variable I will label y for analysis purposes.
+
+  If y is not -1, the result of the current loop index minus 4, then divided by
+3 is used as an index into the key string. The byte at that particular position
+is passed into the function converting the byte to its numerical value based on
+its ASCII representation. The result of the function and x have the XOR
+operation performed. The resulting value is assigned to another local variable
+I will designate as z. The value of z is compared to y modulo 9. If it is
+equal, the loop will continue execution based on its index. If it is not the
+function will return a zero. If the loop completes because of its index bound
+check, the function returns a one.
+
+  Back in main, if the validation function returns a one we entered a valid
+key. If it does not, we did not.
+
+  Attached is the file crack.c which contains a (pseudo) random key generator
+or a potential implementation of one.
+
