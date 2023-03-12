@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Analysis of BabyRE</title>
+    <style>
+      body { padding: 20px }
+    </style>
+  </head>
+  <body>
+    <h2>Analysis of BabyRE</h2>
+    <p></p>
+    <p>Though the binary is labeled in the Assembler category, this is a
+       standard higher level (C, C++) language program compiled with Visual
+       Studio. The main function is found at 0x480 bytes from the beginning of
+       the static file and at address 0x401080 in memory. The bytes of the
+       string "bdnpQai|nufimnug`n{FafhrW" are placed on the stack. Note the
+       last byte of the string contains 4 which is not a printable
+       character.</p>
+    <pre>
+      <code>
+        ...
+        0x401090:	0f 28 05	movaps	XMM0,xmmword ptr ds:0x41b6e0
+        		e0 b6 41 00
+        ...
+        0x40109f:	0f 11 45 d8	movups	xmmword ptr [ebp-0x28],xmm0
+        0x4010a3:	c7 45 e8	mov	dword ptr [ebp-0x18],0x467b6e60
+        		60 6e 7b 46
+        0x4010aa:	c7 45 ec	mov	dword ptr [ebp-0x14],0x72686661
+        		61 66 68 72
+        0x4010b1:	66 c7 45	mov	word ptr [ebp-0x10],0x457
+        		f0 57 04
+        ...
+      </code>
+    </pre>
+    <p>The user is prompted for a key.</p>
+    <pre>
+      <code>
+        ...
+        0x40109a:	68 68 b6       	push   0x41b668
+        		41 00
+        ...
+        0x4010b7:	e8 64 ff       	call   0x401020
+        		ff ff
+        0x4010bc:	68 ac b6       	push   0x41b6ac
+        		41 00
+        0x4010c1:	e8 5a ff       	call   0x401020
+        		ff ff
+        ...
+      </code>
+    </pre>
+    <p>The address 0x41b668 contains the string
+       "Guest your flag. The flag will be of the form flag{[a-zA-Z0-9]+}". The 
+       clue to generating the correct flag is in this string. The address
+       0x41b6ac contains the string "Enter your key:". The function at
+       0x401020 is the printf function.</p>
+    <p>A loop is entered to take 5 bytes (characters) from the user to fill
+       the key.</p>
+    <pre>
+      <code>
+        ...
+        0x4010c9	33 f6		xor	esi,esi	
+        ...
+        0x4010d0:	8d 45 f4        lea    eax,[ebp-0xc]
+        0x4010d3:	03 c6           add    eax,esi
+        0x4010d5:	50              push   eax
+        0x4010d6:	68 bc b6	push   0x41b6bc
+        		41 00
+        0x4010db:	e8 70 ff	call   0x401050
+        		ff ff
+        0x4010e0:	46              inc    esi
+        0x4010e1:	83 c4 08        add    esp,0x8
+        0x4010e4:	83 fe 05        cmp    esi,0x5
+        0x4010e7:	72 e7           jb     0x4010d0
+        ...
+      </code>
+    </pre>
+    <p>The address on the stack starting at ebp - 0xc is the area that will
+       contain the user input key bytes. The esi register will act as our loop
+       index. The XOR operation at 0x4010c9 will initialize its value to 0.
+       The function at 0x401050 is the scanf function. The first parameter
+       is the string at 0x41b6bc which is "%hhd". That is the format specifier
+       for signed char or unsigned char (1 byte). The loop will place the
+       resulting byte received from user input at offset esi + ebp - 0xc. The
+       loop will increment esi by 1 and continue until esi is equal to 5. A
+       potential C implmentation of this is seen below.</p>
+    <pre>
+      <code>
+        ...
+        char key[6];
+        ...
+        for (unsigned i = 0; i < 5; ++i) {
+          scanf("%hhd", key + i);
+        }
+        ...
+      </code>
+    </pre>
+    <p>A loop is then entered to transform the hardcoded string placed on the
+       stack earlier.</p>
+    <pre>
+      <code>
+        ...
+        0x4010e9:	bb 01 00       	mov    ebx,0x1
+        		00 00
+        0x4010ee:	8d 45 d8       	lea    eax,[ebp-0x28]
+        0x4010f1:	33 ff          	xor    edi,edi
+        0x4010f3:	2b d8          	sub    ebx,eax
+        ...
+      </code>
+    </pre>
+    <p>The edi register in the code listing above is initialized to zero by
+       the use of the XOR operation on itself. The stack address ebp - 0x28 is
+       the beginning address of the bytes of the hardcoded string. The ebx
+       register will be used to calculate the loop index plus 1 value seen in
+       the next code section at address 0x401110. This is a pretty nifty way to
+       calculate that value by the use of the rollover to zero property of
+       <code>n</code> bytes when their maximum value is reached.</p>
+    <p>The code listing below is a great example of compiler optimized division
+       by a constant value. Multiplication is a "less expensive" operation
+       compared to division. A compiler will usually perform division by
+       multiplication with some bit shifting and arithmetic when a higher level
+       language expression is dividing by constant. In this case, we are
+       performing a modulo 5 operation on our loop index, the edi register.</p>
+    <pre>
+      <code>
+        ...
+        0x4010f5:	b8 cd cc       	mov    eax,0xcccccccd
+        		cc cc
+        0x4010fa:	8d 75 d8        lea    esi,[ebp-0x28]
+        0x4010fd:	f7 e7          	mul    edi
+        0x4010ff:	8b cf         	mov    ecx,edi
+        0x401101:	03 f7          	add    esi,edi
+        0x401103:	c1 ea 02      	shr    edx,0x2
+        0x401106:	8d 04 92       	lea    eax,[edx+edx*4]
+        0x401109:	2b c8         	sub    ecx,eax
+        0x40110b:	0f b6 44       	movzx  eax,BYTE PTR [ebp+ecx*1-0xc]
+        		0d f4
+        0x401110:	8d 0c 33       	lea    ecx,[ebx+esi*1]
+        0x401113:	30 06          	xor    BYTE PTR [esi],al
+        ...
+      </code>
+    </pre>
+    <p>After performing a modulo 5 operation on our loop index to ensure we stay
+       within our array bounds for the key, we perform an XOR operation on the
+       byte at the current index modulo 5 and the byte at the current index in
+       the hardcoded string. The result of the XOR is stored back in the byte
+       at the current index in the hardcoded string. The same operation is
+       performed for the current index plus 1 before the loop increments the
+       index (the edi register) by 2. The index is then checked if its value
+       is less than 26. If it is, the loop will continue. This is seen in the
+       code listing below.</p>
+    <pre>
+      <code>
+        ...
+        0x401115:	b8 cd cc      	mov    eax,0xcccccccd
+        		cc cc
+        0x40111a:	f7 e1         	mul    ecx
+        0x40111c:	8b cf          	mov    ecx,edi
+        0x40111e:	83 c7 02      	add    edi,0x2
+        0x401121:	c1 ea 02      	shr    edx,0x2
+        0x401124:	8d 04 92       	lea    eax,[edx+edx*4]
+        0x401127:	2b c8          	sub    ecx,eax
+        0x401129:	0f b6 44       	movzx  eax,BYTE PTR [ebp+ecx*1-0xb]
+        		0d f5
+        0x40112e:	30 46 01       	xor    BYTE PTR [esi+0x1],al
+        0x401131:	83 ff 1a       	cmp    edi,0x1a
+        0x401134:	7c bf          	jl     0x4010f5
+        ...
+      </code>
+    </pre>
+    <p>A potential C implementation of the string modifiction loop described
+       above is seen below.</p>
+    <pre>
+      <code>
+        ...
+        char s[0x1b]; // hardcoded string
+        char key[6];  // user input key
+        ...
+        for (unsigned i = 0; i < 0x1a; i += 2) {
+          s[i] ^= key[i % 5];
+          s[i + 1] ^= key[(i + 1) % 5];
+        }
+        ...
+      </code>
+    </pre>
+    <p>The program then outputs the resulting string.</p>
+    <pre>
+      <code>
+        ...
+        0x401136:	8d 45 d8      	lea    eax,[ebp-0x28]
+        0x401139:	50             	push   eax
+        0x40113a:	68 c4 b6       	push   0x41b6c4
+        		41 00
+        0x40113f:	e8 dc fe       	call   0x401020
+        		ff ff
+        ...
+      </code>
+    </pre>
+    <h3>Solution</h3>
+    <p>With not much to go off of and no validation to print a good or bad
+       message, I go back to the initial string output to the user. The string
+       "Guest your flag. The flag will be of the form flag{[a-zA-Z0-9]+}"
+       specifies the flag is of the form "flag{...}". With that information and
+       knowing the key is 5 bytes, we have everything we need to generate the
+       correct key.</p>
+    <p>Taking the first 5 bytes of the hardcoded string and the string "flag{",
+       perform a loop. Initialize the loop index to 0, increment by 1 with each
+       iteration, and terminate the loop when the loop index is equal to 5. In
+       the loop body, perform an XOR operation on the hardcoded string byte
+       at the loop index and the byte in "flag{" at the loop index. The result
+       is the byte of the valid key at that index.</p>
+    <pre>
+      <code>
+        char key[5]; // using this as a data container and not a C string
+
+        for (unsigned i = 0; i < 5; ++i) {
+          key[i] = "bdnpQ"[i] ^ "flag{"[i];
+        }
+      </code>
+    </pre>
+    <p>The result of the above, will produce the byte array seen below.</p>
+    <pre>
+      <code>
+        [ 0x4, 0x8, 0xf, 0x17, 0x2a ]
+      </code>
+    </pre>
+    <p>or</p>
+    <pre>
+      <code>
+        [ 4, 8, 15, 23, 42 ]
+      </code>
+    </pre>
+    <p>Creating a loop to perform the algorithm desribed in the analysis
+       on the hardcoded string using the key from above will generate the string
+       "flag{easy_baby_challenge}". This satisfies the author's instructions
+       and is a valid flag.
+  </body>
+<html>

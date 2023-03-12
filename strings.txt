@@ -1,0 +1,730 @@
+!This program cannot be run in DOS mode.
+Rich
+.text
+`.rdata
+@.data
+.gfids
+@.rsrc
+@.reloc
+SVWhh
+`n{F
+afhrf
+h8aA
+h aA
+h`aA
+j Y+
+8csm
+Y__^[
+ineI
+5ntel
+5Genu
+t#=`
+8_^]
+xf~U
+8csm
+URPQQh
+L$,3
+UVWS
+[_^]
+SVWj
+_^[]
+j Y+
+_^[]
+^_[]
+Vh bA
+h bA
+%P`A
+Vh4bA
+h,bA
+h4bA
+VhPbA
+hHbA
+hPbA
+VhdbA
+h\bA
+hdbA
+j Y+
+j Y+
+SVWUj
+]_^[
+;t$,v-
+UQPXY]Y[
+~8@_
+F4^[]
+QQSV
+~8@_
+F4^[
+	<et
+<Pt8
+y1*t
+A1<Fu
+<Nu&
+u<dt
+<Xu]
+^$+^8+
+y1*t
+F4<jA
+F1<at
+<At	
+F1<gt
+v(PQ
+F1<gt
+N @@
+F8SP
+9F(~
+F4DjA
+F4<jA
+u&9E
+C;^8u
+,0<	w
+,0<	w
+<et	<pu
+,0<	w
+,0<	w
+X_^[
+<(t)
+>)t@
+X_^[
+,0<	w
+RPQQ
+,0<	w
+v(PQ
+v(PQ
+W8^&u:
+W8^&u:
+Z([]
+8%tx
+h tA
+h tA
+h\uA
+PVWS
+PVWS
+j@Y+
+SVW8A
+st[;
+stS;
+stS;
+st[;
+j Y+
+j X+
+rr	jrZ
+w9r0
+j Y+
+j Y+
+rr	jrZ
+PWRQ
+wIPS3
+v(PQ
+W$P;
+^_[]
+st=H
+zu;@
+?]tfS
+-u=;
+j?Xf
+X_^]
+99t	
+wOtD
+PWWS
+A98u
+>"u1
+< t1<	t-
+QQSVW
+PPPPP
+Y_^]
+QSSSSj
+j Y+
+j Y+
+hLaA
+h<aA
+YYhTaA
+hPaA
+t#Vh
+j Y+
+j Y+
+j Y;E
+j Y+
+j _;
+j Y+
+j Y+
+hhwA
+hhwA
+,0<	w
+,0<	w
+<xt"<Xt
+,0<	w
+t`;U
+PPPPP
+hx}A
+hp}A
+hx}A
+_^[]
+^[_]
+h bA
+h4bA
+h<bA
+hPbA
+hdbA
+~0WPQ
+SVW3
+~';_
+GWVj	
+QVWSj
+j X+
+j X+
+f9:t
+f9:t
+f9:t
+f9:t
+f9:t
+FLY;
+uIhd
+uQhd
+_^[]
+0SVW
+u$SW
+8] j0
+j0Yf
+v6j0
+Wj0XPV
+jdSQ
+Fj0X
+h@~A
+80t/
+-jd_;
+PPPPP
+Wj0V
+_^[t
+QWPV
+ _^[
+PPPPP
+QQVW
+u,t6
+$[_^
+_[^]
+[_^]
+PPPPP
+PPPPP
+WWWPWS
+u-PWWS
+_^[]
+IH;A
+SSVWh 
+9wLt
+f9:t!V
+f9:u
+QSVW
+YWWW
+SVWW
+WSVPP
+|VWj=S
+SSSSS
+PPPPP
+QQSWj0j@
+Y_[^]
+xg;5
+_^[]
+_^[]
+9E WW
+t4SWV
+tl= 
+Y_^[
+YY^]
+j Y+
+j@%@
+SVW3
+x7;5
+Ht$;}
+SShU
+(@t	
+9E(j
+PPPPPWS
+QQQP
+PP9E u:PPVWP
+j Y+
+j X+
+jrY;
+j Y+
+j X+
+jrY;
+j X+
+j X+
+jrY;
+stW;
+stW;
+_^[t
+PPPPP
+@( t
+@_^]
+ SVW3
+ SVW3
+PPPPPPPP
+VPRQ
+PRPQh
+x7;5
+<$tL
+|%=2
+D8(Ht
+Zf9U
+D8(HXt:f
+;f9E
+Xf9E
+D8(Ht5F
+D9,+
+2D9-$
+0D9-
+_f99
+uG9E
+~"VW
+QQSV
+%4`A
+_^[]
+Y_^[
+Y_^[
+v	N+D$
+WVU3
+v	N+D$
+<$Xf
+oF f
+oF f
+oF f
+oV f
+o^0f
+of@f
+onPf
+ov`f
+o~pf
+FGIu
+FGIu
+oF f
+oF f
+oF f
+oV f
+o^0f
+of@f
+onPf
+ov`f
+o~pf
+FGIu
+FGIu
+^_[3
+FlsAlloc
+FlsFree
+FlsGetValue
+FlsSetValue
+InitializeCriticalSectionEx
+__based(
+__cdecl
+__pascal
+__stdcall
+__thiscall
+__fastcall
+__vectorcall
+__clrcall
+__eabi
+__ptr64
+__restrict
+__unaligned
+restrict(
+ new
+ delete
+operator
+`vftable'
+`vbtable'
+`vcall'
+`typeof'
+`local static guard'
+`string'
+`vbase destructor'
+`vector deleting destructor'
+`default constructor closure'
+`scalar deleting destructor'
+`vector constructor iterator'
+`vector destructor iterator'
+`vector vbase constructor iterator'
+`virtual displacement map'
+`eh vector constructor iterator'
+`eh vector destructor iterator'
+`eh vector vbase constructor iterator'
+`copy constructor closure'
+`udt returning'
+`RTTI
+`local vftable'
+`local vftable constructor closure'
+ new[]
+ delete[]
+`omni callsig'
+`placement delete closure'
+`placement delete[] closure'
+`managed vector constructor iterator'
+`managed vector destructor iterator'
+`eh vector copy constructor iterator'
+`eh vector vbase copy constructor iterator'
+`dynamic initializer for '
+`dynamic atexit destructor for '
+`vector copy constructor iterator'
+`vector vbase copy constructor iterator'
+`managed vector copy constructor iterator'
+`local static thread guard'
+operator "" 
+ Type Descriptor'
+ Base Class Descriptor at (
+ Base Class Array'
+ Class Hierarchy Descriptor'
+ Complete Object Locator'
+( 8PX
+700WP
+`h````
+xpxxxx
+(null)
+d8L2
+[aOni*{
+@2&@
+"RP(
+eLK(w
+FEMh
+h0'D
+owM&
+~ $s%r
+@b;zO]
+$qE}
+;*xh
+["93
+iu+-,
+\lo}
+obwQ4
+&Sgw
+R	E]
+?nz(
+=87M
+v2!L.2
+	cQr
+X/4B
+k=yI
+^<V7w
+W&|.
+INITY
+inity
+SNAN)
+snan)
+IND)ind)
+CorExitProcess
+CompareStringEx
+GetCurrentPackageId
+LCMapStringEx
+LocaleNameToLCID
+NAN(SNAN)
+nan(snan)
+NAN(IND)
+nan(ind)
+e+000
+Sunday
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Saturday
+January
+February
+March
+April
+June
+July
+August
+September
+October
+November
+December
+MM/dd/yy
+dddd, MMMM dd, yyyy
+HH:mm:ss
+ !"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~
+1#INF
+1#QNAN
+1#SNAN
+1#IND
+log10
+lzZ?
+log10
+asin
+acos
+sqrt
+	k8=
+?5Wg4p
+Nv$^
+w(@	
+BC .=
+(lX 
+#{ =
+`~R=
+}s"=
+%S#[k
+"B <1=
+\-!y
+#.X'=
+i9+=
+?tanh
+atan
+atan2
+ceil
+floor
+fabs
+modf
+ldexp
+_cabs
+_hypot
+fmod
+frexp
+_logb
+_nextafter
+sinh
+cosh
+Guest your flag. The flag will be of the form flag{[a-zA-Z0-9]+}
+Enter your key:
+%hhd
+flag is : %s
+bdnpQai|nufimnug
+GCTL
+.text$mn
+.idata$5
+.00cfg
+.CRT$XCA
+.CRT$XCAA
+.CRT$XCZ
+.CRT$XIA
+.CRT$XIAA
+.CRT$XIAC
+.CRT$XIC
+.CRT$XIZ
+.CRT$XPA
+.CRT$XPX
+.CRT$XPXA
+.CRT$XPZ
+.CRT$XTA
+.CRT$XTZ
+.rdata
+.rdata$sxdata
+.rdata$zzzdbg
+.rtc$IAA
+.rtc$IZZ
+.rtc$TAA
+.rtc$TZZ
+.xdata$x
+.idata$2
+.idata$3
+.idata$4
+.idata$6
+.data
+.bss
+.gfids$x
+.gfids$y
+.rsrc$01
+.rsrc$02
+UnhandledExceptionFilter
+SetUnhandledExceptionFilter
+GetCurrentProcess
+TerminateProcess
+IsProcessorFeaturePresent
+QueryPerformanceCounter
+GetCurrentProcessId
+GetCurrentThreadId
+GetSystemTimeAsFileTime
+InitializeSListHead
+IsDebuggerPresent
+GetStartupInfoW
+GetModuleHandleW
+RtlUnwind
+GetLastError
+SetLastError
+EnterCriticalSection
+LeaveCriticalSection
+DeleteCriticalSection
+InitializeCriticalSectionAndSpinCount
+TlsAlloc
+TlsGetValue
+TlsSetValue
+TlsFree
+FreeLibrary
+GetProcAddress
+LoadLibraryExW
+GetStdHandle
+WriteFile
+GetModuleFileNameA
+MultiByteToWideChar
+WideCharToMultiByte
+ExitProcess
+GetModuleHandleExW
+GetCommandLineA
+GetCommandLineW
+GetACP
+HeapFree
+HeapAlloc
+CompareStringW
+LCMapStringW
+GetFileType
+GetStringTypeW
+CloseHandle
+FindClose
+FindFirstFileExA
+FindNextFileA
+IsValidCodePage
+GetOEMCP
+GetCPInfo
+GetEnvironmentStringsW
+FreeEnvironmentStringsW
+SetEnvironmentVariableA
+SetStdHandle
+GetProcessHeap
+FlushFileBuffers
+GetConsoleCP
+GetConsoleMode
+HeapSize
+HeapReAlloc
+SetFilePointerEx
+WriteConsoleW
+ReadFile
+ReadConsoleW
+CreateFileW
+DecodePointer
+RaiseException
+KERNEL32.dll
+                          
+abcdefghijklmnopqrstuvwxyz
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                          
+abcdefghijklmnopqrstuvwxyz
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<assembly xmlns='urn:schemas-microsoft-com:asm.v1' manifestVersion='1.0'>
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level='asInvoker' uiAccess='false' />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+</assembly>
+0;1\1
+1,2Z2k2p2u2
+4%4,434;4C4K4W4`4e4k4u4
+6&6-636E6O6
+7<7W7c7r7{7
+7%8.848e8
+9/999J9U9[9
+:.:p:~:
+:,;5;=;
+=E>X>
+1/1;1W1w1
+2&2=2E2o2
+3 3%3*3N3Z3_3d3
+4/4;4E4W4\4|4
+6*6A6d6y6
+6g:p:x:
+;3<E<{=
+3"3&3*3.32363:3>3B3F3J3N3
+7D8a8
+93A3
+41595l5@6D6H6L6P6T6X6\6`6d6|6D7H7L7P7T7X7\7`7d7h7
+0/14191T1Y1^1
+80979o<
+=5><>
+73S3W3[3_3c3g3k3o3s3w3{3i6
+8)818I8n8
+8-969o9z9n;x;
+=C={=
+>'>5>G>{>
+?E?T?j?
+N0U0g0p0
+1#1c1u1{1
+2%2+2?2K2
+4#4|4
+7&797l7{7
+8&8+8
+8:9@9
+94:::
+1;1F1
+2(22272<2Y2a2
+3'353W3i3
+434>4C4H4c4m4
+585C5H5M5n5~5
+6"6-62676U6x6
+717C7O7]7~7
+:=:X:
+;*<D<W<q<
+>8?n?
+3%4V4
+7J7Q7
+888A8N8X8z8
+1 1>1S3^3
+:5:>;
+<%</<@<E<Z<
+0+060M0}0
+1K1^1
+1$2K2
+304<4P4e4
+6A7Z7
+999@9\9c9z9
+9":6:z:
+;.;@;R;s;
+0*0Y0
+162=2G2V2z2
+2(3:3V3z3
+3r4y4
+5W6`6x6
+>P>e>v>
+?R?n?
+I0h0
+5,5N5
+687B7
+8F8M8R;
+10282
+8N9{9
+9-:r:
+?b?h?u?
+90K0]0
+0h1~1
+4T4c4
+676D6t6
+:4:W:d:o:
+:.;m;|;
+>0>9?]?
+070T0h0
+5)61696A6I6g6o6
+6	7)7p7
+;9<V<f<
+>l>w>
+>#?/?;?N?m?
+0,0P0
+3#3T3
+6*626
+:&=,=
+B1^142G2e2s2!4X4_4d4h4l4p4
+1$1(1,10141@1D1H1`1d1h1l1p1t1
+3 3$3(3,3034383<3@3D3H3L3P3T3X3\3`3d3h3l3p3t3x3|3
+7$7(7,7074787<7@7L7T7X7\7`7d7
+2 2$2(2,2024282<2@2D2H2L2P2\2`2d2h2l2p2t2x2|2
+9\9d9l9t9|9
+:$:,:4:<:D:L:T:\:d:l:t:|:
+;$;,;4;<;D;L;T;\;d;l;t;|;
+<$<,<4<<<D<L<T<\<d<l<t<|<
+=$=,=4=<=D=L=T=\=d=l=t=|=
+>$>,>4><>D>L>T>\>d>l>t>|>
+?$?,?4?<?D?L?T?\?d?l?t?|?
+0$0,040<0D0L0T0\0d0l0t0x:
+; ;(;0;8;@;H;P;X;`;h;p;x;
+< <(<0<8<@<H<P<X<`<h<p<x<
+= =(=0=8=@=H=P=X=`=h=p=x=
+> >(>0>8>@>H>P>X>`>h>p>x>
+? ?(?0?8?@?H?P?X?`?h?p?x?
+0 0(00080@0H0P0X0`0h0p0x0
+1 1(10181@1H1P1X1`1h1p1x1
+\5d5l5t5|5
+6$6,646<6d7h7p7|:
+;(;H;h;
+<0<P<p<
+=0=P=p=
+>0>L>P>
+01`1p1
+7 7$7(7,7074787<7@7D7P7T7X7\7`7d7h7l7
