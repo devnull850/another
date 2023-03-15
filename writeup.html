@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h3>Division by Multiplication</h3>
+        <p>One of the first interesting experiences of software reverse engineering
+           is encountering a code snippet like the one below.</p>
+        <pre>
+            <code>
+                ...
+                11bc:   8b 45 f4        mov    -0xc(%rbp),%eax
+                11bf:	89 c2           mov    %eax,%edx
+                11c1:	b8 ab aa      	 mov    $0xaaaaaaab,%eax
+                        aa aa
+                11c6:	48 0f af        imul   %rdx,%rax
+                        c2
+                11ca:	48 c1 e8        shr    $0x20,%rax
+                        20
+                11ce:	c1 e8 03        shr    $0x3,%eax
+                ...
+            </code>
+        </pre>
+        <p>At first glance, it looks like a simple multiplication and some random
+           bit shifting. I initially thought the same. A Google search changed that.
+           It is a fine example of compiler optimized division...by multiplication.</p>
+        <p>Division by multiplication? Are they not inverses of one another? I usually
+           reverse a multiplication by dividing what I just multiplied by. How does
+           this even work? These were all questions and ideas that popped into my head
+           upon learning that compilers will optimize division by a constant into
+           multiplication and bit shifting.</p>
+        <p>I never really understood the how and I would usually do a trial and error
+           approach of compiling a small program that performed division by constant.
+           I would change the constant until the resulting assembly from disassembling
+           the resulting binary was similar to the binary I was analyzing. (Yes I am that
+           person that knocked down the brick wall by banging my head into it.)</p>
+        <p>Realizing that it would be good idea to gain a better understanding of the how,
+           I decided to work on understanding the mechanics of how division by
+           multiplication worked. The concept is actually quite simple. Lets say we what
+           to divide a number <code>n</code> by <code>3</code>. Note when I say divide
+           I mean integer division and not floating point division. The former being
+           a whole number result with a remainder and the latter being a value with a
+           fractional or decimal portion.</p>
+        <p>Back to the example of <code>n / 3</code>. The simple idea that changed
+           everything for my understanding is that <code>n / 3 = n * (1 / 3)</code>.
+           Yes that is it! It is very obvious. For whatever reason viewing the problem
+           from that angle was just not intuitive to me. It is the key to understanding
+           division by multiplication.</p>
+        <p>The code snippet in the beginning of the post had what looked like a
+           random number being moved into a register.</p>
+        <pre>
+            <code>
+                ...
+                11c1:   b8 ab aa      	mov    $0xaaaaaaab,%eax
+                        aa aa
+                ...
+            </code>
+        </pre>
+        <p>Investigating that number under the mental model that <code>n / 3 = n * (1 /3)</code>,
+           will be the start of our journey. In particular it is a 32 bit number. Lets divide
+           it by <code>2 ^ 32</code> or 4,294,967,296 to create a fraction to satisfy our mental
+           model. We will go ahead and convert 0xaaaaaaab to its decimal value of
+           2,863,311,531.</p>
+        <pre>
+            <code>
+                2,863,311,531 / 4,294,967,296 ~ 0.66666
+            </code>
+        </pre>
+        <p><code>0.66666</code> is really close to <code>2 / 3</code>. The gives us an indicator
+           that the constant <code>0xaaaaaaab</code> is being used to perform division by a 
+           multiple of 3.</p>
+         <pre>
+            <code>
+               ...
+               11c6:    48 0f af        imul   %rdx,%rax
+                        c2
+               ...
+            </code>
+         </pre>
+         <p>This particular flavor of the signed multiply instruction multiplies the values in
+            the RDX register and RAX register, and stores the product in the RAX register.
+            The RDX register in this code snippet contains what would normally be the dividend
+            in division. The RAX register contains our constant <code>0xaaaaaaab</code> or, for
+            our mental model, <code>(2 / 3)</code>.</p>
+         <pre>
+            <code>
+               ...
+               11ca:    48 c1 e8        shr    $0x20,%rax
+                        20
+               11ce:    c1 e8 03        shr    $0x3,%eax
+               ...
+            </code>
+         </pre>
+         <p>The code snippet above preforms a couple bit shifts to the right. The code is using
+            the 64 bit mode of the DX and AX registers (the R before DX or AX) in the
+            <code>imul</code> and <code>shr</code> instructions. If we examine the instructions
+            before <code>imul</code>, the values moved to both registers were 32 bit values.
+            Multiplying two 32 bit values can result in a product of maximum 64 bits. The second
+            key to understanding division by multiplication is to think of the 64 bit product
+            (assuming 32 bit values) as two parts. The high 32 bits represent the quotient
+            and the low 32 bits can be roughly thought of as the fractional component of the
+            division.</p>
+         <p>For the purposes of performing integer division to find a quotient, this post will
+            focus on the quotient or high 32 bits of the 64 bit product. Going back to the code
+            snippet, the first instruction essentially is converting our 64 bit value in RAX
+            to the high 32 bit value. The <code>shr</code> instruction is sliding those 32 bits
+            into the low 32 bits of RAX. Applying the mental model of the previous paragraph,
+            we have our quotient from the division. But wait what is the other <code>shr</code>
+            doing if we have our quotient?</p>
+         <p>Since we are dealing with binary number representations, the shift right instruction
+            is essentially an integer division by 2. If we do 3 <code>shr</code>, we are performing
+            an integer division by 8.</p>
+         <p>Applying that to our division by multiplication mental model, we now have</p>
+         <pre>
+            <code>x * (2 / 3) * (1 / 8)</code>
+         </pre>
+         <p>or</p>
+         <pre>
+            <code>x * (1 / 12)</code>
+         </pre>
+         <p>Sure enough the code that created the assembly code snippet is seen below</p>
+         <pre>
+            <code>
+               #include <stdio.h>
+
+               int main(void) {
+                     unsigned n;
+                     scanf("%u", &n);
+                     printf("%u\n", n / 12);
+                     return 0;
+               }
+            </code>
+         </pre>
+         <p>It is pretty obvious now to me how division by multiplication works but it is something
+            I never really took the time to dive into to gain a better understanding. The mental
+            models described above were critical for me to achieve the "Aha!" moment. With this
+            understanding I can drop my method of trial and error compilation and use a more
+            mathematical approach to binary analysis.</p>
+    </body>
+</html>
