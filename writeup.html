@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>Analysis of CrackMe-0x1.exe</h3>
+    <p>The main function is found at address 0x401280 in the disassembly
+       listing. The user is prompted to enter a password. In the below code
+       listing, the value moved into the ECX register is a pointer to the
+       global object std::cout. The function at 0x401820 contains the string
+       "Password:" and the code to output the string to the standard output
+       stream via std::cout.</p>
+    <pre>
+      <code>
+  ...
+  4012cb:	8b 0d 74 30 40 00    	mov    ecx,DWORD PTR ds:0x403074
+  4012d1:	e8 4a 05 00 00       	call   0x401820
+  ...
+      </code>
+    </pre>
+    <p>The std::cin global object is then used to take the user input from
+       the standard input stream and populate the string at address EBP - 0x40
+       on the stack. A pointer to std::cin is copied to the ECX register. The 
+       pointer to std::cin and the address of the password string, EBP - 0x40,
+       are the parameters to the function at 0x401c50. The function will
+       allocate memory depending on the size of the string and populate its
+       resulting buffer with the bytes from the standard input stream.</p>
+    <pre>
+      <code>
+  ...
+  4012d6:	8b 0d 68 30 40 00    	mov    ecx,DWORD PTR ds:0x403068
+  4012dc:	8d 55 c0             	lea    edx,[ebp-0x40]
+  4012df:	e8 6c 09 00 00       	call   0x401c50
+  ...
+      </code>
+    </pre>
+    <p>MSVC appears to use a short/small string optimization with the password
+       string. Essentially the MSVC compiler allocates a character (byte)
+       buffer initially for the string. A data member, capacity, holds the
+       allocated storage size for the string. This data member is different
+       from the string's length and they may or may not be equal. Anytime the
+       string is modified the capacity value has the opportunity to be modified
+       as well. If the number of characters for the string exceeds the original
+       byte buffer, new memory will be allocated on the heap and a pointer to
+       the address will be returned and assigned to a data member in the string
+       object. The capacity will be adjusted accordingly.</p>
+    <p>The code listing below shows the checking of the capacity value of the
+       password string. The 4 bytes at EBP - 0x2c correspond to 20 bytes into
+       the password string object. This gives us a little indicator of the
+       actual data member structure of the string. The capacity value is
+       compared to 16. I belive this tells us the initial byte buffer is less
+       than 16 bytes or more accurately occupies less than 16 bytes. The next
+       instruction places the address of the password string in the EAX
+       register. The 4 byte value copied to the ESI register is the length of
+       the string. If the capacity of the string was found to be equal or
+       greater than 16, the address of the password string is dereferenced to
+       be the size of a pointer and the address being pointed to is moved to
+       the EAX register. Note for a 32 bit binary, 4 bytes is the size of a
+       pointer. The value of the capacity being greater than or equal to 16
+       indicates heap storage was used for this string. The first data member
+       of the string object appears to be a union or a pointer.</p>
+    <pre>
+      <code>
+  ...
+  4012e4:	83 7d d4 10          	cmp    DWORD PTR [ebp-0x2c],0x10
+  4012e8:	8d 45 c0             	lea    eax,[ebp-0x40]
+  4012eb:	8b 75 d0             	mov    esi,DWORD PTR [ebp-0x30]
+  4012ee:	0f 43 45 c0          	cmovae eax,DWORD PTR [ebp-0x40]
+  ...
+      </code>
+    </pre>
+    <p>The address of the buffer containing the actual bytes of the string are
+       now in the EAX register. The address is then passed to a pointer at
+       EBP - 0x48. The length of the password string is compared to 16. If it
+       is less than 16, execution continues and the jump at 0x40130d is not
+       taken. We are going to follow the path of the password length being less
+       than 16.</p>
+    <pre>
+      <code>
+  ...
+  401307:	89 45 b8             	mov    DWORD PTR [ebp-0x48],eax
+  40130a:	83 fe 10             	cmp    esi,0x10
+  40130d:	73 14                	jae    0x401323
+  ...
+      </code>
+    </pre>
+    <p>The XMM0 register then has the sixteen bytes of the password string
+       buffer copied to it. Note even if the length of the string is less than
+       16, alignment rules will result in 16 bytes of space still being
+       "occupied." The EAX register then has its value set to 15 and that value
+       moved to a 4 byte space on the stack at EBP - 0x4c. The bytes of the 
+       password string are then copied to a 16 byte area on the stack starting
+       at EBP - 0x68. The first four bytes of the starting at EBP - 0x68 are
+       copied to the EDI register. Execution then jumps to 0x40138d.</p>
+    <pre>
+      <code>
+  ...
+  40130f:	0f 10 00             	movups xmm0,XMMWORD PTR [eax]
+  401312:	b8 0f 00 00 00       	mov    eax,0xf
+  401317:	89 45 b4             	mov    DWORD PTR [ebp-0x4c],eax
+  40131a:	0f 11 45 98          	movups XMMWORD PTR [ebp-0x68],xmm0
+  40131e:	8b 7d 98             	mov    edi,DWORD PTR [ebp-0x68]
+  401321:	eb 6a                	jmp    0x40138d
+  ...
+      </code>
+    </pre>
+    <p>The EAX register will still contain the value of 15 and that is copied
+       to a 4 byte area on the stack at EBP - 0x54. The ESI register has the
+       value of the password string length. That is copied to a 4 byte area
+       on the stack at EBP - 0x58. The value 3869 is copied into the ECX
+       register. The address at EBP - 0x13 is loaded into the ESI register.
+       The value of the ECX register is copied to a 4 byte area on the stack
+       at EBP - 0x48.</p>
+    <pre>
+      <code>
+  ...
+  40138d:	89 45 ac             	mov    DWORD PTR [ebp-0x54],eax
+  401390:	89 75 a8             	mov    DWORD PTR [ebp-0x58],esi
+  401393:	b9 1d 0f 00 00       	mov    ecx,0xf1d
+  401398:	c6 45 fc 01          	mov    BYTE PTR [ebp-0x4],0x1
+  40139c:	8d 75 ed             	lea    esi,[ebp-0x13]
+  40139f:	89 4d b8             	mov    DWORD PTR [ebp-0x48],ecx
+  ...
+      </code>
+    </pre>
+    <p>A loop is entered that will stringify the decimal value 3869 to the
+       string "3869" and store the bytes on the stack. The value 0xccccccccd
+       divided by 2 ^ 32 is approximately 0.8 or 4 / 5. The multiply
+       instruction is actually the first part of compiler optimized division.
+       The second part of compiler optimized division is the shr 3 times.
+       Shifting right 3 times is integer division by 8. If we multiply 4 / 5
+       by 1 / 8, we end up with 1 / 10. The combination of the multiply and
+       shift right 3 times is division by 10.</p>
+     <pre>
+       <code>
+  ...
+  4013a2:	b8 cd cc cc cc       	mov    eax,0xcccccccd
+  4013a7:	4e                   	dec    esi
+  4013a8:	f7 e1                	mul    ecx
+  4013aa:	c1 ea 03             	shr    edx,0x3
+  ...
+       </code>
+     </pre>
+     <p>The ECX register contains the value 3869 initially. The EDX register
+        contains the result of ECX / 10. That value, well one byte of that 
+        value, is moved to the AL register or the lowest byte of the EAX
+        register. If shifting right is an integer division by 2, shifting left
+        is multiplication by 2. We are shifting left 2 times or multiplying the
+        quotient of ECX / 10 by 4. That value is added to the original 
+        quotient ECX / 10. The result is ECX / 10 * 5. That value is then
+        doubled. This gives a result of ECX / 10 * 10. Note this appears to
+        be equal to the original value of ECX but keep in mind this is integer
+        division and not floating point division. You will essentially lose the
+        least significant decimal digit. This is actually really beneficial
+        because the next step subtracts the value in AL from the ECX / 10 * 10
+        result. The value in AL at this time is the value in ECX before the
+        division operation was performed. This is accomplished in the
+        instruction at 0x4013b5, which copies the original value of ECX stored
+        in the 4 bytes at address EBP - 0x48 on the stack. The operation
+        discussed, ECX - ECX / 10 * 10, is the remainder of integer division by
+        10.</p>
+    <p>With the remainder occupying the EAX register and the quotient
+       occupying EDX register (funny kind of similar to the actual DIV
+       instruction), the quotient is copied to the ECX register. The value
+       48 is added to the remainder. This is the stringify operation. ASCII
+       decimal digits have a range of [48, 57] and correspond to the decimal
+       range [0, 9]. The remainder operation plucks off the least significant
+       digit and converts it to its ASCII character representation.</p>
+    <p>A very subtle step in the code listing above, was decrementing the
+       address in the ESI register by 1 (the instruction at 0x4013a7). The now
+       ASCII byte of the least significant decimal digit is copied to the
+       address in ESI. The quotient is copied to both the ECX register and the
+       4 byte area starting at EBP - 0x48 on the stack. The quotient value is
+       compared to zero. If it is not equal to zero, the loop will continue.
+       Once the quotient is zero, the loop will stop.</p>
+    <pre>
+      <code>
+  ...
+  4013ad:	8a c2                	mov    al,dl
+  4013af:	c0 e0 02             	shl    al,0x2
+  4013b2:	8d 0c 10             	lea    ecx,[eax+edx*1]
+  4013b5:	8b 45 b8             	mov    eax,DWORD PTR [ebp-0x48]
+  4013b8:	02 c9                	add    cl,cl
+  4013ba:	2a c1                	sub    al,cl
+  4013bc:	8b ca                	mov    ecx,edx
+  4013be:	04 30                	add    al,0x30
+  4013c0:	88 06                	mov    BYTE PTR [esi],al
+  4013c2:	8b c2                	mov    eax,edx
+  4013c4:	89 45 b8             	mov    DWORD PTR [ebp-0x48],eax
+  4013c7:	85 c0                	test   eax,eax
+  4013c9:	75 d7                	jne    0x4013a2
+  ...
+      </code>
+    </pre>
+    <p>The pointer (address) to the beginning of the now "3869" string after
+       the loop operations are performed is copied to the 4 byte area on the
+       stack at EBP - 0x50. The address of EBP - 0x13 is loaded into the
+       ECX register. The difference between the two addresses is calculated
+       and used as the third parameter to the function at 0x4015e0. The address
+       for the bytes of the string "3869" on the stack are the second
+       parameter. The first parameter is the address EBP - 0x80. The function
+       at 0x4015e0 creates a string and copies the third parameter number of
+       bytes of the second parameter string's bytes to the new string. The
+       new string is stored at the first parameter address. We created a new
+       string with the stringified value of the decimal 3869.</p>
+    <pre>
+      <code>
+  ...
+  4013cd:	89 75 b0             	mov    DWORD PTR [ebp-0x50],esi
+  4013d0:	8d 4d ed             	lea    ecx,[ebp-0x13]
+  ...
+  4013ea:	8b c1                	mov    eax,ecx
+  4013ec:	8b 4d b0             	mov    ecx,DWORD PTR [ebp-0x50]
+  4013ef:	2b c1                	sub    eax,ecx
+  4013f1:	50                   	push   eax
+  4013f2:	51                   	push   ecx
+  4013f3:	8d 4d 80             	lea    ecx,[ebp-0x80]
+  4013f6:	e8 e5 01 00 00       	call   0x4015e0
+  ...
+      </code>
+    </pre>
+    <p>The capacity data member of the new string is compared to 16. As
+       discussed previously, a value less than 16 indicates a heap allocation
+       was not performed and thus the bytes of the string reside in the
+       original byte buffer allocated for small strings as an optimization.</p>
+    <p>The addresses of the "3869" string and the copy of the user input
+       password are loaded into the ECX ("3869" string) and the EDX (password
+       copy) registers. Since the capacity of both strings are less than 16 for
+       the correct input, we can ignore instructions 0x40140b to 0x401412.
+       The lengths of both strings are compared at 0x401415. For correct
+       input, they need to be equal.</p>
+    <pre>
+      <code>
+  ...
+  4013db:	8b 75 d0		mov    esi,DWORD PTR [ebp-0x30]
+  ...
+  401401:	83 7d 94 10          	cmp    DWORD PTR [ebp-0x6c],0x10
+  401405:	8d 4d 80             	lea    ecx,[ebp-0x80]
+  401408:	8d 55 98             	lea    edx,[ebp-0x68]
+  40140b:	0f 43 c8             	cmovae ecx,eax
+  40140e:	83 7d b4 10          	cmp    DWORD PTR [ebp-0x4c],0x10
+  401412:	0f 43 d7             	cmovae edx,edi
+  401415:	3b 75 90             	cmp    esi,DWORD PTR [ebp-0x70]
+  401418:	75 5a                	jne    0x401474
+  ...
+      </code>
+    </pre>
+    <p>The following long block of assembly in the code listing below
+       essentially performs a highly optimized string compare between the copy
+       of the password string and the string "3869".</p>
+    <pre>
+      <code>
+  ...
+  40141a:	83 ee 04             	sub    esi,0x4
+  40141d:	72 12                	jb     0x401431
+  40141f:	90                   	nop
+  401420:	8b 02                	mov    eax,DWORD PTR [edx]
+  401422:	3b 01                	cmp    eax,DWORD PTR [ecx]
+  401424:	75 10                	jne    0x401436
+  401426:	83 c2 04             	add    edx,0x4
+  401429:	83 c1 04             	add    ecx,0x4
+  40142c:	83 ee 04             	sub    esi,0x4
+  40142f:	73 ef                	jae    0x401420
+  401431:	83 fe fc             	cmp    esi,0xfffffffc
+  401434:	74 34                	je     0x40146a
+  401436:	8a 02                	mov    al,BYTE PTR [edx]
+  401438:	3a 01                	cmp    al,BYTE PTR [ecx]
+  40143a:	75 27                	jne    0x401463
+  40143c:	83 fe fd             	cmp    esi,0xfffffffd
+  40143f:	74 29                	je     0x40146a
+  401441:	8a 42 01             	mov    al,BYTE PTR [edx+0x1]
+  401444:	3a 41 01             	cmp    al,BYTE PTR [ecx+0x1]
+  401447:	75 1a                	jne    0x401463
+  401449:	83 fe fe             	cmp    esi,0xfffffffe
+  40144c:	74 1c                	je     0x40146a
+  40144e:	8a 42 02             	mov    al,BYTE PTR [edx+0x2]
+  401451:	3a 41 02             	cmp    al,BYTE PTR [ecx+0x2]
+  401454:	75 0d                	jne    0x401463
+  401456:	83 fe ff             	cmp    esi,0xffffffff
+  401459:	74 0f                	je     0x40146a
+  40145b:	8a 42 03             	mov    al,BYTE PTR [edx+0x3]
+  40145e:	3a 41 03             	cmp    al,BYTE PTR [ecx+0x3]
+  401461:	74 07                	je     0x40146a
+  401463:	1b c0                	sbb    eax,eax
+  401465:	83 c8 01             	or     eax,0x1
+  401468:	eb 02                	jmp    0x40146c
+  40146a:	33 c0                	xor    eax,eax
+  ...
+      </code>
+    </pre>
+    <p>If the two strings are found to be equal, the instruction at 0x40146a
+       is performed. This is a critical component of the code to follow the
+       path shown in the code listing below. Note the instruction at
+       0x40146a performs an XOR on EAX with itself which zeroes the bytes
+       in the EAX register. The value at EBP - 0x4c is the capacity for the
+       password copy. The correct input will not require a heap allocation and
+       thus the value will be less than 16. This takes the jump at 0x4014ba to
+       0x4014e3.</p>
+    <pre>
+      <code>
+  ...
+  40146c:	c6 45 bf 01          	mov    BYTE PTR [ebp-0x41],0x1
+  401470:	85 c0                	test   eax,eax
+  401472:	74 04                	je     0x401478
+  ...
+  401478:	8b 45 94             	mov    eax,DWORD PTR [ebp-0x6c]
+  40147b:	83 f8 10             	cmp    eax,0x10
+  40147e:	72 2e                	jb     0x4014ae
+  ...
+  4014ae:	80 7d bf 00          	cmp    BYTE PTR [ebp-0x41],0x0
+  4014b2:	8b 45 b4             	mov    eax,DWORD PTR [ebp-0x4c]
+  4014b5:	74 38                	je     0x4014ef
+  4014b7:	83 f8 10             	cmp    eax,0x10
+  4014ba:	72 27                	jb     0x4014e3
+  ...
+      </code>
+    </pre>
+    <p>The last interesting piece is the hidden printf function in the code.
+       The code listing below shows the disassembly with objdump. If you
+       notice, the address 0x4014e8 is actually the second byte of the mov
+       instruction. With both jump targets being 0x4014e8 and all possible
+       logic paths covered by je and jne, the byte at 0x4014ec is never touched
+       in the code execution.</p>
+    <pre>
+      <code>
+  ...
+  4014e3:	74 03                	je     0x4014e8
+  4014e5:	75 01                	jne    0x4014e8
+  4014e7:	b8 e8 73 fd ff       	mov    eax,0xfffd73e8
+  4014ec:	ff                   	(bad)
+  4014ed:	eb 36                	jmp    0x401525
+  ...
+      </code>
+    </pre>
+    <p>The actual code path diassembly is seen in the code listing below.</p>
+    <pre>
+      <code>
+  ...
+  4014e3:	74 03                	je     0x4014e8
+  4014e5:	75 01                	jne    0x4014e8
+  4014e7:	b8			(bad)
+  4014e8:	e8 73 fd ff ff		call   0x401260
+  4014ed:	eb 36                	jmp    0x401525
+  ...
+      </code>
+    </pre>
+    <p>The function simply prints the string at 0x403204. That string is 
+       "Success!". The function at 0x401020 is the printf function.</p>
+    <pre>
+      <code>
+  ...
+  401260:	68 04 32 40 00       	push   0x403204
+  401265:	e8 b6 fd ff ff       	call   0x401020
+  40126a:	59                   	pop    ecx
+  40126b:	c3                   	ret
+  ...
+      </code>
+    </pre>
+    <p>The correct password to print the "Success!" message is "3869". The
+       binary covered a few very interesting topics: short/small string
+       optimization, the internal structure of C++ strings, compiler optimized
+       divsion, and instructions in other instruction's bytes as an obfuscation
+       technique. Overall finding the correct password was pretty simple.
+       Really diving into the how of the binary delivers many opportunities
+       for learning and expanding knowledge.</p>
+  </body>
+</html>
