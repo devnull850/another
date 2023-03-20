@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>Analysis of ReverseMe.exe</h3>
+    <p>The key to crack the binary is understanding the initialization of
+       C++ programs. In this particular binary, the MSVC
+       <code>_initterm</code> internal method walks over an array of
+       function pointers. The array begins at address 0x1400042d8. It
+       contains 5 elements with the first element being NULL. According to
+       the MSVC documentation, NULL entries are skipped during the function
+       pointer walk. The fourth element is the most interesting to us as it
+       is a <code>std::string</code> object constructor.</p>
+    <p>The code listing below shows the <code>_initterm</code> method being
+       invoked with two pointers as its parameters. The first parameter
+       is the pointer to the array of function pointers starting at address
+       0x1400042d8. Note RIP is equal to 0x140002810 at instruction
+       0x140002809. RIP plus the offset 0x1ac8 will result in the value
+       0x1400042d8. That is the address of the array of function pointers
+       that the <code>_initterm</code> method walks over. The second
+       parameter is a pointer to the end of the function pointer array.</p>
+    <pre>
+      <code>
+   ...
+   140002802:	48 8d 15 f7 1a 00 00 	lea    rdx,[rip+0x1af7]
+   140002809:	48 8d 0d c8 1a 00 00 	lea    rcx,[rip+0x1ac8]
+   140002810:	e8 c3 08 00 00       	call   0x1400030d8
+   ...
+      </code>
+    </pre>
+    <p>The code for the fourth element of the function pointer array is
+       seen below. The value 9, which as we will see shortly is the length
+       of the string to be instantiated, is moved to the R8 register before
+       a function is called, well what appears to be a function. It is
+       actually a <code>std::string</code> constructor. The address
+       0x1400033c0 being loaded into the RCX register after the constructor
+       is invoked is the destructor of the <code>std::string</code>
+       instance. That function address is then passed to the
+       <code>atexit</code> function and will be called as part of the
+       cleanup before execution is handed back to the Operating System.</p>
+    <pre>
+      <code>
+   ...
+   140001004:	41 b8 09 00 00 00    	mov    r8d,0x9
+   14000100a:	e8 a1 0a 00 00       	call   0x140001ab0
+   14000100f:	48 8d 0d aa 23 00 00 	lea    rcx,[rip+0x23aa]
+   140001016:	48 83 c4 28          	add    rsp,0x28
+   14000101a:	e9 45 16 00 00       	jmp    0x140002664
+   ...
+      </code>
+    </pre>
+    <p>Inside the <code>std::string</code> constructor, the value 9 in the
+       R8 register from above is compared to the value of 15. The value
+       15 is the initial value of the capacity data member of a
+       <code>std::string</code> instance for MSVC's short/small string
+       optimization. Essentially heap allocation is a bit expensive and the
+       compiler will initially allocate a byte buffer of a size typically
+       smaller than 16 bytes for a new <code>std::string</code> instance.
+       If the total length of the string can fit in this initial byte
+       buffer, the compiler will not bother with a heap allocation and use
+       the byte buffer to hold the characters of the string. For our use
+       case, 9 is less than 15. A heap memory allocation is avoided and
+       the original byte buffer is used.</p>
+    <p>In the code listing below, the address 0x140006070 will contain the
+       <code>std::string</code> instance's data members. 16 bytes from the
+       address will contain its length and 24 bytes from the address will
+       contain the capacity data member. The initial capacity of 15 is moved
+       to the RBP register before the comparison with the length value of 9
+       in the R8 register. Since 9 is not greater than 15, the capacity is
+       compared to 16. With the capacity being less than 16, the byte buffer
+       address is loaded into the RBX register and not a pointer to a heap
+       allocated memory region. Note the length value of 9 is moved into the
+       length data member at instruction 0x140001ae1.</p>
+    <p>The <code>memmove</code> function is called at 0x140001b01. The
+       first parameter is the address of the <code>std::string</code>
+       instance, 0x140006070. The second parameter is the address of the
+       string "xxxx4xx10" at address 0x140004428. The third parameter is
+       the number of bytes to copy/move. After the <code>memmove</code>
+       function returns, a NULL byte is moved to the tenth character
+       to create a null terminated C string.</p>
+    <pre>
+      <code>
+   ...
+   140001ace:	48 8b 2d b3 45 00 00 	mov    rbp,QWORD PTR [rip+0x45b3]
+   140001ad5:	49 8b f0             	mov    rsi,r8
+   140001ad8:	4c 3b c5             	cmp    r8,rbp
+   140001adb:	77 32                	ja     0x140001b0f
+   140001add:	48 83 fd 10          	cmp    rbp,0x10
+   140001ae1:	4c 89 05 98 45 00 00 	mov    QWORD PTR [rip+0x4598],r8
+   140001ae8:	48 8d 1d 81 45 00 00 	lea    rbx,[rip+0x4581]
+   140001aef:	48 0f 43 1d 79 45 00 	cmovae rbx,QWORD PTR [rip+0x4579]
+   140001af6:	00 
+   140001af7:	48 8d 15 2a 29 00 00 	lea    rdx,[rip+0x292a]
+   140001afe:	48 8b cb             	mov    rcx,rbx
+   140001b01:	e8 23 17 00 00       	call   0x140003229
+   140001b06:	c6 04 1e 00          	mov    BYTE PTR [rsi+rbx*1],0x0
+   140001b0a:	e9 02 01 00 00       	jmp    0x140001c11
+   ...
+      </code>
+    </pre>
+    <p>The code listing below shows the final steps of the C Runtime being
+       established before the main function is called at 0x14000289b. Of
+       particular note, the pointer returned from the function at
+       0x1400030d2, will hold the <code>envp</code> value, which is the
+       third paramter to main. <code>argv</code> and <code>argc</code> are
+       returned from the functions at 0x1400030f6 and 0x1400030f0
+       respectively. The main function is at address 0x1400014d0.</p>
+    <pre>
+      <code>
+   ...
+   14000287e:	e8 4f 08 00 00       	call   0x1400030d2
+   140002883:	48 8b f8             	mov    rdi,rax
+   140002886:	e8 6b 08 00 00       	call   0x1400030f6
+   14000288b:	48 8b 18             	mov    rbx,QWORD PTR [rax]
+   14000288e:	e8 5d 08 00 00       	call   0x1400030f0
+   140002893:	4c 8b c7             	mov    r8,rdi
+   140002896:	48 8b d3             	mov    rdx,rbx
+   140002899:	8b 08                	mov    ecx,DWORD PTR [rax]
+   14000289b:	e8 30 ec ff ff       	call   0x1400014d0
+   ...
+      </code>
+    </pre>
+    <p>Inside main, a <code>std::string</code> instance is created to store
+       the user prompted password. The <code>std::string</code> data members
+       are very clear with the instructions from 0x140001505 to 0x140001515.
+       The initial byte buffer is at address RBP + 0xf. The length data
+       member is at RBP + 0x1f. The capacity data member is at
+       RBP + 0x27.</p>
+    <pre>
+      <code>
+   ...
+   140001502:	45 33 ff             	xor    r15d,r15d
+   140001505:	4c 89 7d 0f          	mov    QWORD PTR [rbp+0xf],r15
+   140001509:	4c 89 7d 1f          	mov    QWORD PTR [rbp+0x1f],r15
+   14000150d:	48 c7 45 27 0f 00 00 	mov    QWORD PTR [rbp+0x27],0xf
+   140001514:	00 
+   140001515:	44 88 7d 0f          	mov    BYTE PTR [rbp+0xf],r15b
+   ...
+      </code>
+    </pre>
+    <p>The code prompts the user to "Insert your password: ". The function
+       at 0x140001d60 will output the second paramter string to the first
+       paramter output stream. The string is "Insert your password: " and
+       the output stream is <code>std::cout</code>.</p>
+    <p>The <code>std::string</code> instantiated above is populated from
+       the standard input stream <code>std::cin</code> in the function at
+       0x140001f70. The function takes two parameters. The first parameter
+       is the input stream, <code>std::cin</code>. The second parameter is
+       the <code>std::string</code> that was allocated to hold the
+       password.<p>
+    <pre>
+      <code>
+   ...
+   140001519:	48 8d 15 38 2f 00 00 	lea    rdx,[rip+0x2f38]
+   140001520:	48 8b 0d f1 2b 00 00 	mov    rcx,QWORD PTR [rip+0x2bf1]
+   140001527:	e8 34 08 00 00       	call   0x140001d60
+   14000152c:	48 8d 55 0f          	lea    rdx,[rbp+0xf]
+   140001530:	48 8b 0d c9 2b 00 00 	mov    rcx,QWORD PTR [rip+0x2bc9]
+   140001537:	e8 34 0a 00 00       	call   0x140001f70
+   ...
+      </code>
+    </pre>
+    <p>The length, capacity, and first 8 bytes of the byte buffer of the
+       password <code>std::string</code> are copied to the R14, R13, and
+       R12 registers respectively.</p>
+    <pre>
+      <code>
+   ...
+   14000153c:	4c 8b 6d 27          	mov    r13,QWORD PTR [rbp+0x27]
+   140001540:	4c 8b 75 1f          	mov    r14,QWORD PTR [rbp+0x1f]
+   140001544:	4c 8b 65 0f          	mov    r12,QWORD PTR [rbp+0xf]
+   ...
+      </code>
+    </pre>
+    <p>The same process is performed for the <code>std::string</code>
+       instantiated before main. The RSI register holds the address of the
+       <code>std::string</code>'s byte buffer and the RCX register holds
+       the <code>std::string</code>'s first 8 bytes of its byte buffer. RBX
+       will contain the length and R8 will contain the capacity. The length
+       is 9 and the jump at 0x140001577 is not taken.</p>
+    <pre>
+      <code>
+   ...
+   140001548:	48 b8 ff ff ff ff ff 	movabs rax,0x7fffffffffffffff
+   14000154f:	ff ff 7f 
+   140001552:	48 8d 35 17 4b 00 00 	lea    rsi,[rip+0x4b17]
+   140001559:	45 8b cf             	mov    r9d,r15d
+   14000155c:	49 8b d7             	mov    rdx,r15
+   14000155f:	48 8b 1d 1a 4b 00 00 	mov    rbx,QWORD PTR [rip+0x4b1a]
+   140001566:	4c 8b 05 1b 4b 00 00 	mov    r8,QWORD PTR [rip+0x4b1b]
+   14000156d:	48 8b 0d fc 4a 00 00 	mov    rcx,QWORD PTR [rip+0x4afc]
+   140001574:	48 85 db             	test   rbx,rbx
+   140001577:	74 7c                	je     0x1400015f5
+   ...
+      </code>
+    </pre>
+    <p>Two four byte variables in the .data section have their values copied
+       to the R10 and R11 registers. The initial values are 0x61 or 97 in the
+       R10 register and 1 in the R11 register.</p>
+    <pre>
+      <code>
+   ...
+   140001579:	44 0f b6 15 cb 4a 00 	movzx  r10d,BYTE PTR [rip+0x4acb]
+   140001580:	00 
+   140001581:	44 8b 1d c0 4a 00 00 	mov    r11d,DWORD PTR [rip+0x4ac0]
+   ...
+      </code>
+    </pre>
+    <p>A loop is entered that compares each character of the pre main
+       intialized <code>std::string</code>'s bytes to 0x78 or 120. This is
+       the byte value for the ASCII character 'x'. If you recall, the string
+       is "xxxx4xx10". With each iteration if the byte is equal to 120,
+       R10 and R11 are added with the result stored back in R10. R11 is
+       incremented by 15. The byte value in R10 is moved to the current
+       iteration index into the "xxxx4xx10" string. The loop continues
+       until the index is greater than or equal to the "xxxx4xx10"
+       <code>std::string</code> length. The iteration index is incremented
+       by 1 with each iteration.</p>
+    <pre>
+      <code>
+   ...
+   140001590:	49 83 f8 10          	cmp    r8,0x10
+   140001594:	40 0f 93 c7          	setae  dil
+   140001598:	48 8b c6             	mov    rax,rsi
+   14000159b:	48 0f 43 c1          	cmovae rax,rcx
+   14000159f:	80 3c 02 78          	cmp    BYTE PTR [rdx+rax*1],0x78
+   1400015a3:	75 2a                	jne    0x1400015cf
+   1400015a5:	45 02 d3             	add    r10b,r11b
+   1400015a8:	41 83 c3 0f          	add    r11d,0xf
+   1400015ac:	48 8b c6             	mov    rax,rsi
+   1400015af:	40 84 ff             	test   dil,dil
+   1400015b2:	48 0f 45 c1          	cmovne rax,rcx
+   1400015b6:	44 88 14 02          	mov    BYTE PTR [rdx+rax*1],r10b
+   1400015ba:	4c 8b 05 c7 4a 00 00 	mov    r8,QWORD PTR [rip+0x4ac7]
+   1400015c1:	48 8b 1d b8 4a 00 00 	mov    rbx,QWORD PTR [rip+0x4ab8]
+   1400015c8:	48 8b 0d a1 4a 00 00 	mov    rcx,QWORD PTR [rip+0x4aa1]
+   1400015cf:	41 ff c1             	inc    r9d
+   1400015d2:	48 ff c2             	inc    rdx
+   1400015d5:	49 63 c1             	movsxd rax,r9d
+   1400015d8:	48 3b c3             	cmp    rax,rbx
+   1400015db:	72 b3                	jb     0x140001590
+   ...
+      </code>
+    </pre>
+    <p>The resulting string bytes after the completion of the loop are seen
+       below. Note the 3rd, 4th, and 7th bytes are not printable
+       characters.</p>
+    <pre>
+      <code>
+   [0x62, 0x72, 0x91, 0xbf, 0x34, 0x48, 0xa3, 0x31, 0x30]
+      </code>
+    </pre>
+    <p>The values in the R10 and R11 registers after loop completion are
+       stored back in the .data section variables they were initially
+       populated from.</p>
+    <pre>
+      <code>
+   ...
+   1400015dd:	44 88 15 68 4a 00 00 	mov    BYTE PTR [rip+0x4a68],r10b
+   1400015e4:	44 89 1d 5d 4a 00 00 	mov    DWORD PTR [rip+0x4a5d],r11d
+   ...
+      </code>
+    </pre>
+    <p>The value zero, in R15, is copied to the 8 bytes on the stack at
+       RBP - 0x49. R8 contains the capacity of the <code>std::string</code>
+       modified in the loop. The capacity is less than 16. The length of the
+       same <code>std::string</code> is less than 16. The jump at instruction
+       0x140001605 is not taken. The byte buffer of the loop modified
+       <code>std::string</code> is copied to the XMM0 register. The default
+       <code>std::string</code> capacity of 15 for new instances is copied
+       to a location on the stack at RBP - 0x31.</p>
+    <p>The byte buffer in the XMM0 register is copied to a 16 byte region
+       on the stack at address RBP - 0x1. The length in the RBX register is
+       copied to an 8 byte region on the stack at RBP - 0x39.</p>
+    <pre>
+      <code>
+   ...
+   1400015f5:	4c 89 7d b7          	mov    QWORD PTR [rbp-0x49],r15
+   1400015f9:	49 83 f8 10          	cmp    r8,0x10
+   1400015fd:	48 0f 43 f1          	cmovae rsi,rcx
+   140001601:	48 83 fb 10          	cmp    rbx,0x10
+   140001605:	73 10                	jae    0x140001617
+   140001607:	0f 10 06             	movups xmm0,XMMWORD PTR [rsi]
+   14000160a:	48 c7 45 cf 0f 00 00 	mov    QWORD PTR [rbp-0x31],0xf
+   140001611:	00 
+   140001612:	e9 82 00 00 00       	jmp    0x140001699
+   ...
+   140001699:	0f 11 45 ff          	movups XMMWORD PTR [rbp-0x1],xmm0
+   14000169d:	48 89 5d c7          	mov    QWORD PTR [rbp-0x39],rbx
+   1400016a1:	49 83 f8 10          	cmp    r8,0x10
+   1400016a5:	72 2e                	jb     0x1400016d5
+   ...
+      </code>
+    </pre>
+    <p>The byte buffer is copied back to the area in the .data section
+       where the original <code>std::string</code> was created and stored.
+       Its length is also moved to its respective area in the .data section
+       for the instance.</p>
+    <pre>
+      <code>
+   ...
+   1400016d5:	0f 10 45 ff          	movups xmm0,XMMWORD PTR [rbp-0x1]
+   1400016d9:	0f 11 05 90 49 00 00 	movups XMMWORD PTR [rip+0x4990],xmm0
+   1400016e0:	0f 10 45 c7          	movups xmm0,XMMWORD PTR [rbp-0x39]
+   1400016e4:	0f 11 05 95 49 00 00 	movups XMMWORD PTR [rip+0x4995],xmm0
+   ...
+      </code>
+    </pre>
+    <p>The instructions to 0x1400016f3 to 0x1400016fb are the beginning of
+       the creation of a new <code>std::string</code> instance. The address
+       RBP - 0x29 will hold the 16 byte buffer or a pointer to heap memory
+       region if needed. The address RBP - 0x19 will be the length of the
+       <code>std::string</code> instance. RBP - 0x11 will contain that
+       instance's capacity.</p>
+    <p>RDI has the address of the user input password's byte buffer loaded.
+       R13 contains the password's capacity and that value is compared to
+       16. As the capacity is less than 16, R15b is still zero. The length
+       in the R14 register is compared to 16. Again that value is less than
+       16 (9). The byte buffer is then copied to the 16 byte area on the
+       stack beginning at RBP - 0x29. The capacity is set to the default
+       of 15. The length is copied to the new <code>std::string</code>
+       instance's length data member.</p>
+    <pre>
+      <code>
+   ...
+   1400016eb:	48 8d 45 d7          	lea    rax,[rbp-0x29]
+   1400016ef:	48 89 45 f7          	mov    QWORD PTR [rbp-0x9],rax
+   1400016f3:	4c 89 7d d7          	mov    QWORD PTR [rbp-0x29],r15
+   1400016f7:	4c 89 7d e7          	mov    QWORD PTR [rbp-0x19],r15
+   1400016fb:	4c 89 7d ef          	mov    QWORD PTR [rbp-0x11],r15
+   1400016ff:	48 8d 7d 0f          	lea    rdi,[rbp+0xf]
+   140001703:	49 83 fd 10          	cmp    r13,0x10
+   140001707:	41 0f 93 c7          	setae  r15b
+   14000170b:	49 0f 43 fc          	cmovae rdi,r12
+   14000170f:	49 83 fe 10          	cmp    r14,0x10
+   140001713:	73 11                	jae    0x140001726
+   140001715:	0f 10 07             	movups xmm0,XMMWORD PTR [rdi]
+   140001718:	0f 11 45 d7          	movups XMMWORD PTR [rbp-0x29],xmm0
+   14000171c:	48 c7 45 ef 0f 00 00 	mov    QWORD PTR [rbp-0x11],0xf
+   140001723:	00 
+   140001724:	eb 79                	jmp    0x14000179f
+   ...
+   14000179f:	4c 89 75 e7          	mov    QWORD PTR [rbp-0x19],r14
+   ...
+      </code>
+    </pre>
+    <p>The below code snippet does the same action of creating a copy of a
+       <code>std::string</code> but for the <code>std::string</code>
+       instance stored in the .data section. RBP - 0x49 contains the 16 byte
+       are for the byte buffer. RBP - 0x39 contains the length and
+       RBP - 0x31 contains the capacity.</p>
+    <pre>
+      <code>
+   ...
+   1400017a3:	48 c7 45 b7 00 00 00 	mov    QWORD PTR [rbp-0x49],0x0
+   1400017aa:	00 
+   1400017ab:	48 8b 1d ce 48 00 00 	mov    rbx,QWORD PTR [rip+0x48ce]
+   1400017b2:	48 8d 35 b7 48 00 00 	lea    rsi,[rip+0x48b7]
+   1400017b9:	48 83 3d c7 48 00 00 	cmp    QWORD PTR [rip+0x48c7],0x10
+   1400017c0:	10 
+   1400017c1:	48 0f 43 35 a7 48 00 	cmovae rsi,QWORD PTR [rip+0x48a7]
+   1400017c8:	00 
+   1400017c9:	48 83 fb 10          	cmp    rbx,0x10
+   1400017cd:	73 11                	jae    0x1400017e0
+   1400017cf:	0f 10 06             	movups xmm0,XMMWORD PTR [rsi]
+   1400017d2:	0f 11 45 b7          	movups XMMWORD PTR [rbp-0x49],xmm0
+   1400017d6:	48 c7 45 cf 0f 00 00 	mov    QWORD PTR [rbp-0x31],0xf
+   1400017dd:	00 
+   1400017de:	eb 79                	jmp    0x140001859
+   ...
+   140001859:	48 89 5d c7          	mov    QWORD PTR [rbp-0x39],rbx
+   ...
+      </code>
+    </pre>
+    <p>RBP - 0x29 is the address of user input password copy. RBP - 0x49
+       is the address for the .data section <code>std::string</code>
+       copy. The latter is the first parameter to the function that
+       validates our password for correctness. The user input password copy
+       address is the second parameter.</p>
+    <pre>
+      <code>
+   ...
+   14000185d:	48 8d 55 d7          	lea    rdx,[rbp-0x29]
+   140001861:	48 8d 4d b7          	lea    rcx,[rbp-0x49]
+   140001865:	e8 56 fa ff ff       	call   0x1400012c0
+   14000186a:	84 c0                	test   al,al
+   14000186c:	0f 85 c9 01 00 00    	jne    0x140001a3b
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   1400012ca:	4c 8b 42 18          	mov    r8,QWORD PTR [rdx+0x18]
+   1400012ce:	48 8b da             	mov    rbx,rdx
+   1400012d1:	48 8b f9             	mov    rdi,rcx
+   1400012d4:	49 83 f8 10          	cmp    r8,0x10
+   1400012d8:	72 03                	jb     0x1400012dd
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   1400012dd:	48 8b 49 18          	mov    rcx,QWORD PTR [rcx+0x18]
+   1400012e1:	48 8b c7             	mov    rax,rdi
+   1400012e4:	48 83 f9 10          	cmp    rcx,0x10
+   1400012e8:	72 03                	jb     0x1400012ed
+   ...
+    <pre>
+      <code>
+   ...
+   1400012ed:	0f b6 40 04          	movzx  eax,BYTE PTR [rax+0x4]
+   1400012f1:	38 42 04             	cmp    BYTE PTR [rdx+0x4],al
+   1400012f4:	0f 85 d2 00 00 00    	jne    0x1400013cc
+   1400012fa:	48 8b d3             	mov    rdx,rbx
+   1400012fd:	49 83 f8 10          	cmp    r8,0x10
+   140001301:	72 03                	jb     0x140001306
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   140001306:	48 8b c7             	mov    rax,rdi
+   140001309:	48 83 f9 10          	cmp    rcx,0x10
+   14000130d:	72 03                	jb     0x140001312
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   140001312:	0f b6 40 08          	movzx  eax,BYTE PTR [rax+0x8]
+   140001316:	38 42 08             	cmp    BYTE PTR [rdx+0x8],al
+   140001319:	0f 85 ad 00 00 00    	jne    0x1400013cc
+   14000131f:	48 8b d3             	mov    rdx,rbx
+   140001322:	49 83 f8 10          	cmp    r8,0x10
+   140001326:	72 03                	jb     0x14000132b
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   14000132b:	48 8b c7             	mov    rax,rdi
+   14000132e:	48 83 f9 10          	cmp    rcx,0x10
+   140001332:	72 03                	jb     0x140001337
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   140001337:	0f b6 40 09          	movzx  eax,BYTE PTR [rax+0x9]
+   14000133b:	38 42 09             	cmp    BYTE PTR [rdx+0x9],al
+   14000133e:	0f 85 88 00 00 00    	jne    0x1400013cc
+   140001344:	48 83 f9 10          	cmp    rcx,0x10
+   140001348:	72 31                	jb     0x14000137b
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   14000137b:	48 c7 47 10 00 00 00 	mov    QWORD PTR [rdi+0x10],0x0
+   140001382:	00 
+   140001383:	48 c7 47 18 0f 00 00 	mov    QWORD PTR [rdi+0x18],0xf
+   14000138a:	00 
+   14000138b:	c6 07 00             	mov    BYTE PTR [rdi],0x0
+   14000138e:	48 8b 53 18          	mov    rdx,QWORD PTR [rbx+0x18]
+   140001392:	48 83 fa 10          	cmp    rdx,0x10
+   140001396:	72 30                	jb     0x1400013c8
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   1400013c8:	b0 01                	mov    al,0x1
+   1400013ca:	eb 7e                	jmp    0x14000144a
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   14000144a:	c6 03 00             	mov    BYTE PTR [rbx],0x0
+   14000144d:	48 c7 43 18 0f 00 00 	mov    QWORD PTR [rbx+0x18],0xf
+   140001454:	00 
+   140001455:	48 c7 43 10 00 00 00 	mov    QWORD PTR [rbx+0x10],0x0
+   14000145c:	00 
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   140001a3b:	b1 01                	mov    cl,0x1
+   140001a3d:	e8 2e fa ff ff       	call   0x140001470
+   ...
+      </code>
+    </pre>
+    <pre>
+      <code>
+   ...
+   140001474:	84 c9                	test   cl,cl
+   140001476:	48 8b 0d 9b 2c 00 00 	mov    rcx,QWORD PTR [rip+0x2c9b]
+   14000147d:	74 25                	je     0x1400014a4
+   14000147f:	48 8d 15 b2 2f 00 00 	lea    rdx,[rip+0x2fb2]
+   140001486:	e8 d5 08 00 00       	call   0x140001d60
+   14000148b:	48 8b c8             	mov    rcx,rax
+   14000148e:	48 8d 15 9b 0a 00 00 	lea    rdx,[rip+0xa9b]
+   140001495:	ff 15 0d 2c 00 00    	call   QWORD PTR [rip+0x2c0d]
+   14000149b:	33 c9                	xor    ecx,ecx
+   14000149d:	ff 15 6d 2d 00 00    	call   QWORD PTR [rip+0x2d6d]
+   ...
+      </code>
+    </pre>
+  </body>
+</html>
