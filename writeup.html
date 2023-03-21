@@ -305,7 +305,7 @@
    ...
       </code>
     </pre>
-    <p>The instructions to 0x1400016f3 to 0x1400016fb are the beginning of
+    <p>The instructions at 0x1400016f3 to 0x1400016fb are the beginning of
        the creation of a new <code>std::string</code> instance. The address
        RBP - 0x29 will hold the 16 byte buffer or a pointer to heap memory
        region if needed. The address RBP - 0x19 will be the length of the
@@ -387,6 +387,11 @@
    ...
       </code>
     </pre>
+    <p>The capacity of our password copy is copied to the R8 register and
+       the password copy's address is copied to the RBX register. The .data
+       section <code>std::string</code> copy's address is copied to the RDI.
+       The capacity of the password copy is less than 16 and the jump at
+       instruction 0x1400012d8 is taken.</p>
     <pre>
       <code>
    ...
@@ -398,14 +403,26 @@
    ...
       </code>
     </pre>
+    <p>With the .data section <code>std::string</code> copy's address still
+       in the RCX register, its capacity is compared to 16. Again this is
+       also less than 16 and the jump at instruction 0x1400012e8 is
+       taken. The RDI register also holds the .data section
+       <code>std::string</code> copy's address and is copied to the RAX
+       register before the jump is taken.</p>
     <pre>
       <code>
    ...
-   1400012dd:	48 8b 49 18          	mov    rcx,QWORD PTR [rcx+0x18]
+   1400012dd:	48 8b 49 18      	mov    rcx,QWORD PTR [rcx+0x18]
    1400012e1:	48 8b c7             	mov    rax,rdi
    1400012e4:	48 83 f9 10          	cmp    rcx,0x10
    1400012e8:	72 03                	jb     0x1400012ed
    ...
+      </code>
+    </pre>
+    <p>With RAX containing the .data section <code>std::string</code>
+       copy's address and the RDX register containing the password copy's
+       address, both strings have their fifth byte, index 4, compared
+       and checked for equality. The algorithm requires they are equal.</p>
     <pre>
       <code>
    ...
@@ -418,15 +435,9 @@
    ...
       </code>
     </pre>
-    <pre>
-      <code>
-   ...
-   140001306:	48 8b c7             	mov    rax,rdi
-   140001309:	48 83 f9 10          	cmp    rcx,0x10
-   14000130d:	72 03                	jb     0x140001312
-   ...
-      </code>
-    </pre>
+    <p>The ninth byte, index 8, of both <code>std:string</code> copies are
+       next compared for equality. Again the algorithm requires they both be
+       equal.</p>
     <pre>
       <code>
    ...
@@ -439,15 +450,11 @@
    ...
       </code>
     </pre>
-    <pre>
-      <code>
-   ...
-   14000132b:	48 8b c7             	mov    rax,rdi
-   14000132e:	48 83 f9 10          	cmp    rcx,0x10
-   140001332:	72 03                	jb     0x140001337
-   ...
-      </code>
-    </pre>
+    <p>Finally the tenth byte of both <code>std::string</code> copies are
+       compared and required to be equal. This brings up the question of this
+       being a potential off by one error as the tenth byte, index 9, of a
+       string of length 9 is the NULL byte. This could also simply be a check
+       that the user input password is in fact 9 bytes and a C string.</p>
     <pre>
       <code>
    ...
@@ -459,6 +466,12 @@
    ...
       </code>
     </pre>
+    <p>Not entirely sure why but the .data section <code>std::string</code>
+       copy has the length set to 0 and the capacity data member has a 15
+       copied to it. Its byte buffer has its first byte set to NULL,
+       effectively creating an empty string. Maybe this is done to attempt
+       to hide the <code>std::string</code> or a general cleanup by the
+       compiler.</p>
     <pre>
       <code>
    ...
@@ -473,6 +486,9 @@
    ...
       </code>
     </pre>
+    <p>A 1 is copied to the EAX register, least significant byte of the EAX
+       register. This is the register that holds the return value from a
+       function.</p>
     <pre>
       <code>
    ...
@@ -481,6 +497,10 @@
    ...
       </code>
     </pre>
+    <p>The same operation is preformed on the .data section
+       <code>std::string</code> copy two code listings above is performed
+       on the password copy <code>std::string</code>. The function returns
+       the 1 from above.</p>
     <pre>
       <code>
    ...
@@ -492,6 +512,10 @@
    ...
       </code>
     </pre>
+    <p>Back in main, the return value is checked for a non zero value and
+       a jump is taken if it is a non zero value in the code listing
+       below. The function at address 0x140001470 prints one of two messages
+       determined by the value of the ECX register or its only parameter.</p>
     <pre>
       <code>
    ...
@@ -500,6 +524,11 @@
    ...
       </code>
     </pre>
+    <p>If the ECX register is not zero (instruction 0x14000147d) the
+       "Valid Password" string is printed. If it is zero, the
+       "Wrong Password" string is printed. In either case, the exit
+       function is called after printing the message and execution of the
+       program stops.</p>
     <pre>
       <code>
    ...
@@ -516,5 +545,13 @@
    ...
       </code>
     </pre>
+    <p>This is a pretty simple binary to "crack" as the correct password
+       "xxxx4xx10" is a hardcoded value that can easily be found using the
+       Unix strings command. Note the x's are a variable indicating any
+       character that the standard input stream can process. The interesting
+       find was that one only needs the string "xxxx4xxx0" to pass
+       validation and print the "Valid Password" message.  This was either
+       by design or an off by one error by the author, potentially getting
+       the indices and the character place switched.</p>
   </body>
 </html>
