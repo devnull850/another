@@ -1,0 +1,50 @@
+!This program cannot be run in DOS mode.
+.text
+`.data
+7777777777777777777777777777 TTTTTTTTTTTTTTTTTTTTTTTTTTTT 7777777777777777777777777777
+777777777777777777777777777  TTTTTTTTTTTTTTTTTTTTTTTTTTTT 777777777777777777777777777
+77777777777777777777777777   TTTTTTTTTTTTTTTTTTTTTTTTTTTT 77777777777777777777777777
+                 77777777              TTTTTTTT                            77777777
+                77777777               TTTTTTTT                           77777777
+               77777777                TTTTTTTT                          77777777
+              77777777                 TTTTTTTT                         77777777
+             77777777                  TTTTTTTT                        77777777
+            77777777                   TTTTTTTT                       77777777
+           77777777                    TTTTTTTT                      77777777
+          77777777                     TTTTTTTT                     77777777
+         77777777                      TTTTTTTT                    77777777
+        77777777                       TTTTTTTT                   77777777
+       77777777                        TTTTTTTT                  77777777
+                                                                         CrackMe#3
+Please consider to support me.
+My BTC Address: 35jiCRnY5ycro8apD6cP9dXrz7jjWeFuvu
+I'll be available at l7otr7d[at]gmail.com
+Sorry..I don't like Debuggers.
+Sorry..Its time to charge your PC.
+Enter the User Name: 
+Sorry..I don't like Debuggers.
+Sorry..Its time to charge your PC.
+Enter the Serial key: 
+Sorry..I don't like Debuggers.
+Sorry..Its time to charge your PC.
+Serial key is valid
+Serial key is invalid
+kernel32.dll
+GetSystemPowerStatus
+IsDebuggerPresent
+msvcrt.dll
+printf
+_iob
+fgets
+strlen
+memcmp
+__set_app_type
+_controlfp
+__argc
+__argv
+_environ
+__getmainargs
+exit
+_XcptFilter
+_exit
+_except_handler3

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>Analysis of CrackMe#3_By_7T7.exe</h3>
+    <p>The crackme is a straight keygen. The Tiny C compiler produces assembly
+       very similar to GCC. There is no crazy highly optimized common code
+       snippets or any of the typical stuff you would encounter with MSVC.</p>
+    <p>The main function is found at address 0x401000. The Power Status from
+       the System information via the linked Kernel DLL's
+       <code>GetSystemPowerStatus</code> must populate the
+       <code>SYSTEM_POWER_STATUS</code> structure's
+       <code>BatteryLifeTime</code> data member with 100. It is rather annoying
+       and the program will not go any further. The presence of a debugger is
+       checked with <code>IsDebuggerPresent</code> function. Those are the
+       only anti analysis things in the binary.</p>
+    <p>If your power status is at 100% and you are not running in a debugger
+       (or flip the flag returned from the debugger check in a debugger),
+       you are prompted for a user name. The string at address 0x402590 is
+       "Enter the User Name: ". The function at address 0x4017a0 is the
+       <code>printf</code> function.</p>
+    <pre>
+      <code>
+  ...
+  40116a:	b8 90 25 40 00       	mov    eax,0x402590
+  40116f:	50                   	push   eax
+  401170:	e8 2b 06 00 00       	call   0x4017a0
+  ...
+      </code>
+    </pre>
+    <p>The <code>fgets</code> function is used to populate a buffer on the
+       stack at address EBP - 0x64. The maximum number of characters and the
+       second parameter is 100. The input stream to read from is the third
+       parameter. The standar input stream is used for input.</p>
+    <pre>
+      <code>
+  ...
+  401178:	8b 05 cc 26 40 00    	mov    eax,DWORD PTR ds:0x4026cc
+  40117e:	50                   	push   eax
+  40117f:	b8 64 00 00 00       	mov    eax,0x64
+  401184:	50                   	push   eax
+  401185:	8d 45 9c             	lea    eax,[ebp-0x64]
+  401188:	50                   	push   eax
+  401189:	e8 22 06 00 00       	call   0x4017b0
+  ...
+      </code>
+    </pre>
+    <p>The length of the user name string is taken and decremented by 1. This is
+       to account for the newline character that is included in the input if
+       the maximum number of characters, 100, are not read in. The function
+       at address 0x4017b8 is the <code>strlen</code> function and it is the
+       function used to get the length of the user name. A pointer is assigned
+       the address of the user name buffer.</p>
+    <pre>
+      <code>
+  ...
+  401191:	8d 45 9c             	lea    eax,[ebp-0x64]
+  401194:	50                   	push   eax
+  401195:	e8 1e 06 00 00       	call   0x4017b8
+  ...
+  40119d:	48                   	dec    eax
+  40119e:	89 45 98             	mov    DWORD PTR [ebp-0x68],eax
+  ...
+      </code>
+    </pre>
+    <p>A loop is entered with the loop index being a four byte value on the
+       stack at EBP - 0x460. It is initialized to zero. The loop will continue
+       execution if the loop index is less then the length of the user name
+       string minus one.</p>
+    <pre>
+      <code>
+  ...
+  4011a1:	b8 00 00 00 00       	mov    eax,0x0
+  4011a6:	89 85 a0 fb ff ff    	mov    DWORD PTR [ebp-0x460],eax
+  4011ac:	8b 85 a0 fb ff ff    	mov    eax,DWORD PTR [ebp-0x460]
+  4011b2:	8b 4d 98             	mov    ecx,DWORD PTR [ebp-0x68]
+  4011b5:	39 c8                	cmp    eax,ecx
+  4011b7:	0f 8d 8e 00 00 00    	jge    0x40124b
+  4011bd:	e9 11 00 00 00       	jmp    0x4011d3
+  ...
+      </code>
+    </pre>
+    <p>An integer array (4 byte elements) is populated with each element
+       containing the character at the current index of the loop in the user
+       name string.</p>
+    <pre>
+      <code>
+  ...
+  4011d3:	8b 85 a0 fb ff ff    	mov    eax,DWORD PTR [ebp-0x460]
+  4011d9:	c1 e0 02             	shl    eax,0x2
+  4011dc:	8d 8d 08 fe ff ff    	lea    ecx,[ebp-0x1f8]
+  4011e2:	01 c1                	add    ecx,eax
+  4011e4:	8b 85 a0 fb ff ff    	mov    eax,DWORD PTR [ebp-0x460]
+  4011ea:	8d 55 9c             	lea    edx,[ebp-0x64]
+  4011ed:	01 c2                	add    edx,eax
+  4011ef:	0f be 02             	movsx  eax,BYTE PTR [edx]
+  4011f2:	89 01                	mov    DWORD PTR [ecx],eax
+  ...
+      </code>
+    </pre>
+    <p>Each element in a second integer array is populated from the user name
+       byte in the integer array above at the current index XOR by the length
+       of the user name string minus one multiplied by the user name string
+       length minus one XOR by user name byte.</p>
+    <pre>
+      <code>
+  ...
+  4011f4:	8b 85 a0 fb ff ff    	mov    eax,DWORD PTR [ebp-0x460]
+  4011fa:	c1 e0 02             	shl    eax,0x2
+  4011fd:	8d 8d 78 fc ff ff    	lea    ecx,[ebp-0x388]
+  401203:	01 c1                	add    ecx,eax
+  401205:	8b 85 a0 fb ff ff    	mov    eax,DWORD PTR [ebp-0x460]
+  40120b:	c1 e0 02             	shl    eax,0x2
+  40120e:	8d 95 08 fe ff ff    	lea    edx,[ebp-0x1f8]
+  401214:	01 c2                	add    edx,eax
+  401216:	8b 02                	mov    eax,DWORD PTR [edx]
+  401218:	8b 55 98             	mov    edx,DWORD PTR [ebp-0x68]
+  40121b:	31 d0                	xor    eax,edx
+  40121d:	8b 55 98             	mov    edx,DWORD PTR [ebp-0x68]
+  401220:	0f af c2             	imul   eax,edx
+  401223:	8b 95 a0 fb ff ff    	mov    edx,DWORD PTR [ebp-0x460]
+  401229:	c1 e2 02             	shl    edx,0x2
+  40122c:	89 8d 9c fb ff ff    	mov    DWORD PTR [ebp-0x464],ecx
+  401232:	8d 8d 08 fe ff ff    	lea    ecx,[ebp-0x1f8]
+  401238:	01 d1                	add    ecx,edx
+  40123a:	8b 11                	mov    edx,DWORD PTR [ecx]
+  40123c:	31 d0                	xor    eax,edx
+  40123e:	8b 8d 9c fb ff ff    	mov    ecx,DWORD PTR [ebp-0x464]
+  401244:	89 01                	mov    DWORD PTR [ecx],eax
+  401246:	e9 77 ff ff ff       	jmp    0x4011c2
+  ...
+      </code>
+    </pre>
+    <p>Assuming <code>a</code> is the integer containing the user name bytes
+       and <code>b</code> is the current integer array being populated, a
+       potential C implementation may look like the following:</p>
+    <pre>
+      <code>
+  ...
+  b[i] = ((a[i] ^ (strlen(user) - 1)) * (strlen(user) - 1)) ^ a[i];
+  ...
+      </code>
+    </pre>
+    <p>With each iteraction the loop index is incremented by one.</p>
+    <pre>
+      <code>
+  ...
+  4011c2:	8b 85 a0 fb ff ff    	mov    eax,DWORD PTR [ebp-0x460]
+  4011c8:	89 c1                	mov    ecx,eax
+  4011ca:	40                   	inc    eax
+  4011cb:	89 85 a0 fb ff ff    	mov    DWORD PTR [ebp-0x460],eax
+  4011d1:	eb d9                	jmp    0x4011ac
+  ...
+      </code>
+    </pre>
+    <p>Another battery and debugger check is performed. Two other integer
+       arrays are populated but are irrelevant for the keygen.</p>
+    <p>Skipping ahead the user is prompted for the serial key. The string at
+       address 0x4025ea is "Enter the Serial key: ". The function at address
+       0x4017a0 is the <code>printf</code> function.</p>
+    <pre>
+      <code>
+  ...
+  40143d:	b8 ea 25 40 00       	mov    eax,0x4025ea
+  401442:	50                   	push   eax
+  401443:	e8 58 03 00 00       	call   0x4017a0
+  ...
+      </code>
+    </pre>
+    <p>The <code>fgets</code> function is used to populate a buffer on the
+       stack for the serial key at EBP - 0x608. The user input is read from
+       the standard input stream and the maximum number of characters to be
+       read is 200.</p>
+    <pre>
+      <code>
+  ...
+  40144b:	8b 05 cc 26 40 00    	mov    eax,DWORD PTR ds:0x4026cc
+  401451:	50                   	push   eax
+  401452:	b8 c8 00 00 00       	mov    eax,0xc8
+  401457:	50                   	push   eax
+  401458:	8d 85 f8 f9 ff ff    	lea    eax,[ebp-0x608]
+  40145e:	50                   	push   eax
+  40145f:	e8 4c 03 00 00       	call   0x4017b0
+  ...
+      </code>
+    </pre>
+    <p>The length of the serial key string is taken and decremented by 1.</p>
+    <pre>
+      <code>
+  ...
+  401467:	8d 85 f8 f9 ff ff    	lea    eax,[ebp-0x608]
+  40146d:	50                   	push   eax
+  40146e:	e8 45 03 00 00       	call   0x4017b8
+  ...
+  401476:	48                   	dec    eax
+  ...
+      </code>
+    </pre>
+    <p>The length calculated above is used to index the last element or
+       character of the serial key string. If the input string is less than the
+       maximum of 200 characters, this will be the newline character. The
+       newline character at that index is changed to 0. This creates a NULL
+       terminated C string.</p>
+    <pre>
+      <code>
+  ...
+  401477:	8d 8d f8 f9 ff ff    	lea    ecx,[ebp-0x608]
+  40147d:	01 c1                	add    ecx,eax
+  40147f:	b8 00 00 00 00       	mov    eax,0x0
+  401484:	88 01                	mov    BYTE PTR [ecx],al
+  ...
+      </code>
+    </pre>
+    <p>The code listing below initializes a loop index to zero and contains
+       the boolean check to determine if the loop continues.</p>
+    <pre>
+      <code>
+  ...
+  401486:	b8 00 00 00 00       	mov    eax,0x0
+  40148b:	89 85 64 f8 ff ff    	mov    DWORD PTR [ebp-0x79c],eax
+  401491:	8b 85 64 f8 ff ff    	mov    eax,DWORD PTR [ebp-0x79c]
+  401497:	8b 4d 98             	mov    ecx,DWORD PTR [ebp-0x68]
+  40149a:	39 c8                	cmp    eax,ecx
+  40149c:	0f 8d a6 00 00 00    	jge    0x401548
+  4014a2:	e9 11 00 00 00       	jmp    0x4014b8
+  ...
+      </code>
+    </pre>
+    <p>The loop will chunk three characters in the serial key string starting
+       at the current loop index multiplied by 3. Assuming <code>i</code> is
+       the loop index, the three characters are at index <code>3 * i</code>,
+       <code>3 * i + 1</code>, and <code>3 * i + 2</code> in each loop
+       iteration "chunk." The character at index <code>3 * i</code> is
+       subtracted by 48 and multiplied by 100. The character at
+       <code>3 * i + 1</code> is subtracted by 48 and multiplied by 10. The
+       character at <code>3 * i + 2</code> is subtracted by 48. The three
+       resulting values are added together and moved to an integer array at the
+       current loop index in the array. The array is on the stack at address
+       EBP - 0x798.</p>
+    <pre>
+      <code>
+  ...
+  4014b8:	8b 85 64 f8 ff ff    	mov    eax,DWORD PTR [ebp-0x79c]
+  4014be:	c1 e0 02             	shl    eax,0x2
+  4014c1:	8d 8d 68 f8 ff ff    	lea    ecx,[ebp-0x798]
+  4014c7:	01 c1                	add    ecx,eax
+  4014c9:	8b 85 64 f8 ff ff    	mov    eax,DWORD PTR [ebp-0x79c]
+  4014cf:	ba 03 00 00 00       	mov    edx,0x3
+  4014d4:	0f af c2             	imul   eax,edx
+  4014d7:	8d 95 f8 f9 ff ff    	lea    edx,[ebp-0x608]
+  4014dd:	01 c2                	add    edx,eax
+  4014df:	0f be 02             	movsx  eax,BYTE PTR [edx]
+  4014e2:	83 e8 30             	sub    eax,0x30
+  4014e5:	ba 64 00 00 00       	mov    edx,0x64
+  4014ea:	0f af c2             	imul   eax,edx
+  4014ed:	8b 95 64 f8 ff ff    	mov    edx,DWORD PTR [ebp-0x79c]
+  4014f3:	89 8d 60 f8 ff ff    	mov    DWORD PTR [ebp-0x7a0],ecx
+  4014f9:	b9 03 00 00 00       	mov    ecx,0x3
+  4014fe:	0f af d1             	imul   edx,ecx
+  401501:	42                   	inc    edx
+  401502:	8d 8d f8 f9 ff ff    	lea    ecx,[ebp-0x608]
+  401508:	01 d1                	add    ecx,edx
+  40150a:	0f be 11             	movsx  edx,BYTE PTR [ecx]
+  40150d:	83 ea 30             	sub    edx,0x30
+  401510:	b9 0a 00 00 00       	mov    ecx,0xa
+  401515:	0f af d1             	imul   edx,ecx
+  401518:	01 d0                	add    eax,edx
+  40151a:	8b 8d 64 f8 ff ff    	mov    ecx,DWORD PTR [ebp-0x79c]
+  401520:	ba 03 00 00 00       	mov    edx,0x3
+  401525:	0f af ca             	imul   ecx,edx
+  401528:	83 c1 02             	add    ecx,0x2
+  40152b:	8d 95 f8 f9 ff ff    	lea    edx,[ebp-0x608]
+  401531:	01 ca                	add    edx,ecx
+  401533:	0f be 0a             	movsx  ecx,BYTE PTR [edx]
+  401536:	83 e9 30             	sub    ecx,0x30
+  401539:	01 c8                	add    eax,ecx
+  40153b:	8b 8d 60 f8 ff ff    	mov    ecx,DWORD PTR [ebp-0x7a0]
+  401541:	89 01                	mov    DWORD PTR [ecx],eax
+  401543:	e9 5f ff ff ff       	jmp    0x4014a7
+  ...
+      </code>
+    </pre>
+    <p>With each iteration, the loop index is incremented by one.</p>
+    <pre>
+      <code>
+  ...
+  4014a7:	8b 85 64 f8 ff ff    	mov    eax,DWORD PTR [ebp-0x79c]
+  4014ad:	89 c1                	mov    ecx,eax
+  4014af:	40                   	inc    eax
+  4014b0:	89 85 64 f8 ff ff    	mov    DWORD PTR [ebp-0x79c],eax
+  4014b6:	eb d9                	jmp    0x401491
+  ...
+      </code>
+    </pre>
+    <p>Another debugger and power status check is performed. The two arrays
+       discussed are now compared using the <code>memcmp</code> function.
+       The <code>memcmp</code> function takes the two arrays as the first two inputs
+       and the length of the user name string minus one multiplied by four.</p>
+    <pre>
+      <code>
+  ...
+  401596:	8b 45 98             	mov    eax,DWORD PTR [ebp-0x68]
+  401599:	c1 e0 02             	shl    eax,0x2
+  40159c:	50                   	push   eax
+  40159d:	8d 85 78 fc ff ff    	lea    eax,[ebp-0x388]
+  4015a3:	50                   	push   eax
+  4015a4:	8d 85 68 f8 ff ff    	lea    eax,[ebp-0x798]
+  4015aa:	50                   	push   eax
+  4015ab:	e8 10 02 00 00       	call   0x4017c0 #memcmp
+  ...
+      </code>
+    </pre>
+    <p>If a zero is returned from <code>memcmp</code>, the
+       "Serial key is valid\n" message is displayed to the user.</p>
+    <pre>
+      <code>
+  ...
+  4015b3:	83 f8 00             	cmp    eax,0x0
+  4015b6:	0f 85 13 00 00 00    	jne    0x4015cf
+  4015bc:	b8 45 26 40 00       	mov    eax,0x402645
+  4015c1:	50                   	push   eax
+  4015c2:	e8 d9 01 00 00       	call   0x4017a0
+  ...
+      </code>
+    </pre>
+    <h3>Keygen</h3>
+    <p>The first step of the keygen is to create a integer array from the
+       algorithm below applied to each character of the user name string.</p>
+    <pre>
+      <code>
+  ...
+  // assume:
+  //   a is the integer array
+  //   user is the user name string
+  //   LEN is the length of the user name string
+
+  a[i] = ((user[i] ^ LEN) * LEN) ^ user[i]; 
+  ...
+      </code>
+    </pre>
+    <p>Once you have the array populated, stringify each integer value and
+       concatenate the resulting strings to generate the serial key string.</p>
+    <pre>
+      <code>
+  // assume s is the serial key string
+
+  ...
+  for (size_t i = 0; i < LEN; ++i) {
+    s[3*i] = a[i] / 100 + 48; 
+    s[3*i + 1] = a[i] / 10 % 10 + 48;
+    s[3*i + 2] = a[i] % 10 + 48;
+  }
+  ...
+      </code>
+    </pre>
+    <p>One thing to watch out for, depending on the size of the user name
+       length, is you may end up with integer values in the array elements for         the first step that exceed the bounds of 3 decimal digits. I found to be
+       consistently valid for a user name with all lower case alphabetic
+       characters the string needed to be 7 characters or less.</p>
+  </body>
+</html>
