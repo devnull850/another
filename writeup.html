@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>Analysis</h3>
+    <p>The binary makes extensive use of <code>std::string</code> instances and
+       <code>std::vector</code> instances. Once one begins to see the
+       <code>std::vector</code> instances the binary is not that difficult to
+       analyze.</p>
+    <p>The <code>main</code> function appears to be at address 0x402d80 in the
+       binary and simply calls a function at address 0x402000 before pausing
+       and returning. The prompting of the user for a key and the algorithm for
+       checking its validity are both found in the function at address
+       0x402000.</p>
+    <p>Now the fun of reverse engineering MSVC's implementation of
+       <code>std::vector</code> begins. It is actually not complicated.
+       Essentially the implementation of the object contains 3 pointers. The
+       first pointer points to the first element of the vector. The second
+       pointer points to the last POPULATED element in vector. The third
+       pointer points to the end of the vector's allocated space in memory.
+       The pointers are actually iterators in C++ land but for our disassembly
+       we can treat them as pointers since they hold an address.</p>
+    <p>One can make the disassembly much easier to digest by creating a custom
+       type in Ghidra or IDA and applying it to the vector references in the
+       binary. A potential custom type is seen below.</p>
+    <pre>
+      <code>
+  struct uint_vector {
+    unsigned *first;
+    unsigned *last;
+    unsigned *end;
+  };
+      </code>
+    </pre>
+    <p>The code listing below populates a 64 byte block on the stack with
+       what appears to be integer or unsigned integer values from the .data
+       section of the binary. A new <code>std::vector</code> is created with
+       the function (method) at address 0x402e80. The vector instance is a
+       stack (local) variable starting at address EBP - 0x34. The vector will
+       be initialized with the integer values from the 64 byte block. After
+       the method at 0x402e80 returns, the vector will contain 16 unsigned or
+       signed integers.</p>
+    <pre>
+      <code>
+  ...
+  40202d:	0f 57 c0             	xorps  xmm0,xmm0
+  402030:	8d 8d a0 fe ff ff    	lea    ecx,[ebp-0x160]
+  402036:	33 f6                	xor    esi,esi
+  402038:	8d 85 e0 fe ff ff    	lea    eax,[ebp-0x120]
+  40203e:	89 b5 08 ff ff ff    	mov    DWORD PTR [ebp-0xf8],esi
+  402044:	66 0f d6 45 cc       	movq   QWORD PTR [ebp-0x34],xmm0
+  402049:	0f 28 05 f0 a8 42 00 	movaps xmm0,XMMWORD PTR ds:0x42a8f0
+  402050:	0f 11 85 a0 fe ff ff 	movups XMMWORD PTR [ebp-0x160],xmm0
+  402057:	51                   	push   ecx
+  402058:	0f 28 05 20 a9 42 00 	movaps xmm0,XMMWORD PTR ds:0x42a920
+  40205f:	0f 11 85 b0 fe ff ff 	movups XMMWORD PTR [ebp-0x150],xmm0
+  402066:	50                   	push   eax
+  402067:	0f 28 05 30 a9 42 00 	movaps xmm0,XMMWORD PTR ds:0x42a930
+  40206e:	0f 11 85 c0 fe ff ff 	movups XMMWORD PTR [ebp-0x140],xmm0
+  402075:	51                   	push   ecx
+  402076:	0f 28 05 60 a9 42 00 	movaps xmm0,XMMWORD PTR ds:0x42a960
+  40207d:	8d 4d cc             	lea    ecx,[ebp-0x34]
+  402080:	89 75 d4             	mov    DWORD PTR [ebp-0x2c],esi
+  402083:	0f 11 85 d0 fe ff ff 	movups XMMWORD PTR [ebp-0x130],xmm0
+  40208a:	e8 f1 0d 00 00       	call   0x402e80
+  ...
+      </code>
+    </pre>
+    <p>The other C++ data structure or class to note is the
+       <code>std::string</code> class. The MSVC implementation appears to
+       use a short/small string optimization. A 16 byte buffer will be used
+       for the characters of the string unless more space is needed. When more
+       space is needed a heap allocation will occur and a pointer will be used
+       for navigating to the area in memory where the characters of the string
+       are located. The data members of the MSVC implementation appear to be
+       a Union of a char array of 16 elements and a pointer. The other two data
+       members are the capacity and length or number of characters of the
+       string. Note they may or may not be the same value. The capacity is the
+       number of bytes allocated for the string's character "array." The length
+       is the actual number of characters in the string. Again to make
+       disassembly much easier to follow, one can make a custom type in Ghidra
+       or IDA. A potential implementation is seen below.</p>
+    <pre>
+      <code>
+  union string_buffer {
+    char buffer[16];
+    unsigned *pointer;
+  };
+
+  struct std_string {
+    union string_buffer buffer;
+    unsigned length;
+    unsigned capacity;
+  };
+      </code>
+    </pre>
+    <p>The user is prompted for a key and a <code>std::string</code> instance
+       is populated from the bytes taken from the standard input stream. The
+       length is compared to 16 and must be equal for execution to continue.</p>
+    <p>Five <code>std::vector</code> instances are initialized on the stack.
+       Their three pointer data members are simply assigned to zero.</p>
+    <p>The first of five loops is entered. The loop takes each character of the
+       key and creates a string of the decimal value for that byte.</p>
+    <pre>
+      <code>
+  Ex.: 'T' -> 84 -> "84"
+      </code>
+    </pre>
+    <p>If the length of the generated string is less than 3, a '2' is appended
+       to the string. The characters of the string are then separated,
+       subtracted by 48 to convert them to the decimal value they represent, and
+       inserted into one of three integer vectors. The byte value of the
+       character of the key is inserted into an integer vector and the
+       temporary string with the decimal value as a string is inserted into a
+       vector of strings. Below I focus on the first three vectors mentioned
+       because they are the important ones used in the key validation. The variable
+       "decimal_string" below is the string converted from the decimal byte value
+       of the key character.</p>
+    <pre>
+      <code>
+  vector at EBP - 0x4c <- decimal_string.at(0) - 48
+  vector at EBP - 0x58 <- decimal_string.at(1) - 48
+  vector at EBP - 0x64 <- decimal_string.at(2) - 48
+      </code>
+    </pre>
+    <p>The loop continues for 16 iterations or the length of a valid key. The
+       code listing below shows important portions of the disassembly of the
+       steps described above. Note the majority of code is optimization and
+       memory allocation for the strings and/or vectors. I tried to leave those
+       portions out to not distract from the actual algorithm to verify a valid
+       key. Also of note there are 3 temporary strings created and used to pass
+       the decimal string to the three integer vectors.</p>
+    <pre>
+      <code>
+  ...
+  # user input key
+  402194:	8d 85 6c ff ff ff    	lea    eax,[ebp-0x94]
+  40219a:	0f 43 85 6c ff ff ff 	cmovae eax,DWORD PTR [ebp-0x94]
+
+  # character at index ECX, where ECX is the loop iteration index
+  4021a1:	0f be 04 08          	movsx  eax,BYTE PTR [eax+ecx*1]
+
+  # decimal string instance
+  4021a5:	8d 8d 54 ff ff ff    	lea    ecx,[ebp-0xac]
+  4021ab:	8b d0                	mov    edx,eax
+  4021ad:	89 85 fc fe ff ff    	mov    DWORD PTR [ebp-0x104],eax
+
+  # function to convert decimal byte value to string
+  4021b3:	e8 78 10 00 00       	call   0x403230
+  ...
+
+  # Appending of '2' to the strings with length under 3
+  4022dc:	66 c7 04 07 32 00    	mov    WORD PTR [edi+eax*1],0x32
+  ...
+
+  # temporary string containing decimal string and possible '2' appended
+  40240b:	8d 8d 3c ff ff ff    	lea    ecx,[ebp-0xc4]
+  402411:	8b 85 3c ff ff ff    	mov    eax,DWORD PTR [ebp-0xc4]
+  402417:	0f 43 c8		cmovae ecx,eax
+  ...
+
+  # temporary string character at index 0 subtracted by 48
+  40241d:	0f be 09             	movsx  ecx,BYTE PTR [ecx]
+  402420:	83 e9 30             	sub    ecx,0x30
+  402423:	89 8d 08 ff ff ff    	mov    DWORD PTR [ebp-0xf8],ecx
+  ...
+  40242d:	0f be 70 01          	movsx  esi,BYTE PTR [eax+0x1]
+  ...
+  402433:	0f be b5 3d ff ff ff 	movsx  esi,BYTE PTR [ebp-0xc3]
+  40243a:	8d 85 3c ff ff ff    	lea    eax,[ebp-0xc4]
+  402440:	0f be 40 02          	movsx  eax,BYTE PTR [eax+0x2]
+
+  # temporary string character at index 1 subtracted by 48
+  402444:	83 ee 30             	sub    esi,0x30
+
+  # temporary string character at index 2 subtracted by 48
+  402447:	83 e8 30             	sub    eax,0x30
+
+  # temporary variables used to shuttle values to appropriate vectors
+  40244a:	89 b5 14 ff ff ff    	mov    DWORD PTR [ebp-0xec],esi
+  402450:	89 85 0c ff ff ff    	mov    DWORD PTR [ebp-0xf4],eax
+  402456:	89 85 10 ff ff ff    	mov    DWORD PTR [ebp-0xf0],eax
+  ...
+      </code>
+    </pre>
+    <p>Below is a pseudo code mapping for the local integer variables and their
+       vector destination.</p>
+    <pre>
+      <code>
+  vector at EBP - 0x4c <- dword ptr [ebp - 0xf8]
+  vector at EBP - 0x58 <- dword ptr [ebp - 0xec]
+  vector at EBP - 0x64 <- dword ptr [ebp - 0xf4]
+      </code>
+    </pre>
+    <p>The second loop will create another 16 element vector based on the
+       16 element vector created at the beginning of the current function.
+       If the value of the first vector at the current loop index is 2, 3, 10,
+       11, 12, or 15, the value is inserted into the new vector. The other
+       values are halved (divided by 2) and inserted into the new vector.</p>
+    <pre>
+      <code>
+  ...
+
+  # ESI contains the address of the vector element at the current index 
+  402660:	8b 06                	mov    eax,DWORD PTR [esi]
+  402662:	83 f8 02             	cmp    eax,0x2
+  402665:	74 43                	je     0x4026aa
+  402667:	83 f8 03             	cmp    eax,0x3
+  40266a:	74 3e                	je     0x4026aa
+  40266c:	83 f8 0f             	cmp    eax,0xf
+  40266f:	74 39                	je     0x4026aa
+  402671:	83 f8 0c             	cmp    eax,0xc
+  402674:	74 34                	je     0x4026aa
+  402676:	83 f8 0b             	cmp    eax,0xb
+  402679:	74 2f                	je     0x4026aa
+  40267b:	83 f8 0a             	cmp    eax,0xa
+  40267e:	74 2a                	je     0x4026aa
+  ...
+      </code>
+    </pre>
+    <p>The newly created and populated vector is on the stack at address
+       EBP - 0x28.</p>
+    <p>The third loop has no effect on the elements compared as part of the
+       key validation algorithm. I will skip it.</p>
+    <p>The fourth loop will construct a new <code>std::vector</code> instance
+       and populate its elements based on two of the previous vectors. The
+       two vectors are at EBP - 0x64 and EBP - 0x58. To simplify discussion,
+       I will refer to the vector at EBP - 0x64 as vector0 and the vector at
+       EBP - 0x58 as vector1.</p>
+    <p>The two 16 integer vectors, the first vector created in this current
+       function and the one created based on that vector's element's values, are
+       used as indices into vector0 and vector1. For simplicity, the first
+       vector which has its current element's address in the pointer at
+       EBP - 0x120 will be referred to as vectorA. The vector that was created
+       based on vectorA's elements with its current element's address in the
+       pointer at EBP - 0xe0 will be referred to as vectorB.</p>
+    <p>The code listing below creates yet another vector that is on the stack
+       at address EBP - 0x70. The value for its current element for the current
+       loop index is the sum of vector0's element at the current loop index
+       element's value in vectorB and vector1's element at the current loop
+       index element's value in vectorA. That is a bit to comprehend.
+       The pseudo code listing below should help to illustrate the thought a
+       bit better.</p>
+    <pre>
+      <code>
+  // assume i is the current loop index
+  // assume x is integer declared somewhere in this scope
+  // it is an iterator pointing the element after the last of the new_vector
+
+  x = vector0.at(vectorB.at(i)) + vector1.at(vectorA.at(i));
+  new_vector.insert(it, x);
+      </code>
+    </pre>
+    <p>The loop continues for 16 iterations. The code listing below shows
+       the disassembly described above.</p>
+    <pre>
+      <code>
+  ...
+  # ECX will contain vectorA's current element address
+  402840:	8b 0c 01             	mov    ecx,DWORD PTR [ecx+eax*1]
+
+  # EAX will contain vectorB's current element address
+  402843:	8b 00                	mov    eax,DWORD PTR [eax]
+  402845:	8b bd 14 ff ff ff    	mov    edi,DWORD PTR [ebp-0xec]
+
+  # EAX will contain vector0.at(vectorB.at(i))
+  40284b:	8b 04 87             	mov    eax,DWORD PTR [edi+eax*4]
+  40284e:	8b bd f8 fe ff ff    	mov    edi,DWORD PTR [ebp-0x108]
+
+  # vector0.at(vectorB.at(i)) + vector1.at(vectorA.at(i))
+  402854:	03 04 8f             	add    eax,DWORD PTR [edi+ecx*4]
+  402857:	89 85 10 ff ff ff    	mov    DWORD PTR [ebp-0xf0],eax
+
+  # inserting the sum into the new vector
+  40285d:	3b f2                	cmp    esi,edx
+  40285f:	74 0a                	je     0x40286b
+  402861:	89 06                	mov    DWORD PTR [esi],eax
+  402863:	83 c6 04             	add    esi,0x4
+  402866:	89 75 94             	mov    DWORD PTR [ebp-0x6c],esi
+  402869:	eb 16                	jmp    0x402881
+  40286b:	8d 85 10 ff ff ff    	lea    eax,[ebp-0xf0]
+  402871:	50                   	push   eax
+  402872:	56                   	push   esi
+  402873:	8d 4d 90             	lea    ecx,[ebp-0x70]
+  402876:	e8 e5 20 00 00       	call   0x404960
+  ...
+      </code>
+    </pre>
+    <p>The new vector which I will refer to as the generated vector or
+       vectorG, is then used in the final loop with two other vectors with
+       elements populated from values in the .data section. The first vector
+       which I will refer to as vectorC1 is located on the stack at EBP - 0xb8.
+       It has all 16 of its elements populated with a 4 element integer array
+       in the .data section at 0x42a8e0. The 4 elements are just repeated 4
+       times to populate all 16 elements. The values are all the value 3.
+       </p>
+    <p>The other vector which I will refer to as vectorC2 is on the stack at
+       EBP - 0xa0. Its first four elements are populated with the four integers
+       contained at address 0x42a910. The second four elements are populated
+       with the four integers contained at address 0x42a940. The third and
+       fourth 4 element chunks are populated with the four integers at
+       address 0x42a900 and 0x42a950 respectively. The code listing below
+       shows the creation and population of the two vectors.</p>
+    <pre>
+      <code>
+  ...
+  # vectorC1 creation and population
+  4028c0:	8d 8d a0 fe ff ff    	lea    ecx,[ebp-0x160]
+  ...
+  4028d1:	0f 57 c0             	xorps  xmm0,xmm0
+  4028d4:	8d 85 e0 fe ff ff    	lea    eax,[ebp-0x120]
+  4028da:	50                   	push   eax
+  4028db:	66 0f d6 85 48 ff ff 	movq   QWORD PTR [ebp-0xb8],xmm0
+  4028e2:	ff 
+  4028e3:	0f 28 05 e0 a8 42 00 	movaps xmm0,XMMWORD PTR ds:0x42a8e0
+  4028ea:	51                   	push   ecx
+  4028eb:	8d 8d 48 ff ff ff    	lea    ecx,[ebp-0xb8]
+  4028f1:	0f 11 85 a0 fe ff ff 	movups XMMWORD PTR [ebp-0x160],xmm0
+  4028f8:	0f 11 85 b0 fe ff ff 	movups XMMWORD PTR [ebp-0x150],xmm0
+  4028ff:	0f 11 85 c0 fe ff ff 	movups XMMWORD PTR [ebp-0x140],xmm0
+  402906:	0f 11 85 d0 fe ff ff 	movups XMMWORD PTR [ebp-0x130],xmm0
+  40290d:	e8 6e 05 00 00       	call   0x402e80
+  ...
+  # vectorC2 creation and population
+  402916:	8d 8d 60 fe ff ff    	lea    ecx,[ebp-0x1a0]
+  40291c:	0f 57 c0             	xorps  xmm0,xmm0
+  ...
+  402929:	66 0f d6 85 60 ff ff 	movq   QWORD PTR [ebp-0xa0],xmm0
+  402930:	ff 
+  402931:	8d 85 a0 fe ff ff    	lea    eax,[ebp-0x160]
+  402937:	0f 28 05 10 a9 42 00 	movaps xmm0,XMMWORD PTR ds:0x42a910
+  40293e:	0f 11 85 60 fe ff ff 	movups XMMWORD PTR [ebp-0x1a0],xmm0
+  ...
+  402946:	0f 28 05 40 a9 42 00 	movaps xmm0,XMMWORD PTR ds:0x42a940
+  40294d:	0f 11 85 70 fe ff ff 	movups XMMWORD PTR [ebp-0x190],xmm0
+  402954:	50                   	push   eax
+  402955:	0f 28 05 00 a9 42 00 	movaps xmm0,XMMWORD PTR ds:0x42a900
+  40295c:	0f 11 85 80 fe ff ff 	movups XMMWORD PTR [ebp-0x180],xmm0
+  402963:	51                   	push   ecx
+  402964:	0f 28 05 50 a9 42 00 	movaps xmm0,XMMWORD PTR ds:0x42a950
+  40296b:	8d 8d 60 ff ff ff    	lea    ecx,[ebp-0xa0]
+  402971:	0f 11 85 90 fe ff ff 	movups XMMWORD PTR [ebp-0x170],xmm0
+  402978:	e8 03 05 00 00       	call   0x402e80
+  ...
+      </code>
+    </pre>
+    <p>The fifth and final loop compares the sum of vectorG and vectorC1 values
+       to be equal to the value of vectorC2 at the current loop index. A
+       counter variable stored in the combination of the ECX and EDI registers
+       is incremented for every equality.</p>
+    <pre>
+      <code>
+  ...
+  4029b8:	8b 04 10             	mov    eax,DWORD PTR [eax+edx*1]
+  4029bb:	8d 4f 01             	lea    ecx,[edi+0x1]
+  4029be:	03 02                	add    eax,DWORD PTR [edx]
+  4029c0:	8d 52 04             	lea    edx,[edx+0x4]
+  4029c3:	8b b5 e0 fe ff ff    	mov    esi,DWORD PTR [ebp-0x120]
+  4029c9:	3b 44 16 fc          	cmp    eax,DWORD PTR [esi+edx*1-0x4]
+  4029cd:	8b 85 18 ff ff ff    	mov    eax,DWORD PTR [ebp-0xe8]
+  4029d3:	0f 45 cf             	cmovne ecx,edi
+  4029d6:	83 ad 04 ff ff ff 01 	sub    DWORD PTR [ebp-0xfc],0x1
+  4029dd:	8b f9                	mov    edi,ecx
+  4029df:	75 d7                	jne    0x4029b8
+  ...
+      </code>
+    </pre>
+    <p>At the conclusion of the loop, the counter now in the EDI register
+       is compared to 16. If it is equal, the "Good work! Key: " is output
+       to the standard output stream with the key input.</p>
+    <pre>
+      <code>
+  ...
+  4029e1:	83 ff 10             	cmp    edi,0x10
+  ...
+  4029ea:	75 2d                	jne    0x402a19
+  4029ec:	ba 84 a8 42 00       	mov    edx,0x42a884
+  4029f1:	e8 da 09 00 00       	call   0x4033d0
+  ...
+      </code>
+    </pre>
+    <h3>Keygen</h3>
+    <p>Based on analysis, a 16 character string (key) is needed to produce the
+       valid message. Each character is converted to a string that represents
+       its decimal byte value in memory. If the character's decimal value is
+       greater than 99, its second and third decimal digits are used to
+       populate one of two vectors. The second decimal digit populates what I
+       called vector1 in the analysis above. The third decimal digit populates
+       vector0. For the decimal strings less than 100, vector0 will be
+       populated with the value 2.</p>
+    <p>The two vectors vectorA and vectorB are used to scramble values a bit
+       and disrupt a "clean" and simpler keygen. The vector, vectorG, used in
+       the final loop is created from the sum of vector0 and vector1 at indices
+       provided by vectorB and vectorA respectively. The value at vectorC2 must
+       equal the sum of the value at vectorG and vectorC1. The listing below
+       helps to break this down.</p>
+    <pre>
+      <code>
+  // assume i is a loop index
+
+  // assert the below
+  vectorC2.at(i) == vectorG.at(i) - vectorC1.at(i)
+
+  vectorG.at(i) = vector0.at(vectorB.at(i)) + vector1.at(vectorA.at(i))
+
+  vector0.at(i) = decimal_string[2] - 48 /* or 2 */   
+  vector1.at(i) = decimal_string[1] - 48
+
+  vectorA: { 0, 2, 1, 4, 3, 15, 5, 6, 7, 9, 8, 10, 11, 12, 14, 13 }
+  vectorB: { 0, 2, 2, 2, 3, 15, 4, 4, 3, 3, 15, 10, 11, 12, 6, 6 }
+
+  vectorC1: { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }
+  vectorC2: { 7, 14, 6, 5, 12, 14, 11, 11, 5, 5, 6, 5, 3, 5, 13, 13 }
+      </code>
+    </pre>
+    <p>Limiting the values in vector0 to the range [0, 2] simplifies
+       the key generation algorithm. The idea for this is based on the
+       appending of the '2' for decimal strings representing values less than
+       100.</p>
+    <p>Sorting the indices in vectorB shows that indices at 1, 5, 7, 8, 9, 13,
+       14 are essentially do not care values for vector0 as they are never used
+       in the comparsion loop. Subtracting the values at the respective index
+       in both vectorC1 and vectorC2 gives us the values that the sum of
+       vector0 value and vector1 value needs to equal. Note we can not have a
+       value in vector0 or vector1 over 9 as this is out of the range of ASCII
+       48 to 57 or the character set for decimal digits. With that, that gives
+       us an indicator for the possible values that each value can be.</p>
+    <p>I do not claim this is an all encompassing key generator. And I am
+       confident this is only a subset of the possible valid keys. What follows
+       is my best attempt at a keygen for the algorithm.</p>
+    <pre>
+      <code>
+  // result of vectorC2 - vectorC1
+  { 4, 11, 3, 2, 9, 11, 8, 8, 2, 2, 3, 2, 0, 2, 10, 10 }
+
+  // unscrambling vectorA to sorted order will result in the
+  // comparison values below as seen for each iteration
+  { 4, 3, 11, 9, 2, 8, 8, 2, 3, 2, 2, 0, 2, 10, 10, 11 } 
+
+  0: [2] has to equal 2
+     [1] has a range of [4, 9]
+
+     reason: decimal_string[2] being less than 2 indicates the character
+         is over 100 and 4 - 1 and 4 - 0 will result in a nonprintable
+         character
+
+  1: anything as long as if decimal_string[2] != 2 decimal_string[2]
+     is less than 3
+
+  2: sum must equal 11
+     decimal_string[2] must equal 2 any other places [1] out of range
+     decimal_string[1] must equal 9 if [2] equals 2
+     character < 100
+
+  3: sum must equal 9
+     [2] must equal 2
+     [1] must equal 7
+     character < 100
+
+  4: sum must equal 2
+     [2] must equal 2
+     [1] must equal 0
+     character < 100
+     * this could be three digit value but it would complicate logic
+
+  5: sum must equal 8
+     [2] must equal 2
+     [1] must equal 6
+     character < 100
+
+  6: sum must equal 8
+     [2] must equal 2
+     [1] must equal 6
+     character < 100
+
+  7: anything as long as if decimal_string[2] != 2 decimal_string[2]
+     is less than 3
+
+  8: anything as long as if decimal_string[2] != 2 decimal_string[2]
+     is less than 3
+
+  9: anything as long as if decimal_string[2] != 2 decimal_string[2]
+     is less than 3
+
+ 10: if [2] is less than 2, [1] + [2] == 2
+     else [2] == 2, [1] == 0
+
+ 11: 100 is the only valid character
+
+ 12: if [2] is less than 2, [1] + [2] == 2
+     else [2] == 2, [1] == 0
+
+ 13: [2] must equal 2
+     [1] must equal 8
+     character < 100
+     * this might be another any value use case
+
+ 14: [2] must equal 2
+     [1] must equal 8
+     character < 100
+     * this might be another any value use case
+
+ 15: [2] must equal 2
+     [1] must equal 9
+     character < 100
+      </code>
+    </pre>
+    <p>The attached crack.c provides a C implementation of the algorithm
+       described above. Overall this was a great binary to really understand
+       and see C++ vectors and strings in action. I think the difficultly is
+       a bit higher than the listed 3.0 but I did use strictly static analysis.
+       Also the algorithm, and the scrambling comparison and equality makes it
+       a little difficult to reverse. And there is no guarantee I found a truly
+       universal keygen. The author did a great job creating this and I really
+       enjoyed it.</p>
+  </body>
+</html>
