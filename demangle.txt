@@ -1,0 +1,44 @@
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const
+operator delete(void*, unsigned long)
+std::ctype<char>::do_widen(char) const
+std::cin
+std::ios_base::Init::~Init()
+std::basic_istream<char, std::char_traits<char> >& std::getline<char, std::char_traits<char>, std::allocator<char> >(std::basic_istream<char, std::char_traits<char> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, char)
+std::__throw_bad_cast()
+std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long)
+std::basic_ostream<char, std::char_traits<char> >::put(char)
+std::ctype<char>::_M_widen_init() const
+std::basic_ostream<char, std::char_traits<char> >::flush()
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)
+std::ios_base::Init::Init()
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_create(unsigned long&, unsigned long)
+std::__throw_out_of_range_fmt(char const*, ...)
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()
+std::cout
+std::__throw_logic_error(char const*)
+std::basic_ios<char, std::char_traits<char> >::widen(char) const [clone .isra.0]
+std::basic_ostream<char, std::char_traits<char> >& std::endl<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&) [clone .isra.0]
+void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_construct<char const*>(char const*, char const*, std::forward_iterator_tag) [clone .isra.0]
+_GLOBAL__sub_I__Z7changerNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+std::__ioinit
+std::basic_ostream<char, std::char_traits<char> >::put(char)@GLIBCXX_3.4
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::compare(char const*) const@GLIBCXX_3.4.21
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)@GLIBCXX_3.4.21
+std::basic_ostream<char, std::char_traits<char> >::flush()@GLIBCXX_3.4
+std::__throw_logic_error(char const*)@GLIBCXX_3.4
+std::ctype<char>::do_widen(char) const
+std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)@GLIBCXX_3.4
+operator delete(void*, unsigned long)@CXXABI_1.3.9
+std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long)@GLIBCXX_3.4.9
+std::ctype<char>::_M_widen_init() const@GLIBCXX_3.4.11
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()@GLIBCXX_3.4.21
+std::__throw_bad_cast()@GLIBCXX_3.4
+std::cout@GLIBCXX_3.4
+std::__throw_out_of_range_fmt(char const*, ...)@GLIBCXX_3.4.20
+std::ios_base::Init::Init()@GLIBCXX_3.4
+checker(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_create(unsigned long&, unsigned long)@GLIBCXX_3.4.21
+std::cin@GLIBCXX_3.4
+std::basic_istream<char, std::char_traits<char> >& std::getline<char, std::char_traits<char>, std::allocator<char> >(std::basic_istream<char, std::char_traits<char> >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, char)@GLIBCXX_3.4.21
+std::ios_base::Init::~Init()@GLIBCXX_3.4

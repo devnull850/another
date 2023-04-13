@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>Analysis</h3>
+    <p>The first thing to notice is that the binary is not stripped. The
+       original symbols (names) for methods are still present in the binary.
+       This helps to a degree reading the disassembly listing. The other
+       important thing to note is the heavy use of the R12-R15 registers
+       which is an indicator to me that the author utilized non "standard"
+       optimization flags during compilation or the author linked in custom
+       assembly code portions.</p>
+    <p>The <code>main</code> function is a breeze to find as it is still
+       labeled <code>main</code> in the disassembly listing. The function is
+       found at address 0x12f0 in the binary.</p>
+    <p>The first important code snippet encountered is what originally appears
+       to be random addresses having their contents assigned to a value of zero.
+       As mentioned previously, the binary appears to be optimized a bit more
+       than the default GCC optimization flags would produce. After a bit of
+       inspection in other places in the binary, the code snippet below appears
+       to contain the data members and contents of a <code>std::string</code>
+       instance on the stack (local variable in main).</p>
+    <pre>
+      <code>
+  ...
+  132b:	c6 44 24 20 00       	mov    BYTE PTR [rsp+0x20],0x0
+  1330:	48 8d 5c 24 20       	lea    rbx,[rsp+0x20]
+  1335:	48 c7 44 24 18 00 00 	mov    QWORD PTR [rsp+0x18],0x0
+  133c:	00 00 
+  133e:	4c 8d 74 24 10       	lea    r14,[rsp+0x10]
+  ...
+      </code>
+    </pre>
+    <p>In the above code snippet, RSP + 0x10 is the base address of the string
+       instance. RSP + 0x20 or 16 bytes into the string instance is the buffer
+       and/or pointer to the actual character array of the string instance.
+       RSP + 0x18 or 8 bytes into the string instance will hold the length of
+       the character array of the string instance.</p>
+    <p>The code snippet below will populate the string instance described above
+       using the standard library <code>std::getline</code> method. Note the
+       method at address 0x1830 will get the delimiter for the
+       <code>std::getline</code> method. The code uses the three argument
+       version of the <code>std::getline</code> method. Parameter one is the
+       input stream which in our case is <code>std::cin</code>. Parameter two
+       is the <code>std::string</code> instance to populate from the input
+       received from the input stream. And the third parameter is the mentioned
+       delimiter.</p>
+    <pre>
+      <code>
+  ...
+  1354:	e8 d7 04 00 00       	call   1830
+  1359:	0f be d0             	movsx  edx,al
+  135c:	4c 89 f6             	mov    rsi,r14
+  135f:	48 89 ef             	mov    rdi,rbp
+  1362:	e8 29 ff ff ff       	call   1290
+  ...
+      </code>
+    </pre>
+    <p>The user input string is then copied to another string instance which
+       is stored on the stack at address RSP + 0xb0. Note the user input
+       string address is still stored in the R14 register from the original
+       code snippet.</p>
+    <pre>
+      <code>
+  ...
+  1367:	48 8d ac 24 b0 00 00 	lea    rbp,[rsp+0xb0]
+  136e:	00 
+  136f:	4c 89 f6             	mov    rsi,r14
+  1372:	48 89 ef             	mov    rdi,rbp
+  1375:	e8 16 fe ff ff       	call   1190
+  ...
+      </code>
+    </pre>
+    <p>With RBP still containing the user input string copy, it is passed as
+       the second parameter to a method called <code>changer</code>. A stack
+       address, RSP + 0x90, is passed as the first parameter. This address will
+       contain another string instance that will be constructed in the
+       <code>changer</code> method.</p>
+    <pre>
+      <code>
+  ...
+  137a:	4c 8d bc 24 90 00 00 	lea    r15,[rsp+0x90]
+  1381:	00 
+  1382:	48 89 ee             	mov    rsi,rbp
+  1385:	4c 89 ff             	mov    rdi,r15
+  1388:	e8 03 06 00 00       	call   1990
+  ...
+      </code>
+    </pre>
+    <p>Inside the <code>changer</code> method, the first character of the user
+       input string copy (index 0) and the 19th character of the user input
+       string copy (index 18) are compared to the letter 'G'. If either are not
+       the letter 'G', the string at the first parameter address is populated
+       with "Password denied". Later we will find out this is not the path we
+       want to take.</p>
+    <p>If both characters are the letter 'G', the first character will be
+       assigned the value of the fifth character (index 4) of the user input
+       string copy. The 19th character (index 18) will assigned the 15th
+       character (index 14) of the user input string copy. The fifth and 15th
+       character (index 4 and 14) will have their values assigned to the '-'
+       character.</p>
+    <p>The now modified user input string copy is then copied to the string
+       at the first parameter passed to the current method. The modified string
+       (at the first parameter address) is returned from the method. The code
+       snippet below displays the string transformations and character
+       assignments.</p>
+    <pre>
+      <code>
+  ...
+  1996:	49 89 fc             	mov    r12,rdi
+  ...
+  19b1:	48 8b 06             	mov    rax,QWORD PTR [rsi]
+  19b4:	80 38 47             	cmp    BYTE PTR [rax],0x47
+  19b7:	0f b6 48 04          	movzx  ecx,BYTE PTR [rax+0x4]
+  19bb:	0f b6 50 0e          	movzx  edx,BYTE PTR [rax+0xe]
+  19bf:	75 7f                	jne    1a40
+  19c1:	80 78 12 47          	cmp    BYTE PTR [rax+0x12],0x47
+  19c5:	75 79                	jne    1a40
+  19c7:	88 08                	mov    BYTE PTR [rax],cl
+  19c9:	48 8b 06             	mov    rax,QWORD PTR [rsi]
+  19cc:	88 50 12             	mov    BYTE PTR [rax+0x12],dl
+  19cf:	48 8b 06             	mov    rax,QWORD PTR [rsi]
+  19d2:	c6 40 04 2d          	mov    BYTE PTR [rax+0x4],0x2d
+  19d6:	48 8b 06             	mov    rax,QWORD PTR [rsi]
+  19d9:	c6 40 0e 2d          	mov    BYTE PTR [rax+0xe],0x2d
+  ...
+      </code>
+    </pre>
+    <p>Back in the <code>main</code> function, the new modified string has its
+       contents copied to the original user input string. There are artifacts
+       of string optimization code in the copy process. I will overlook those
+       as they distract a bit from the important point that the modified string
+       from the <code>changer</code> method is copied to the original user
+       input string.</p>
+    <p>As described in the <code>changer</code> method, the original input
+       string, now containing the modified string, is compared to the string
+       "Password denied". This is done with the <code>std::string</code>
+       <code>compare</code> method. If the two strings are equal, a zero is
+       returned from the method. For the purposes of "cracking" the binary,
+       we want a non zero return value. We do not want our string to be
+       "Password denied".</p>
+    <pre>
+      <code>
+  ...
+  1418:	48 8d 35 50 0c 00 00	lea    rsi,[rip+0xc50]
+  141f:	4c 89 f7             	mov    rdi,r14
+  1422:	e8 59 fd ff ff       	call   1180
+  1427:	85 c0                	test   eax,eax
+  1429:	0f 84 7a 02 00 00    	je     16a9
+  ...
+      </code>
+    </pre>
+    <p>A few "local variables" are assigned values before the validation loop
+       is entered. The RCX register in the code snippet below will contain
+       the user input string length and will be used in the loop termination
+       decision logic. R13 and RDX will be used as both iteration indices
+       and as part of the loop termination decision logic. The RDX register
+       will also be repurposed in the loop as well in the actual validation
+       check. The integer at RSP + 0xc will be used as a counter that is 
+       used after the validation loop to get to the correct message. The
+       EBX register is initialized to 4. It will create a break out of the loop
+       when its vlaue is zero.</p>
+    <pre>
+      <code>
+  ...
+  1439:	45 31 ed             	xor    r13d,r13d
+  143c:	31 d2                	xor    edx,edx
+  ...
+  1448:	48 8b 4c 24 18       	mov    rcx,QWORD PTR [rsp+0x18]
+  144d:	bb 04 00 00 00       	mov    ebx,0x4
+  ...
+  14a0:	c7 44 24 0c 00 00 00 	mov    DWORD PTR [rsp+0xc],0x0
+  14a7:	00 
+  ...
+  14b0:	4c 8d a4 24 c0 00 00 	lea    r12,[rsp+0xc0]
+  14b7:	00 
+  ...
+      </code>
+    </pre>
+    <p>The user input string length is subtracted by the RDX register value
+       which at this point will contain the value stored in the R13 register.
+       The R13 register is initialized to zero and incremented by five with
+       each loop iteration. If the user input string length minus the RDX
+       (R13) value is greater than 4, the RCX register is assigned the value
+       of 4. If the value is less than or equal to four, RCX (input string
+       length minus RDX) will keep its value.</p>
+    <p>The RBP register contains one of the strings used temporarily in the
+       string tranformation process described previously. It is now repurposed
+       to temporarily hold substrings of the user input string. The substring
+       appears to be from the RCX value as the start index to the end of the
+       user input string. Note RBP contains the address of RSP + 0xb0, which
+       is where the substring will reside after the substring copy process
+       described.</p>
+    <pre>
+      <code>
+  ...
+  14b8:	48 8b 74 24 10       	mov    rsi,QWORD PTR [rsp+0x10]
+  14bd:	48 29 d1             	sub    rcx,rdx
+  14c0:	b8 04 00 00 00       	mov    eax,0x4
+  14c5:	48 89 ef             	mov    rdi,rbp
+  14c8:	4c 89 a4 24 b0 00 00 	mov    QWORD PTR [rsp+0xb0],r12
+  14cf:	00 
+  14d0:	48 01 d6             	add    rsi,rdx
+  14d3:	48 39 c1             	cmp    rcx,rax
+  14d6:	48 0f 47 c8          	cmova  rcx,rax
+  14da:	48 8d 14 0e          	lea    rdx,[rsi+rcx*1]
+  14de:	e8 ed 03 00 00       	call   18d0
+  ...
+      </code>
+    </pre>
+    <p>With a substring of the user input string in the string at address
+       RSP + 0xb0, the actual character validation check is performed in a
+       nested loop. The code snippet below shows the setup of the registers
+       before the nested loop is entered. The RAX and ESI registers will be
+       used in the calculation for determining valid characters. The R8
+       register will be used in the logic to determine if the nested loop
+       should continue or terminate.</p>
+    <pre>
+      <code>
+  ...
+  14e3:	48 8b bc 24 b0 00 00 	mov    rdi,QWORD PTR [rsp+0xb0]
+  14ea:	00 
+  14eb:	0f be 37             	movsx  esi,BYTE PTR [rdi]
+  14ee:	48 8d 47 01          	lea    rax,[rdi+0x1]
+  14f2:	4c 8d 47 04          	lea    r8,[rdi+0x4]
+  ...
+      </code>
+    </pre>
+    <p>Inside the nested loop, the previous character (originally the first
+       character in the substring) is subtracted from the current character.
+       A negation and check for a signed result is performed to effectively
+       perform the absolute value of the original subtraction if the result is
+       negative. The result must be equal to 5 to continue in the nested loop
+       and eventually reach the code that increments the counter at
+       RSP + 0xc.</p>
+    <p>The RAX register is incremented by 1 (originally the address of the
+       second character in the substring). That value is then compared against
+       the R8 value which contains the address of the fifth character of the
+       substring. If the values are not equal, the nested loop continues. This
+       means the nested loop will have three iterations total unless the result
+       of the subtraction is not 5.</p> 
+    <pre>
+      <code>
+  ...
+  14f6:	89 f2                	mov    edx,esi
+  14f8:	0f be 30             	movsx  esi,BYTE PTR [rax]
+  14fb:	89 f1                	mov    ecx,esi
+  14fd:	29 d1                	sub    ecx,edx
+  14ff:	89 ca                	mov    edx,ecx
+  1501:	f7 da                	neg    edx
+  1503:	0f 48 d1             	cmovs  edx,ecx
+  1506:	83 fa 05             	cmp    edx,0x5
+  1509:	0f 85 35 01 00 00    	jne    1644
+  150f:	48 83 c0 01          	add    rax,0x1
+  1513:	49 39 c0             	cmp    r8,rax
+  1516:	75 de                	jne    14f6
+  ...
+      </code>
+    </pre>
+    <p>If the nested loop terminates because of R8 being equal to RAX, the
+       substring is deallocated and the counter at RSP + 0xc is incremented by
+       1. The R13 register is also incremented by 5.</p>
+    <p>The EBX register is decremented by 1 and compared to zero. If its value
+       is zero, execution breaks out of the outer loop. If execution continues
+       in the outer loop, the value in R13 is copied to RDX and compared to
+       user input string length. If the value in RDX is less than or equal to
+       the user input string length, the outer loop will continue.</p>
+    <pre>
+      <code>
+  ...
+  152e:	83 44 24 0c 01       	add    DWORD PTR [rsp+0xc],0x1
+  1533:	41 83 c5 05          	add    r13d,0x5
+  1537:	83 eb 01             	sub    ebx,0x1
+  153a:	74 44                	je     1580
+  153c:	48 8b 4c 24 18       	mov    rcx,QWORD PTR [rsp+0x18]
+  1541:	49 63 d5             	movsxd rdx,r13d
+  1544:	48 39 ca             	cmp    rdx,rcx
+  1547:	0f 86 6b ff ff ff    	jbe    14b8
+  ...
+      </code>
+    </pre>
+    <p>Once EBX equals zero, indicating four iterations of the outer loop, the
+       counter at RSP + 0xc is compared to four. If the value is not equal to
+       four, a branch is taken to output "Password denied" to the terminal.</p>
+    <pre>
+      <code>
+  ...
+  1580:	31 c0                	xor    eax,eax
+  1582:	83 7c 24 0c 04       	cmp    DWORD PTR [rsp+0xc],0x4
+  1587:	0f 85 04 01 00 00    	jne    1691
+  ...
+      </code>
+    </pre>
+    <p>If the counter is equal to zero, a loop is entered that will transform
+       the characters of the user input string that are not equal to 45 or the
+       character '-'. Each character not equal to 45 will be subtracted by
+       3.</p>
+    <pre>
+      <code>
+  ...
+  1590:	48 8b 4c 24 10       	mov    rcx,QWORD PTR [rsp+0x10]
+  1595:	48 01 c1             	add    rcx,rax
+  1598:	0f b6 11             	movzx  edx,BYTE PTR [rcx]
+  159b:	80 fa 2d             	cmp    dl,0x2d
+  159e:	74 05                	je     15a5
+  15a0:	83 ea 03             	sub    edx,0x3
+  15a3:	88 11                	mov    BYTE PTR [rcx],dl
+  15a5:	48 83 c0 01          	add    rax,0x1
+  15a9:	48 83 f8 10          	cmp    rax,0x10
+  15ad:	75 e1                	jne    1590
+  ...
+      </code>
+    </pre>
+    <p>After the loop completes, the "Password accept\n" message is output
+       to the terminal as well as "Code: " followed by the modified user input
+       string. This completes the crackme.</p>
+    <pre>
+      <code>
+  ...
+  15af:	48 8d 35 de 0a 00 00 	lea    rsi,[rip+0xade]
+  15b6:	48 8d 3d 83 2a 00 00 	lea    rdi,[rip+0x2a83]
+  15bd:	e8 1e fc ff ff       	call   11e0
+  15c2:	48 89 c7             	mov    rdi,rax
+  15c5:	48 8d 35 d9 0a 00 00 	lea    rsi,[rip+0xad9]
+  15cc:	e8 0f fc ff ff       	call   11e0
+  15d1:	48 8b 54 24 18       	mov    rdx,QWORD PTR [rsp+0x18]
+  15d6:	48 8b 74 24 10       	mov    rsi,QWORD PTR [rsp+0x10]
+  15db:	48 89 c7             	mov    rdi,rax
+  15de:	e8 2d fc ff ff       	call   1210
+  15e3:	48 89 c7             	mov    rdi,rax
+  15e6:	e8 a5 02 00 00       	call   1890
+  ...
+      </code>
+    </pre>
+    <h3>Key Generator</h3>
+    <p>From the analysis there is not a dedicated string length check. The
+       string must be at least 19 bytes long because the 19th byte (index 18) is
+       compared to the letter 'G' in the <code>changer</code> method. I do not
+       see any reason or benefit to a longer string. It appears the EBX
+       register's break like functionality in the outer loop does allow a
+       longer string but I will keep things simple and cap the string at 19
+       bytes.</p>
+    <p>The nested loop requires the 4 byte chunks in the substrings created
+       starting at their first character must have a difference of 5 between
+       the byte before and after it. Also the <code>changer</code> method
+       moved the value at the fifth element (index 4) to the first element
+       (index 0). The value at the 15th element (index 14) was moved to the
+       19th element (index 18). The values at index 4 and 14 were assigned to
+       45 or the character '-'.</p>
+    <p>With that information, the listing below creates values that satisfy
+       the constraints described.</p>
+    <pre>
+      <code>
+  // assume s represents our password string
+  s[0] = 0x47; // 'G'
+  s[18] = 0x47; // 'G'
+
+  // assume n is some value between [32, 123]
+  // or a range of printable bytes
+  s[4] = n; // value is moved into s[0]
+  s[1] = n (+-) 5;
+  s[2] = s[1] (+-) 5;
+  s[3] = s[2] (+-) 5;
+
+  // n does not have to be equal to n
+  // above
+  s[5] = n;
+  s[6] = s[5] (+-) 5;
+  s[7] = s[6] (+-) 5;
+  s[8] = s[7] (+-) 5;
+
+  // n does not have to be equal to n
+  // above
+  s[10] = n;
+  s[11] = s[10] (+-) 5;
+  s[12] = s[11] (+-) 5;
+  s[13] = s[12] (+-) 5;
+
+  // n does not have to be equal to n
+  // above
+  s[15] = n;
+  s[16] = s[15] (+-) 5;
+  s[17] = s[16] (+-) 5;
+  // Don't forget this value is moved
+  // into index 18 in changer
+  s[14] = s[17] (+-) 5;
+      </code>
+    </pre>
+    <p>The 10th character (index 9) can have any value since it is not used
+       in any of the validation substring checks. If the constraints listed
+       above are satisified the user should see the "Password accept"
+       message.</p>
+  </body>
+</html>
