@@ -1,0 +1,226 @@
+<DOCTYPE! html>
+<html>
+  <body>
+    <h3>Analysis of "Simple CrackMe by Rainbow"</h3>
+    <p>The crackme is incredibly simple as the name suggests. The code snippet
+       that follows creates an integer array (4 byte elements) that will have
+       a character pointer point to the address of the first element. Since
+       the last element is zero this creates a C string. This C string is
+       the key the user will need to input to get the success message.</p>
+    <pre>
+      <code>
+  ...
+  401422:	c7 44 24 78	mov    DWORD PTR [esp+0x78],0x31306e4a
+		4a 6e 30 31 
+  40142a:	c7 44 24 7c	mov    DWORD PTR [esp+0x7c],0x4d6d3239
+		39 32 6d 4d 
+  401432:	c7 84 24 80	mov    DWORD PTR [esp+0x80],0x7370716b
+		00 00 00 6b
+		71 70 73 
+  40143d:	c7 84 24 84	mov    DWORD PTR [esp+0x84],0x31394f6b
+		00 00 00 6b
+		4f 39 31 
+  401448:	c7 84 24 88	mov    DWORD PTR [esp+0x88],0x4a6a736a
+		00 00 00 6a
+		73 6a 4a 
+  401453:	c7 84 24 8c	mov    DWORD PTR [esp+0x8c],0x55696a61
+		00 00 00 61
+		6a 69 55 
+  40145e:	c7 84 24 90	mov    DWORD PTR [esp+0x90],0x6e4a5350
+		00 00 00 50
+		53 4a 6e 
+  401469:	c7 84 24 94	mov    DWORD PTR [esp+0x94],0x0
+		00 00 00 00
+		00 00 00 
+  ...
+      </code>
+    </pre>
+    <p>The string and the correct key from the code snippet above is
+       "Jn0192mMkqpskO91jsjJajiUPSJn". This is just a simple example of playing
+       with pointer types. Human readable characters are stored as bytes no
+       different than an integer value like 5. The bytes are interpreted to
+       their character meaning based a character encoding scheme. In this
+       binary that encoding scheme is the ASCII standard.</p>
+    <p>The user is prompted to enter a key with the message, "Key please: ".</p>
+    <pre>
+      <code>
+  ...
+  401489:	c7 04 24 44	mov    DWORD PTR [esp],0x405044
+		50 40 00 
+  401490:	e8 cb 26 00	call   403b60 <_printf>
+		00       
+  ...
+      </code>
+    </pre>
+    <p>The <code>scanf</code> function is used to populate a string on the
+       stack based on the first parameter being the format specifier "%s". I
+       will come back to this observation in a bit.</p>
+    <pre>
+      <code>
+  ...
+  401495:	8d 44 24 14    	lea    eax,[esp+0x14]
+  401499:	89 44 24 04     mov    DWORD PTR [esp+0x4],eax
+  40149d:	c7 04 24 51	mov    DWORD PTR [esp],0x405051
+		50 40 00 
+  4014a4:	e8 a7 26 00	call   403b50 <_scanf>
+		00       
+  ...
+      </code>
+    </pre>
+    <p>The hardcoded integer array with a character pointer pointing to its
+       first element is compared to the user input key using the
+       <code>strncmp</code> function. The <code>strncmp</code> function takes
+       three parameters. The first two are the strings we are attempting to
+       compare and the third and most interesting to us is the number of
+       characters to compare. The value for the number of characters to
+       compare is 100. Hold that value in your head.</p>
+    <pre>
+      <code>
+  ...
+  4014a9:	c7 44 24 08	mov    DWORD PTR [esp+0x8],0x64
+		64 00 00 00  
+  4014b1:	8d 44 24 14     lea    eax,[esp+0x14]
+  4014b5:	89 44 24 04     mov    DWORD PTR [esp+0x4],eax
+  4014b9:	8d 44 24 78     lea    eax,[esp+0x78]
+  4014bd:	89 04 24        mov    DWORD PTR [esp],eax
+  4014c0:	e8 63 26 00	call   403b28 <_strncmp>
+		00       
+  ...
+      </code>
+    </pre>
+    <p>A zero returned from the <code>strncmp</code> function indicates the
+       two strings have the same byte representation up to the first null byte
+       encountered. If the value returned is zero, the success message
+       "Congratz!! u in." is output.</p>
+    <pre>
+      <code>
+  ...
+  4014c5:	89 84 24 dc	mov    DWORD PTR [esp+0xdc],eax
+		00 00 00 
+  4014cc:	83 bc 24 dc	cmp    DWORD PTR [esp+0xdc],0x0
+		00 00 00 00 
+  4014d4:	75 0e           jne    4014e4 <_main+0xd4>
+  4014d6:	c7 04 24 54	mov    DWORD PTR [esp],0x405054
+		50 40 00 
+  4014dd:	e8 7e 26 00	call   403b60 <_printf>
+		00       
+  4014e2:	eb 0c           jmp    4014f0 <_main+0xe0>
+  ...
+      </code>
+    </pre>
+    <h3>Buffer Overflow</h3>
+    <p>Alright the correct key is "Jn0192mMkqpskO91jsjJajiUPSJn" which is
+       hardcode in the function that performs all the work. Why even write
+       about this binary? Remember the two points I mentioned above that
+       were important? The first is the format specifier "%s" for obtaining
+       the user input key. The second is the value of 100 for the maximum
+       number of characters to compare the two strings passed to the
+       <code>strncmp</code> function.</p>
+    <p>The local variables for a function are (typically) stored on the stack
+       in the stack frame "allocated" for that function. I say allocated but
+       in reality it is space that is reserved by way of a subtraction of the
+       stack pointer (ESP or RSP). This is typically one of the first things
+       performed when entering a new function. It is so routinely done that it
+       also has a name, the function prologue.</p>
+    <p>The code snippet below is the function prologue for the
+       <code>main</code> function described in detail above. The EBP register
+       is the frame pointer. Its value is pushed onto the stack when entering
+       the function. The value of the current stack pointer is copied to the
+       frame pointer. EBP can now be used with negative offsets to address
+       local variables within the respective function's stack frame.</p>
+    <p>The stack pointer will then be aligned and have a value subtracted
+       from its value. This space between the frame pointer and the new
+       stack pointer will be the space dedicated to the current function's
+       local variables. This is also referred to as a function's stack frame.
+       The process in totality is the function's prologue.</p>
+    <pre>
+      <code>
+  ...
+  401410:	55             	push   ebp
+  401411:	89 e5          	mov    ebp,esp
+  401413:	57             	push   edi
+  401414:	83 e4 f0      	and    esp,0xfffffff0
+  401417:	81 ec e0 00   	sub    esp,0xe0
+		00 00
+  ...
+      </code>
+    </pre>
+    <p>The hardcoded correct string has its address at 120 bytes from the
+       current stack pointer address.</p>
+    <pre>
+      <code>
+  ...
+  401422:	c7 44 24 78	mov    DWORD PTR [esp+0x78],0x31306e4a
+		4a 6e 30 31 
+  ...
+      </code>
+    </pre>
+    <p>The user input string has its address at 20 bytes from the current
+       stack pointer address.</p>
+    <pre>
+      <code>
+  ...
+  401495:	8d 44 24 14    	lea    eax,[esp+0x14]
+  ...
+      </code>
+    </pre>
+    <p>The difference between the two addresses is 100. That is a familiar
+       number!</p>
+    <p>The format specifier comes into play here. The format specifier "%s"
+       does not limit the maximum number of characters that can be read,
+       provided it is within whatever constraint the Operating System or
+       library imposes on the application code.</p>
+    <p>With no constraint to limit the number of characters input in the
+       application, we have what appears to be another potential solution via
+       the good ole' Buffer Overflow. The only other significant local
+       variable is the value from the result of the <code>strncmp</code>
+       function. The address is 208 bytes from the current stack pointer
+       address. This does place a potential overlap with some of the bytes of
+       the harcoded string if we were to fill it with 100 bytes. But that value
+       at that address is modified after the comparison has occurred.</p>
+    <p>The other important consideration with the "%s" format specifier is
+       the newline character (or all whitespace characters). When a newline
+       character is encountered, "reading" from the input stream to populate
+       the string stops.</p>
+    <h3>Exploit Solution</h3>
+    <p>The table below displays the stack addresses for the local variables
+       described above.</p>
+    <table>
+      <tr>
+        <th>SP Offset</th>
+        <th>Stack Variable</th>
+      </tr>
+      <tr>
+        <td>+ 20</td>
+        <td>user input key</td>
+      </tr>
+      <tr>
+        <td>+ 120</td>
+        <td>compare string</td>
+      </tr>
+      <tr>
+        <td>+ 208</td>
+        <td><code>strncmp</code> result</td>
+      </tr>
+    </table>
+    <p>The <code>strncmp</code> function will compare up to a maximum of
+       the third parameter number of bytes between the two strings in the first
+       and second parameter. Since the format specifier "%s" will stop filling
+       the input key string once a whitespace character, NULL, or EOF is
+       encountered, it does limit the character set we can input. We also need
+       more than 100 bytes to have an impact (overwrite) the comparison
+       string's bytes.</p>
+    <p>The simple solution to is create a 100 byte string and append those 100
+       bytes to the 100 bytes. This will fill the hardcoded comparison string
+       with same exact 100 bytes as user input key string, since their
+       addresses are 100 bytes apart on the stack. The <code>strncmp</code>
+       function will compare the 100 bytes and they will be equal. The function
+       will return zero and the success message will be output. If you are lazy
+       like me, the python one liner below will do the trick.</p>
+    <pre>
+      <code>
+  $ python3 -c 'print("\x41" * 200)'
+      </code>
+    </pre>
+  </body>
+</html>
