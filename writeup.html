@@ -402,5 +402,71 @@
   a[12] / a[13]) - 148000000) < 1000000
       </code>
     </pre>
+    <h3>Keygen</h3>
+    <p>The obvious solution to the problem is to plug away values for the
+       characters until the constraints of the equation are satisfied.
+       Unfortunately at 14 characters you might be there a while with a
+       bruteforce approach even with a restricted chraracter set.</p>
+    <p>The solution I ended up adopting was a successive variable
+       substitution for parts of the equation. I broke up the equation
+       into 4 sub equations. I created ranges that if satisfied helped to
+       decrease the total processing needed to find a valid flag. This
+       admittingly does limit the possible values the key generator can
+       produce.</p>
+    <pre>
+      <code>
+(1) n = flag[1] * flag[0] * flag[2] * w -
+        148000000
+      </code>
+    </pre>
+    <p>Where n is the range [0, 1000000). Which gives w an approximate range of
+       [81, 1347]. That range was calculated and used to limit the values
+       needed to investigate. The calculations are seen below.</p>
+    <pre>
+      <code>
+// flag[0], flag[1], flag[2] all equal to 48
+// lowest value in character set
+
+// n = 999999, highest possible value
+w = (148000000 + 999999) / 48 / 48 / 48 -> 1347 
+
+// flag[0], flag[1], flag[2] all equal to 122
+// highest value in character set
+
+// n = 0, lowest possible value
+w = 148000000 / 122 / 122 / 122 -> 81
+      </code>
+    </pre>
+    <pre>
+      <code>
+(2) w = x / flag[11] / flag[12] / flag[13]
+      </code>
+    </pre>
+    <p>Where x has an approximate range of [8957952, 2147483647). Note, I cutoff
+       x's range to signed integer max. This was to simplify the key generator
+       by avoiding the rollover that occurs when a value exceeds signed integer
+       max in a 32 bit space. The x range was calculated by using the lowest
+       and highest w values from its possible ranges.</p>
+    <pre>
+      <code>
+(3) x = y * flag[1] * flag[0] + flag[7] + flag[7]
+      </code>
+    </pre>
+    <p>Where y is in the range [601, 932067). The y range was calculated by
+       using the lowest and highest x range values.</p>
+    <pre>
+      <code>
+(4) y = flag[2] - flag[8] * flag[8] * flag[9] *
+        flag[3] * flag[4] * flag[5] * flag[6] *
+	flag[0] * flag[2]
+      </code>
+    </pre>
+    <p>I helped shorten the processing needed to find a valid flag further by
+       restricting the character set to [0-9A-Za-z]. From there I was lazy
+       and just used a random number generator to select a character from that
+       character set and ran a loop until each sub equation was satisifed
+       before checking that the final value of the equation was in the range
+       [0, 1000000). Note, the 10th character can be anything since it is
+       never used in the equation.</p>
   </body>
 </html>
