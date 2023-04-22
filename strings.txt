@@ -1,0 +1,1232 @@
+!This program cannot be run in DOS mode.
+|7%@|
+|Rich
+.text
+`.rdata
+@.data
+.rsrc
+@.reloc
+wHQR
+w&QR
+Y_^[
+SVWP
+wZQR
+w(RQ
+Y_^[
+SVWP
+Y_^[
+$SVW
+Y_^[
+;_^[
+PQVW
+Y_^[
+PQSVW
+Y_^[
+0SVW
+Y_^[
+9A8j
+Y_^[
+HHu5
+Y_^[
+sLVj
+BRPQ
+ND^[
+QSVW
+G,_^[
+W9^Lt
+VD^[
+wLVj
+QQSVW
+9_LtR
+9_Lu
+GL9_8u
+sLPj
+sLVj
+sLVj
+9;t>
+hHN@
+QVWj
+^_[]
+YY^]
+9E$j
+PPPPPWS
+PP9E
+hma@
+Y_^[
+u"hP
+Y_^[
+Y__^[
+>csm
+SVW3
+Genu
+5ineI
+5ntel
+t#=`
+_^[3
+QQSVWd
+;p$u
+p$^]
+8csm
+Y_^[
+t2VW
+>csm
+?RCC
+?MOC
+?csm
+hcsm
+oF f
+oF f
+oF f
+oV f
+o^0f
+of@f
+onPf
+ov`f
+o~pf
+FGIu
+FGIu
+Sj [
+8_^]
+8csm
+BVj(j
+YYPV
+Y_^[
+Y_^[
+u SW
+_^[]
+dSVW
+;csm
+;csm
+u	9s
+;csm
+u$9G
+v!8E
+u QW
+uf_^[
+;MOC
+;RCC
+@u)j
+u Qj
+@_^[]
+9p u"
+:csm
+ft&9q
+:csm
+r49z
+@_^[]
+j<hH
+Y_^[
+>csm
+8csm
+t0QW
+Y_^[
+URPQQh
+L$,3
+UVWS
+[_^]
+SVWj
+_^[]
+QSVW
+UQPXY]Y[
+VVVVV
+PPPPP
+VVVVV
+VVVVV
+Y_^[
+Y_^[
+Y_^[
+Y_^[
+~1WPQ
+Y_^[
+Y_^[
+SVWt
+Y_^[
+X_^]
+t,9E
+_^[]
+Y_^[
+uC9u
+SVWj
+A<Au
+VWSP
+_^[]
+Y_^[
+Y_^[
+_^[]
+Y_^[
+Y_^[
+PSWS
+SSSSS
+"tNj
+WWWWW
+ARPRQh
+j2[;
+j?Yj
+SWt?
+PPPPP
+PPPPPPPP
+j X+
+Y_^[
+QSVW
+99t	
+wGt>
+j Y+
+QWWP
+A98u
+< t3<	t/
+=t7j
+PPPPP
+Y_^]
+SSSSj
+Y_^[
+Y_^[
+t#Vh
+Y_^[
+Y_^[
+Y_^[
+_^[]
+SSSSS
+PPPPP
+ VWh
+Af;:u
+PPPPP
+PPPPP
+SWt@jU
+PPPPP
+f90t
+f97t
+VVVVV
+QQSVW
+j.Yf;
+PVj@W
+j.Xf;
+_tqPVj@
+uQPVj
+j,Yf;
+YYj,Z
+SSSSS
+Wj.Y
+Y_^]
+u,f9F
+u&h4
+PSPt
+ j8Z
+PPPPP
+_^[]
+SSSSS
+8Ou	
+F _^[
+8Ou	
+PPPPP
+j;Xf9
+j;Xf9
+8f;9
+PPPPP
+PPPPP
+PPPPP
+6j@W
+6jUQ
+SSSSS
+6jUW
+_^[]
+SSSSS
+6jUW
+SSSSS
+Y_^[
+Y_^[
+j _;
+>_^]
+rqf;u
+r_f;u
+rMf;u
+r;f;u
+r)f;
+j0Yf;
+j:Xf;
+r}f;u
+rkf;u
+rYf;u
+rGf;u
+r5f;u
+r#f;
+t5;E
+f;1u
+Y_^[
+PPPPP
+<1=u
+Y_^[
+SWj\V
+uWPW
+PPPPP
+u_SV
+u"j\S
+PATH
+t.j/V
+tSj/V
+PPPPP
+Y_^[
+Y_^[
+Y_^[
+Y_^[
+FLY;
+tehd
+Y_^[
+QSVW
+Wu5j
+^_[]
+Y_^[
+SVW3
+Y_^[
+Y_^[
+xE;5
+Y_^[
+xE;5
+\0.F;
+Y_^[
+Y_^[
+SWRQ
+ SVW
+uK;U
+SVW<
+_^[]
+@( t
+CSPj
+D8(Ht'
+(HtMf
+Xf9E
+Xf9E
+(Ht5F
+-^_[
+Y_^[
+Y_^[
+_^[]
+f90t
+f90u
+PVSWS
+PVSWj
+PVVVj
+f9<H}
+t0SV
+u<WW
+WWWWW
+9E WW
+t1RWV
+9E(j
+PPPPPWS
+QQQP
+PP9E u:PPVWP
+Y_^[
+Y_^[
+Y_^[
+u!h(
+~);^
+FVWj	
+w(te
+*t`=+
+vR=1
+tK=3
+w#tI
+*tD=+
+v2=.
+v6=1
+t/=3
+_^[]
+f92t
+SSSSj
+u7SS
+_^[]
+*?QP
+PSSQ
+SSSSS
+WWWWW
+<:u 
+SSSQ
+t4h9kA
+zSSSSj
+u7SS
+_[^]
+Y_^[
+_^[]
+IH;A
+SVWh 
+9wLt	
+;3t'
+Y_^[
+f9:t!V
+f9:u
+QSVW
+SVWW
+WSVPP
+SWj=V
+u{9]
+SSSSS
+PPPPP
+QQSVj8j@
+Y_[^]
+Y_^[
+xg;5
+_^[]
+ PjPW
+$PjQW
+*PjTW
++PjUW
+,PjVW
+-PjWW
+.PjRW
+/PjSW
+HPjPW
+LPjQW
+!<;u
+GjPW
+C0Pj
+C4Pj
+_^[]
+Pj(W
+Pj)W
+Pj(W
+Pj)W
+Pj W
+Pj W
+Y_^[]
+SVWf9
+_^[]
+tl= 
+Y_^[
+YY^]
+Y_^[
+WWWWW
+_^[]
+u	!FX@
+uX9^\
+NX9^`t1
+NXf9
+9^\ty
+;V\uYW
+NXf9
+PWjUR
+SSSSS
+!FX@
+SSSSS
+j	PjYV
+u2Vj@h`
+f9;u
+f98u
+j@Wh
+tjj_S
+j@Sj
+PPPPP
+8_^]
+9^`u
+_^[]
+_^[]
+;K\u
+9C`t
+9C\t
+;S\u
+9C`u99C\t4
+u2Wj
+u29K\t-
+t9Wj
+:f;>u
+:f;>u
+t2;u
+WHPhp
+tnf9
+HPh`
+f98t
+t^WjU
+j@Sh
+_^[]
+VPRQ
+PRPQh
+PPPPP
+Systj
+emRof
+=PQS
+ukh0$B
+uV9E
+uG9]$t
+;tMA
+_[^]
+SVW3
+_^[]
+_^[]
+PPPPP
+r1SPV
+Y^[]
+etPj
+w/PV
+<0WV
+v!WQ
+PPPPPPPP
+j-Xf
+SVRQ
+_^[]
+@h0}B
+<$tL
+|%=2
+QQSV
+YY^[
+_^[]
+Y_^[
+Y_^[
+WVS3
+^_[3
+bad allocation
+address family not supported
+address in use
+address not available
+already connected
+argument list too long
+argument out of domain
+bad address
+bad file descriptor
+bad message
+broken pipe
+connection aborted
+connection already in progress
+connection refused
+connection reset
+cross device link
+destination address required
+device or resource busy
+directory not empty
+executable format error
+file exists
+file too large
+filename too long
+function not supported
+host unreachable
+identifier removed
+illegal byte sequence
+inappropriate io control operation
+interrupted
+invalid argument
+invalid seek
+io error
+is a directory
+message size
+network down
+network reset
+network unreachable
+no buffer space
+no child process
+no link
+no lock available
+no message available
+no message
+no protocol option
+no space on device
+no stream resources
+no such device or address
+no such device
+no such file or directory
+no such process
+not a directory
+not a socket
+not a stream
+not connected
+not enough memory
+not supported
+operation canceled
+operation in progress
+operation not permitted
+operation not supported
+operation would block
+owner dead
+permission denied
+protocol error
+protocol not supported
+read only file system
+resource deadlock would occur
+resource unavailable try again
+result out of range
+state not recoverable
+stream timeout
+text file busy
+timed out
+too many files open in system
+too many files open
+too many links
+too many symbolic link levels
+value too large
+wrong protocol type
+unknown error
+0123456789abcdefghijklmnopqrstuvwxyz
+					
+0123456789abcdefghijklmnopqrstuvwxyz
+bad exception
+__based(
+__cdecl
+__pascal
+__stdcall
+__thiscall
+__fastcall
+__vectorcall
+__clrcall
+__eabi
+__swift_1
+__swift_2
+__swift_3
+__ptr64
+__restrict
+__unaligned
+restrict(
+ new
+ delete
+operator
+`vftable'
+`vbtable'
+`vcall'
+`typeof'
+`local static guard'
+`string'
+`vbase destructor'
+`vector deleting destructor'
+`default constructor closure'
+`scalar deleting destructor'
+`vector constructor iterator'
+`vector destructor iterator'
+`vector vbase constructor iterator'
+`virtual displacement map'
+`eh vector constructor iterator'
+`eh vector destructor iterator'
+`eh vector vbase constructor iterator'
+`copy constructor closure'
+`udt returning'
+`RTTI
+`local vftable'
+`local vftable constructor closure'
+ new[]
+ delete[]
+`omni callsig'
+`placement delete closure'
+`placement delete[] closure'
+`managed vector constructor iterator'
+`managed vector destructor iterator'
+`eh vector copy constructor iterator'
+`eh vector vbase copy constructor iterator'
+`dynamic initializer for '
+`dynamic atexit destructor for '
+`vector copy constructor iterator'
+`vector vbase copy constructor iterator'
+`managed vector copy constructor iterator'
+`local static thread guard'
+operator "" 
+operator co_await
+operator<=>
+ Type Descriptor'
+ Base Class Descriptor at (
+ Base Class Array'
+ Class Hierarchy Descriptor'
+ Complete Object Locator'
+`anonymous namespace'
+FlsAlloc
+FlsFree
+FlsGetValue
+FlsSetValue
+InitializeCriticalSectionEx
+COMSPEC
+cmd.exe
+ !"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~
+CorExitProcess
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+.com
+.exe
+.bat
+.cmd
+AreFileApisANSI
+CompareStringEx
+EnumSystemLocalesEx
+GetDateFormatEx
+GetLocaleInfoEx
+GetTimeFormatEx
+GetUserDefaultLocaleName
+IsValidLocaleName
+LCMapStringEx
+LCIDToLocaleName
+LocaleNameToLCID
+AppPolicyGetProcessTerminationMethod
+Sunday
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Saturday
+January
+February
+March
+April
+June
+July
+August
+September
+October
+November
+December
+MM/dd/yy
+dddd, MMMM dd, yyyy
+HH:mm:ss
+log10
+sinh
+cosh
+tanh
+asin
+acos
+atan
+atan2
+sqrt
+ceil
+floor
+fabs
+modf
+ldexp
+_cabs
+_hypot
+fmod
+frexp
+_logb
+_nextafter
+?X&eB
+?Ltm
+tLVv
+?h6_~
+37.=
+?7Tf(
+=\uI=
+g:"(
+$O1=
+uXO=
+1w<=
+>'eH
+pnJ=
+Ht=c
+]vQ<)8
+z1}B
+X4I+
+|)P!?Ua0
+		!=
++34?
+??7;
+MkK?
+R_V?
+9&\?
+Eb2]A=
+f#I=
+hb?O2
+H`3=
+c?e2
+Le?2
+0h?[
+2ieO=
+|W8A=
+np?z 
+)(q?
+}~:f
+t?,&
+u?^p?o4
+!9v?
+GYM=
+Pex?0
+6K{?
+E	M=
+X-F=
+w}?0
+y1~?|"
+V%A+=
+4';=
+q	! 
+#D5p
+La8i
+{4Wf
+Ai0T
+@VNQ
+p4"%
+P'E=
+ls1=
+?PiB
+{^C=
+n{;=
+3<L=
+?|I7Z#
+aDJ=
+>,'1D=
++NB=
+?g)([|X>=
+?|[{
+~*L=
+u!K=
+?IT$7
+-8 ?
+.h ?
+2 !?
+4P!?
+!y##
+98"?
+:h"?bC
+? #?
+@H#?43
+Ax#?uN}*
+r7Yr7=
+.K="=
+F0$?3=1
+H`$?h|
+%?uY
+NH%?
+Px%?
+%?\9
+&?~YK|
+sU0&?W
+VX&?
+4g%6
+:]=O>
+#w_j
+(+E 
+V~|_
+!|.4
+G"jm
+6(`J
+k:UG
+UY =
+Bfe9
+CqTR;
+AiFC.
+?5a1
+<{Q}<
+hI{L[
+<8bunz8
+<V/>
+?(FN\
+<'*6
+?3xj
+<)TH
+K<<H!
+m1WY$
+?#%X.y
+F||<##
+$x<e
+<]%>
+T~OXu
+?.)T
+zyC7
+k7+%
+<@En[vP
+log10
+lzZ?
+	k8=
+?5Wg4p
+Nv$^
+w(@	
+BC .=
+(lX 
+#{ =
+`~R=
+}s"=
+%S#[k
+"B <1=
+\-!y
+#.X'=
+i9+=
+Unknown exception
+bad array new length
+string too long
+iostream
+bad cast
+bad locale name
+ios_base::badbit set
+ios_base::failbit set
+ios_base::eofbit set
+Enter flag: 
+liqzoolfozpbpraxmcvjgpscd
+htuhfgpningsebayuaugabwosrmkdtedjfizzhaqgudmy
+pylkrhdygthdc
+Yes, you professional!
+Invalid flag!
+pause
+iostream stream error
+RSDS&
+C:\Users\User\source\repos\SimpleKeygenme\Release\SimpleKeygenme.pdb
+GCTL
+.text$di
+.text$mn
+.text$x
+.text$yd
+.idata$5
+.00cfg
+.CRT$XCA
+.CRT$XCAA
+.CRT$XCC
+.CRT$XCL
+.CRT$XCZ
+.CRT$XIA
+.CRT$XIAA
+.CRT$XIAC
+.CRT$XIC
+.CRT$XIZ
+.CRT$XPA
+.CRT$XPX
+.CRT$XPXA
+.CRT$XPZ
+.CRT$XTA
+.CRT$XTZ
+.rdata
+.rdata$r
+.rdata$sxdata
+.rdata$voltmd
+.rdata$zzzdbg
+.rtc$IAA
+.rtc$IZZ
+.rtc$TAA
+.rtc$TZZ
+.xdata$x
+.idata$2
+.idata$3
+.idata$4
+.idata$6
+.data
+.data$r
+.data$rs
+.bss
+.rsrc$01
+.rsrc$02
+EnterCriticalSection
+LeaveCriticalSection
+InitializeCriticalSectionEx
+DeleteCriticalSection
+EncodePointer
+DecodePointer
+MultiByteToWideChar
+WideCharToMultiByte
+LCMapStringEx
+GetStringTypeW
+GetCPInfo
+UnhandledExceptionFilter
+SetUnhandledExceptionFilter
+GetCurrentProcess
+TerminateProcess
+IsProcessorFeaturePresent
+QueryPerformanceCounter
+GetCurrentProcessId
+GetCurrentThreadId
+GetSystemTimeAsFileTime
+InitializeSListHead
+IsDebuggerPresent
+GetStartupInfoW
+GetModuleHandleW
+RtlUnwind
+RaiseException
+GetLastError
+SetLastError
+InitializeCriticalSectionAndSpinCount
+TlsAlloc
+TlsGetValue
+TlsSetValue
+TlsFree
+FreeLibrary
+GetProcAddress
+LoadLibraryExW
+GetStdHandle
+WriteFile
+GetModuleFileNameW
+ExitProcess
+GetModuleHandleExW
+GetCommandLineA
+GetCommandLineW
+HeapFree
+CloseHandle
+WaitForSingleObject
+GetExitCodeProcess
+CreateProcessW
+GetFileAttributesExW
+CompareStringW
+LCMapStringW
+GetLocaleInfoW
+IsValidLocale
+GetUserDefaultLCID
+EnumSystemLocalesW
+HeapAlloc
+GetFileType
+FlushFileBuffers
+GetConsoleOutputCP
+GetConsoleMode
+ReadFile
+GetFileSizeEx
+SetFilePointerEx
+ReadConsoleW
+HeapReAlloc
+FindClose
+FindFirstFileExW
+FindNextFileW
+IsValidCodePage
+GetACP
+GetOEMCP
+GetEnvironmentStringsW
+FreeEnvironmentStringsW
+SetEnvironmentVariableW
+SetStdHandle
+GetProcessHeap
+HeapSize
+CreateFileW
+WriteConsoleW
+KERNEL32.dll
+                          
+abcdefghijklmnopqrstuvwxyz
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                          
+abcdefghijklmnopqrstuvwxyz
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+.?AVlogic_error@std@@
+.?AVlength_error@std@@
+.?AVbad_exception@std@@
+.?AVfailure@ios_base@std@@
+.?AVruntime_error@std@@
+.?AVbad_alloc@std@@
+.?AVsystem_error@std@@
+.?AVbad_cast@std@@
+.?AV_System_error@std@@
+.?AVexception@std@@
+.?AVbad_array_new_length@std@@
+.?AVios_base@std@@
+.?AV?$_Iosb@H@std@@
+.?AV?$basic_ios@DU?$char_traits@D@std@@@std@@
+.?AV?$basic_streambuf@DU?$char_traits@D@std@@@std@@
+.?AV?$basic_ostream@DU?$char_traits@D@std@@@std@@
+.?AV?$basic_filebuf@DU?$char_traits@D@std@@@std@@
+.?AVcodecvt_base@std@@
+.?AV?$codecvt@DDU_Mbstatet@@@std@@
+.?AV_Locimp@locale@std@@
+.?AV?$basic_istream@DU?$char_traits@D@std@@@std@@
+.?AVtype_info@@
+.?AVerror_category@std@@
+.?AV?$ctype@D@std@@
+.?AV_Facet_base@std@@
+.?AU_Crt_new_delete@std@@
+.?AV_Iostream_error_category2@std@@
+.?AUctype_base@std@@
+.?AVfacet@locale@std@@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<assembly xmlns='urn:schemas-microsoft-com:asm.v1' manifestVersion='1.0'>
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level='asInvoker' uiAccess='false' />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+</assembly>
+0 0*0@0T0X0b0p0z0
+1)151?1K1g1
+1%2M2S2o2
+213O3h3
+4I4Y4l596w6
+637F7]7
+9,9V9d9
+?F?X?
+X0b0g0
+151[1
+6+727C7S7`7i7x7
+858[8d8j8
+<V=h=b>
+263B3
+5C7K7[7
+8$8?8^8t8
+9(9-9
+:):f:k:q:
+;);K;l;x;
+=@=j=
+;@;X;k;
+;@<Q<X<`<v<
+< =:=p=
+>$><>W>b>z>
+-2B2P2^2
+2/3=3
+4!4'4.454<4a4
+5-5l5
+778^9
+:!:':-:B:W:^:d:v:
+;W<`<k<r<
+=$=.=>=N=^=g=
+> >*>=>B>a>
+?;?a?j?p?
+O0o0y0
+0;1D1I1\1p1u1
+3$3-3\3e3n3|3
+648J8Y8
+8F:v:
+50H0
+l7p7t7x7|7
+919>9`9
+:,:::@:[:
+;';8;D;
+4+414X4'6
+9!9::A:j:
+;$;<;e;x;
+<&<2<7<<<W<a<m<r<w<
+<C=S=|=
+0'0t0
+171>1\1v1
+2-2C2P2^2l2w2
+4#5o7
+8b9g9n9
+8H9`9
+;@>J>T>
+>)?Y?
+688N8h8v8
+9M9[9d9
+<1<;<m<t<
+=">C>^>s>x>
+1i1q1{1
+2_2k2p2v2{2
+2#3<3A3J3
+4!5,565E5M5U5L6
+;A<L<
+=L=P=X=d=~=
+>->F>K>d>u>z>
+6b8[9+:X:
+<'<2<D<O<
+<w=A>
+0C1M1P2
+4]5d5
+606I6g6
+7:7O7a7n7
+8$8+808n8v8
+9"92979<9L9Q9V9f9k9p9
+:5:[:
+;+;O;
+<9<C<S<X<]<x<
+=-=B=f=x=
+>+>y>
+?*?Q?c?o?
+0/0<0A0O0
+1:1U1
+3)434N4
+819Q9\9j9
+9&:E:W:a:
+;7;^;
+; <G<f<"=R=l=
+091C1
+:0;s;
+<8<d<q<
+<:={=
+?%?f?
+0[1r1
+2>2_2s2
+9);5=?=b=l=
+=V>8?
+5#5t5y5~5
+5M6V6
+9#999O9W9
+4%404k4
+6I6U6m6u6
+8/9\9
+:A;p;=<Q<i<q<
+>8>@>M>]?
+0$080C0
+3&363
+5%565u5
+3@4G4N4U4o4~4
+5=5e5T7w7
+8g8p8t8z8~8
+8 9b9
+;0<=<n<|<
+0)0o0~0
+111l1s1
+212C2U2g2y2
+2	3H3-6
+7(7d7
+9"9*929:9
+3E4%7
+718B8S8
+:K:v:G;
+;Z<c<
+<S=\=
+D031i1
+2G3O3
+3@4O4
+4M5T5^5
+8L:x<
+M0g1
+2g4-6
+7#7,7f7u7
+8Q8Z8c8l8
+:y;$<
+2%4+484p5
+6A8`8l8
+:/:G:M:Y:x:~:
+<#<0<B<
+<'=<=E=N=I>Q>Y>a>i>
+?)?I?
+7@8q8
+;$;Q;
+<G<{<
+=J=T=^=h=r=|=
+@1L1P1T1X1\1`1d1h1l1p1t1x1|1
+2 2$2(2,2024282<2@2D2H2L2P2T2X2\2`2d2h2l2p2t2x2|2
+3 3$3(3,3034383<3@3D3H3T3X3\3`3d3h3l3p3t3x3|3
+3$6,646<6D6L6T6\6d6l6t6|6
+7$7,747<7D7L7T7\7d7l7t7|7
+8$8,848<8D8L8T8\8d8l8t8|8
+1 1(10181@1H1P1X1`1h1p1x1
+2 2(20282@2H2P2X2`2h2p2x2
+3 3(30383@3H3P3X3`3h3p3x3
+4 4(404\:`:d:
+X6`6d6h6l6p6t6x6|6
+6H7P7X7\7`7d7h7l7p7t7|7
+8 8$8(8,8
+> >$>(>,>0>4>8><>@>D>H>L>P>T>X>\>`>d>h>l>p>t>x>
+? ?$?(?,?0?
+3$3,343<3D3L3T3\3d3l3t3z5~5
+5 6$6(6,6`6l6x6
+7 7,787D7P7\7h7t7
+8(848@8L8X8d8p8|8
+9$909<9H9T9`9p9|9
+:$:0:<:H:T:`:l:x:
+<4D4L4T4\4d4l4t4|4
+5$5,545<5D5L5T5\5d5l5t5|5
+6$6,646<6D6L6T6\6d6l6t6|6
+7$7,747<7D7L7T7\7d7l7t7|7
+8$8,848<8D8L8T8\8d8l8t8|8
+9$9,949<9D9L9T9\9d9l9t9|9
+:$:,:4:<:D:L:T:\:d:l:t:|:
+;$;,;4;<;D;L;T;
+X5`5h5p5x5
+6 6(60686@6H6P6X6`6h6p6x6
+7 7(70787@7H7P7X7`7h7p7x7
+8 8(80888@8H8P8X8`8h8p8x8
+9 9(90989@9H9P9X9`9h9p9x9
+: :(:0:8:@:H:P:X:`:h:p:x:
+; ;(;0;8;@;H;P;X;`;h;p;x;
+< <(<0<8<@<H<P<X<`<h<p<
+8@9X9
+:(:,:<:@:D:L:d:h:
+;(;,;4;L;P;h;l;
+< <(<@<P<T<X<\<`<h<
+=,=<=@=P=T=X=\=`=h=
+>$>(>,>0>4><>@>D>H>P>h>x>
+?0?4?L?\?`?d?|?
+0$0(0,0004080L0P0T0X0\0`0t0x0
+101@1P1`1d1t1x1|1
+2 24282H2L2P2T2X2`2x2
+7$7D7L7T7\7d7l7t7
+888D8d8l8t8|8
+9(949T9`9
+:4:<:P:`:l:
+; ;8;L;\;h;p;
+<0<8<@<H<L<T<`<
+= =@=L=l=x=
+>8>@>D>`>h>l>|>
+?$?8?X?x?
+080X0x0
+181X1x1
+282X2x2
+383X3x3
+4 4<4@4`4
+5 545<5P5X5`5h5|5
+1 1$1(1,1014181<1@1D1P1T1X1\1`1d1h1l1p1
+3(383H3`3l3p3t3
+3054585<5p:x:
+;8;X;t;
+=H=l=
+> >D>p>

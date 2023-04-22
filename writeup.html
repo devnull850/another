@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>Analysis of ctf_by_vladmetz.exe</h3>
+    <p>The <code>main</code> function is found at 0x4020f0 in the binary. The
+       flag prompting and validation is all performed in the function. The user
+       is prompted to "Enter flag: " in the code snippet below.</p>
+    <pre>
+      <code>
+...
+40211e:	ba 7c 87 42 00 	mov    edx,0x42877c
+402123:	e8 78 05 00 00	call   0x4026a0
+...
+      </code>
+    </pre>
+    <p>The first thing to notice is that a MSVC <code>std::string</code> 
+       instance is the data structure used to store the user input flag. This
+       is seen in the code snippet below. Being able to identity stack
+       addressed data structures like this makes analysis of this binary
+       incredibly simple. The dead give away that this is a
+       <code>std::string</code> instance are the references to three stack
+       addresses. The lowest addressed reference, EBP - 0x60, is 16 bytes
+       from the next lowest addressed reference, EBP - 0x50. The other address
+       is EBP - 0x4c, which is 4 bytes from EBP - 0x50. The first reference is
+       a Short/Small String Optimized char array or char pointer buffer of the  
+       <code>std::string</code> instance. For strings 15 bytes or less a char
+       array is used. For strings greater than 15 bytes a heap allocation
+       occurs and the pointer returned from the allocation will occupy the
+       first bytes of the address. The second reference is the length of the
+       string's buffer. The third reference is the capacity reserved for the
+       buffer which is initially 15, indicating the initial capacity of the
+       char array buffer.</p>
+    <pre>
+      <code>
+...
+40212a:	c7 45 a0 00 00	mov    DWORD PTR [ebp-0x60],0x0
+40212f:	00 00
+...
+402139:	c7 45 b0 00 00 	mov    DWORD PTR [ebp-0x50],0x0
+40213e:	00 00
+402140:	c7 45 b4 0f 00	mov    DWORD PTR [ebp-0x4c],0xf
+402145:	00 00
+402147:	c6 45 a0 00    	mov    BYTE PTR [ebp-0x60],0x0
+...
+      </code>
+    </pre>
+    <p>The code snippet below populates the <code>std::string</code> instance
+       described in detail above.</p>
+    <pre>
+      <code>
+...
+402150:	8d 55 a0      	lea    edx,[ebp-0x60]
+...
+40215a:	b9 d0 c0 42 00 	mov    ecx,0x42c0d0
+40215f:	e8 1c 0f 00 00	call   0x403080
+...
+      </code>
+    </pre>
+    <p>The other data structure of significance is seen below. The
+       <code>memset</code> function (address 0x407000 in the binary) is used to
+       fill 56 bytes of memory on the stack starting at address EBP - 0x48 with
+       the value zero in all the bytes. It will be evident in two code snippets
+       that this is an integer array of 14 elements (56 / 4 = 14).</p>
+    <pre>
+      <code>
+...
+402164:	6a 38          	push   0x38
+402166:	8d 45 b8      	lea    eax,[ebp-0x48]
+402169:	6a 00          	push   0x0
+40216b:	50             	push   eax
+40216c:	e8 8f 4e 00 00 	call   0x407000
+...
+      </code>
+    </pre>
+    <p>The length of the user input flag is checked to not be equal to zero.
+       This is actually a code optimization. If there are no characters in the
+       string's buffer, there is no need to fill the array above with anything
+       since all the element's values are already zero.</p>
+    <pre>
+      <code>
+...
+402171:	8b 7d b0       	mov    edi,DWORD PTR [ebp-0x50]
+...
+40217c:	85 ff          	test   edi,edi
+40217e:	74 19         	je     0x402199
+...
+      </code>
+    </pre>
+    <p>The loop below assigns the integer array element at the current loop
+       index the value of the character (byte) in the flag string's buffer at
+       the current loop index. The capacity of the flag string is checked to
+       determine if the buffer should be addressed as a char array or if there
+       is a need to first dereference the address of the char pointer. The
+       loop continues for the flag string's length number of iterations. Note,
+       the integer array being 14 elements is an indicator that the flag should
+       also be 14 characters.</p>
+    <pre>
+      <code>
+...
+402177:	8b 55 a0       	mov    edx,DWORD PTR [ebp-0x60]
+40217a:	33 c9          	xor    ecx,ecx
+...
+402180:	8b 75 b4       	mov    esi,DWORD PTR [ebp-0x4c]
+402183:	83 fe 10       	cmp    esi,0x10
+402186:	8d 45 a0       	lea    eax,[ebp-0x60]
+402189:	0f 43 c2       	cmovae eax,edx
+40218c:	0f be 04 08    	movsx  eax,BYTE PTR [eax+ecx*1]
+402190:	89 44 8d b8   	mov    DWORD PTR [ebp+ecx*4-0x48],eax
+402194:	41            	inc    ecx
+402195:	3b cf          	cmp    ecx,edi
+402197:	72 ea          	jb     0x402183
+...
+      </code>
+    </pre>
+    <p>The final indicator that the data structure starting at EBP - 0x48 is
+       in fact an integer array is seen below. The addresses referenced in the
+       remaining code snippets are all offsets of 4 bytes from one another and
+       in the offset range of [0, 0x48) bytes from the starting address
+       EBP - 0x48. There are also three <code>std::string</code> instances
+       created during the process of using the integer array to statisfy an
+       equation. The three <code>std::string</code> instances are never used
+       anywhere in satisfying the equation. I will ignore and omit their
+       code in the analysis to not distract from statisfying the equation which
+       is the flag validation.</p>
+    <pre>
+      <code>
+...
+4021d4:	8b 45 d4       	mov    eax,DWORD PTR [ebp-0x2c]
+4021d7:	8b 4d c4       	mov    ecx,DWORD PTR [ebp-0x3c]
+4021da:	0f af 4d c8    	imul   ecx,DWORD PTR [ebp-0x38]
+4021de:	8b 75 b8       	mov    esi,DWORD PTR [ebp-0x48]
+4021e1:	8b 5d c0       	mov    ebx,DWORD PTR [ebp-0x40]
+4021e4:	8d 14 00       	lea    edx,[eax+eax*1]
+4021e7:	8b 45 d8      	mov    eax,DWORD PTR [ebp-0x28]
+4021ea:	8b 7d bc       	mov    edi,DWORD PTR [ebp-0x44]
+4021ed:	0f af 4d cc    	imul   ecx,DWORD PTR [ebp-0x34]
+4021f1:	0f af c0       	imul   eax,eax
+4021f4:	0f af f3       	imul   esi,ebx
+...
+      </code>
+    </pre>
+    <p>After the completion of the code snippet above each register will
+       hold the values in the table below. Note, assume the integer array
+       starting at EBP - 0x48 is referenced as <code>a</code> in the table
+       equations.</p>
+    <table>
+      <tr>
+        <th>Register</th>
+        <th>Equation</th>
+      </tr>
+      <tr>
+        <td>EAX</td>
+        <td>a[8] * a[8]</td>
+      </tr>
+      <tr>
+        <td>ECX</td>
+        <td>a[3] * a[4] * a[5]</td>
+      </tr>
+      <tr>
+        <td>EDX</td>
+        <td>a[7] + a[7]</td>
+      </tr>
+      <tr>
+        <td>EBX</td>
+        <td>a[2]</td>
+      </tr>
+      <tr>
+        <td>ESI</td>
+        <td>a[0] * a[2]</td>
+      </tr>
+      <tr>
+        <td>EDI</td>
+        <td>a[1]</td>
+      </tr>
+    </table>
+    <p>Two very important observations of the assembly instructions used are
+       the registers selected for storing values before entering the not shown
+       <code>std::string</code> constructors and the use of a particular
+       <code>imul</code> instruction. The first observation is the use of the
+       EDI, ESI, and EBX registers before entering the <code>std::string</code>
+       constructors. Even though omitted each constructor pushes the three
+       registers on its stack frame before peforming its work and pops the
+       values off before returning. This maintains the values in the three
+       registers to their values before each constructor call.</p>
+    <p>The second important observation is the version of the <code>imul</code>
+       instruction used. The actual machine code bytes of the instruction
+       starts with 0x0f 0xaf. Looking at the Intel instruction set this the
+       version that multiplies a 16 or 32 bit register by 16 or 32 bit register
+       or memory location and stores the result back in the first 16 or 32 bit
+       register. This is significant because other <code>imul</code>
+       instructions (machine code 0xf6 and 0xf7) will operate on the
+       combination EDX:EAX registers which would change the potential
+       results.</p> 
+    <pre>
+      <code>
+...
+402203:	0f af 4d d0    	imul   ecx,DWORD PTR [ebp-0x30]
+402207:	0f af 45 dc    	imul   eax,DWORD PTR [ebp-0x24]
+...
+      </code>
+    </pre>
+    <p>I will repeat the process of showing the code snippet and the resulting
+       register values after the operations are performed in a table in the
+       next few code snippets.</p>
+    <table>
+      <tr>
+        <th>Register</th>
+        <th>Equation</th>
+      </tr>
+      <tr>
+        <td>EAX</td>
+        <td>a[8] * a[8] * a[9]</td>
+      </tr>
+      <tr>
+        <td>ECX</td>
+        <td>a[3] * a[4] * a[5] * a[6]</td>
+      </tr>
+      <tr>
+        <td>EDX</td>
+        <td>a[7] + a[7]</td>
+      </tr>
+      <tr>
+        <td>EBX</td>
+        <td>a[2]</td>
+      </tr>
+      <tr>
+        <td>ESI</td>
+        <td>a[0] * a[2]</td>
+      </tr>
+      <tr>
+        <td>EDI</td>
+        <td>a[1]</td>
+      </tr>
+    </table>
+    <pre>
+      <code>
+...
+402225:	0f af c1      	imul   eax,ecx
+...
+      </code>
+    </pre>
+    <table>
+      <tr>
+        <th>Register</th>
+        <th>Equation</th>
+      </tr>
+      <tr>
+        <td>EAX</td>
+        <td>a[8] * a[8] * a[9] * a[3] * a[4] * a[5] * a[6]</td>
+      </tr>
+      <tr>
+        <td>ECX</td>
+        <td>a[3] * a[4] * a[5] * a[6]</td>
+      </tr>
+      <tr>
+        <td>EDX</td>
+        <td>a[7] + a[7]</td>
+      </tr>
+      <tr>
+        <td>EBX</td>
+        <td>a[2]</td>
+      </tr>
+      <tr>
+        <td>ESI</td>
+        <td>a[0] * a[2]</td>
+      </tr>
+      <tr>
+        <td>EDI</td>
+        <td>a[1]</td>
+      </tr>
+    </table>
+    <pre>
+      <code>
+...
+40222e:	0f af c6       	imul   eax,esi
+402231:	8b f3          	mov    esi,ebx
+402233:	2b f0          	sub    esi,eax
+402235:	0f af f7       	imul   esi,edi
+402238:	0f af 75 b8   	imul   esi,DWORD PTR [ebp-0x48]
+40223c:	03 f2          	add    esi,edx
+...
+      </code>
+    </pre>
+    <table>
+      <tr>
+        <th>Register</th>
+        <th>Equation</th>
+      </tr>
+      <tr>
+        <td>EAX</td>
+        <td>a[8] * a[8] * a[9] * a[3] * a[4] * a[5] *
+            a[6] * a[0] * a[2]</td>
+      </tr>
+      <tr>
+        <td>ECX</td>
+        <td>a[3] * a[4] * a[5] * a[6]</td>
+      </tr>
+      <tr>
+        <td>EDX</td>
+        <td>a[7] + a[7]</td>
+      </tr>
+      <tr>
+        <td>EBX</td>
+        <td>a[2]</td>
+      </tr>
+      <tr>
+        <td>ESI</td>
+        <td>(a[2] - a[8] * a[8] * a[9] * a[3] * a[4] *
+            a[5] * a[6] * a[0] * a[2]) * a[1] * a[0] +
+            (a[7] + a[7])</td>
+      </tr>
+      <tr>
+        <td>EDI</td>
+        <td>a[1]</td>
+      </tr>
+    </table>
+    <pre>
+      <code>
+...
+40224a:	8b c6          	mov    eax,esi
+40224c:	0f af 7d b8    	imul   edi,DWORD PTR [ebp-0x48]
+402250:	99             	cdq
+402251:	f7 7d e4       	idiv   DWORD PTR [ebp-0x1c]
+402254:	0f af fb       	imul   edi,ebx
+402257:	99             	cdq
+402258:	f7 7d e8       	idiv   DWORD PTR [ebp-0x18]
+...
+40225d:	99             	cdq
+40225e:	f7 7d ec       	idiv   DWORD PTR [ebp-0x14]
+...
+40226d:	0f af f8      	imul   edi,eax
+...
+      </code>
+    </pre>
+    <table>
+      <tr>
+        <th>Register</th>
+        <th>Equation</th>
+      </tr>
+      <tr>
+        <td>EAX</td>
+        <td>((a[2] - a[8] * a[8] * a[9] * a[3] * a[4] *
+            a[5] * a[6] * a[0] * a[2]) * a[1] * a[0] +
+            (a[7] + a[7])) / a[11] / a[12] / a[13]</td>
+      </tr>
+      <tr>
+        <td>EBX</td>
+        <td>a[2]</td>
+      </tr>
+      <tr>
+        <td>ESI</td>
+        <td>(a[2] - a[8] * a[8] * a[9] * a[3] * a[4] *
+            a[5] * a[6] * a[0] * a[2]) * a[1] * a[0] +
+            (a[7] + a[7])</td>
+      </tr>
+      <tr>
+        <td>EDI</td>
+        <td>a[1] * a[0] * a[2] *
+            (((a[2] - a[8] * a[8] * a[9] * a[3] * a[4] *
+            a[5] * a[6] * a[0] * a[2]) * a[1] * a[0] +
+            (a[7] + a[7])) / a[11] / a[12] / a[13])</td>
+      </tr>
+    </table>
+    <p>The result stored in the EDI is subtracted by 148,000,000.</p>
+    <pre>
+      <code>
+...
+402287:	8d 87 00 b3 2d	lea    eax,[edi-0x8d24d00]
+40228c:	f7
+...
+      </code>
+    </pre>
+    <p>The difference from the above must be less than 1,000,000 to execute
+       the sequence of instructions that will output
+       "Yes, you professional!"</p>
+    <pre>
+      <code>
+...
+402291:	ba e8 87 42 00 	mov    edx,0x4287e8
+402296:	3d 40 42 0f 00 	cmp    eax,0xf4240
+40229b:	72 05          	jb     0x4022a2
+...
+4022a2:	e8 f9 03 00 00 	call   0x4026a0
+...
+      </code>
+    </pre>
+    <p>Taken in totality, the equation below is the flag validation
+       algorithm. Again assume <code>a</code> is the integer array containing
+       the characters of the user input flag. Note, the result of the equation
+       needs to be greater than or equal to zero. The <code>cmp</code>
+       instruction will subtract the first operand from the second, set the
+       status flags, and discard the result. There is no notation of signed
+       in this operation and thus values less than zero will be the equivalent
+       of subtracting 1,000,000 from a really large unsigned number. This will
+       prevent the setting of the carry flag.</p>
+    <pre>
+      <code>
+(a[1] * a[0] * a[2] *
+  (((a[2] - a[8] * a[8] * a[9] * a[3] *
+    a[4] * a[5] * a[6] * a[0] * a[2]) *
+   a[1] * a[0] + a[7] + a[7]) / a[11] /
+  a[12] / a[13]) - 148000000) < 1000000
+      </code>
+    </pre>
+  </body>
+</html>
