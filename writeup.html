@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>Analysis of keygenme.exe</h3>
+    <p>Jumping into the <code>main</code> function, the user is prompted for
+       a name and a serial. The serial is a signed integer (4 bytes) and the
+       name is a <code>std::string</code> instance. Both are declared outside
+       of <code>main</code> in the .data section of the binary.</p>
+    <pre>
+      <code>
+...
+401637:	8b 0d 80 30	mov    ecx,DWORD PTR ds:0x403080
+40163b: 40 00    
+40163d:	ba 1c 32 40	mov    edx,0x40321c
+401641: 00       
+401642:	53              push   ebx
+401643:	56             	push   esi
+401644:	57             	push   edi
+401645:	e8 b6 03 00	call   0x401a00
+401649: 00       
+40164a:	8b 0d 74 30	mov    ecx,DWORD PTR ds:0x403074
+40164e: 40 00    
+401650:	e8 4b 07 00	call   0x401da0
+401654: 00       
+...
+      </code>
+    </pre>
+    <p>The disassembly listing snippet above prompts the user for the name and
+       roughly translates to the C++ code seen below.</p>
+    <pre>
+      <code>
+std::cout << "enter name: ";
+std::cin >> name;
+      </code>
+    </pre>
+    <p>After prompting the user for a name, the code then prompts for the
+       serial.</p>
+    <pre>
+      <code>
+...
+401655:	8b 0d 80 30	mov    ecx,DWORD PTR ds:0x403080
+401659: 40 00    
+40165b:	ba 2c 32 40	mov    edx,0x40322c
+40165f: 00       
+401660:	e8 9b 03 00	call   0x401a00
+401664: 00       
+401665:	8b 0d 74 30	mov    ecx,DWORD PTR ds:0x403074
+401669: 40 00    
+40166b:	68 3c 54 40	push   0x40543c
+40166f: 00       
+401670:	ff 15 88 30	call   DWORD PTR ds:0x403088
+401674: 40 00    
+...
+      </code>
+    </pre>
+    <p>The disassembly listing snippet above is roughly equivalent to the C++
+       code seen below.</p>
+    <pre>
+      <code>
+std::cout << "enter serial: ";
+std::cin >> serial;
+      </code>
+    </pre>
+    <p>The user input name string instance is copied to another string instance
+       with its address at the current address of the stack pointer.</p>
+    <pre>
+      <code>
+...
+40167e:	8b fc          	mov    edi,esp
+401680:	c7 47 10 00	mov    DWORD PTR [edi+0x10],0x0
+401684: 00 00 00 
+401687:	c7 47 14 00	mov    DWORD PTR [edi+0x14],0x0
+40168b: 00 00 00 
+...
+      </code>
+    </pre>
+    <pre>
+      <code>
+std::string copy(name);
+      </code>
+    </pre>
+    <p>The string copy of the name string is passed as the only parameter to
+       a function that returns a signed integer value that is compared against
+       the user input serial.</p>
+    <pre>
+      <code>
+...
+401720:	89 5f 10       	mov    DWORD PTR [edi+0x10],ebx
+401723:	89 77 14      	mov    DWORD PTR [edi+0x14],esi
+401726:	e8 05 fb ff	call   0x401230
+40172a: ff       
+...
+      </code>
+    </pre>
+    <p>Inside the function called above, there is what initially appears to be
+       a complex algorithm used to calculate the returned value. It was a bit
+       disappointing to find out that the majority of the code throws away
+       the calculations in the algorithm. The actual value returned from the
+       function is a simple sum of all the characters of the input parameter
+       string with a couple arthimetic and bitwise operations performed on the
+       resulting sum.</p>
+    <p>The disassembly listing shown below sets up the sum loop by
+       initializing the loop counter (EDX) and the accumulating sum "variable"
+       (EDI) to zero. The ESI register will contain the length of the input
+       string and be used to determine when to exit the loop.</p>
+    <pre>
+      <code>
+...
+401560:	8b 75 18        mov    esi,DWORD PTR [ebp+0x18]
+...
+4015b7:	33 ff          	xor    edi,edi
+4015b9:	33 d2          	xor    edx,edx
+...
+      </code>
+    </pre>
+    <p>The sum loop is shown in the disassembly listing below. The EAX register
+       contains the base address of either the char array or block of memory
+       on the heap reserved for the string's underlying byte or character
+       values. EDX is the loop index and EDI is the accumulating sum. The loop
+       continues until EDX equals the input parameter string's length.</p>
+    <pre>
+      <code>
+...
+4015cd:	0f be 04 10    	movsx  eax,BYTE PTR [eax+edx*1]
+4015d1:	42             	inc    edx
+4015d2:	03 f8          	add    edi,eax
+4015d4:	8b c7          	mov    eax,edi
+4015d6:	3b d6          	cmp    edx,esi
+4015d8:	72 ea          	jb     0x4015c4
+...
+      </code>
+    </pre>
+    <p>A rough translation of the disasembly listing above in C/C++ code is
+       shown below for clarity.</p>
+    <pre>
+      <code>
+int sum = 0;
+int i = 0;
+
+while (i < copy.length()) {
+  sum += copy[i];
+  ++i;
+}
+      </code>
+    </pre>
+    <p>After summing all the bytes of the string, the resulting sum is XOR'd
+       by 6, multiplied by 1176, and XOR'd by 7. The resuling value is then
+       returned from the function. The disassembly and the equivalent C/C++
+       code are shown below.</p>
+    <pre>
+      <code>
+...
+4015da:	83 f0 06       	xor    eax,0x6
+...
+4015e7:	69 f0 98 04	imul   esi,eax,0x498
+4015eb: 00 00    
+...
+4015f0:	83 f6 07       	xor    esi,0x7
+...
+      </code>
+    </pre>
+    <pre>
+      <code>
+return 7 ^ ((sum ^ 6) * 1176);
+      </code>
+    </pre>
+    <p>Back in the <code>main</code> function, the value returned from the
+       function described previously is then multiplied by 58800. The resulting
+       product is compared to the user input serial. If the two values are
+       equivalent, the "correct!" message is output. If the two values are not
+       equal, nothing is output to the user.</p>
+    <pre>
+      <code>
+...
+401733:	69 c0 b0 e5	imul   eax,eax,0xe5b0
+401737: 00 00    
+401739:	3b 05 3c 54	cmp    eax,DWORD PTR ds:0x40543c
+40173d: 40 00    
+40173f:	75 21          	jne    0x401762
+401741:	68 40 1c 40	push   0x401c40
+401745: 00       
+401746:	51             	push   ecx
+401747:	8b 0d 80 30	mov    ecx,DWORD PTR ds:0x403080
+40174b: 40 00    
+40174d:	ba 3c 32 40	mov    edx,0x40323c
+401751: 00       
+401752:	e8 a9 02 00	call   0x401a00
+401756: 00       
+401757:	83 c4 04       	add    esp,0x4
+40175a:	8b c8          	mov    ecx,eax
+40175c:	ff 15 4c 30	call   DWORD PTR ds:0x40304c
+401760: 40 00    
+...
+      </code>
+    </pre>
+    <pre>
+      <code>
+val = FUN_00401230(copy);
+val *= 58800;
+
+if (val == serial) {
+  std::cout << "correct!" << std::endl;
+}
+
+system("pause");
+return 0;
+      </code>
+    </pre>
+    <h3>Keygen</h3>
+    <p>Writing a key generator for this is trivial. The code below shows an
+       implementation.</p>
+    <pre>
+      <code>
+// assume name contains the user input
+// name
+int sum = 0;
+int serial;
+
+for (int i = 0; i < name.length(); ++i) {
+  sum += name[i];
+}
+
+serial = (7 ^ (1176 * (sum ^ 6))) * 58800;
+      </code>
+    </pre>
+  </body>
+</html>
