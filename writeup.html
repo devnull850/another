@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>Introduction</h3>
+    <p>The following blog post will discuss reverse engineering the binary
+       crackme.exe from the crackmes.one website under Second? crackme
+       [FIXED] by latvianfarmer17. The binary prompts the user for a username
+       and an id. An algorithm is performed with the characters of the username
+       to generate a string that is then compared to the user input id. The id
+       must be equal to the generated string to "crack" the binary.</p>
+    <h3>Analysis of main</h3>
+    <p>The main function is found at address 0x1430. Within main the user is
+       first prompted to "Enter username\n>". This is seen in the code listing
+       below.
+    <pre>
+      <code>
+...
+1443:	48 8d 0d 16	lea    rcx,[rip+0x1e16]
+1447:	1e 00 00
+144a:	e8 d1 fb ff   	call   0x1020
+144e:	ff
+...
+      </code>
+    </pre>
+    <p>The <code>scanf</code> function is used to populate a string on the
+       stack at address RSP + 0x20. The first parameter to <code>scanf</code>
+       is the format specifier "%[^\n]". That will accept printable characters
+       until a newline character is encountered. The code listing below shows
+       <code>scanf</code> being used to populate the username string.</p>
+    <pre>
+      <code>
+...
+1455:	48 8d 54 24    	lea    rdx,[rsp+0x20]
+1459:	20
+145a:	48 8d 0d 13 	lea    rcx,[rip+0x1e13]
+145e:	1e 00 00
+1461:	e8 1a fc ff     call   0x1080
+1465:	ff
+...
+      </code>
+    </pre>
+    <p>A loop is then entered that checks that every character in the username
+       string is alphanumeric. The code listing below shows the loop.</p>
+    <pre>
+      <code>
+...
+1484:	33 db            xor    ebx,ebx
+1486:	8b cb            mov    ecx,ebx
+...
+1490:	0f b6 44 0c      movzx  eax,BYTE PTR [rsp+rcx*1+0x20]
+1494:	20
+1495:	3c 0a            cmp    al,0xa
+1497:	74 25            je     0x14be
+1499:	84 c0            test   al,al
+149b:	74 21            je     0x14be
+149d:	44 8d 40 bf      lea    r8d,[rax-0x41]
+14a1:	8d 50 d0         lea    edx,[rax-0x30]
+14a4:	2c 61            sub    al,0x61
+14a6:	3c 19            cmp    al,0x19
+14a8:	76 0b            jbe    0x14b5
+14aa:	41 80 f8 19      cmp    r8b,0x19
+14ae:	76 05            jbe    0x14b5
+14b0:	80 fa 09         cmp    dl,0x9
+14b3:	77 45            ja     0x14fa
+14b5:	48 ff c1         inc    rcx
+14b8:	48 83 f9 11      cmp    rcx,0x11
+14bc:	7c d2            jl     0x1490
+...
+      </code>
+    </pre>
+    <p>The user is then prompted to enter the id. The <code>scanf</code>
+       function is again used to populate the id string. The format specifier
+       used in <code>scanf</code> is "%s". The id string is on the stack at
+       address RSP + 0x38. Both the prompting and the populating of the id
+       string are show in the code listing below.</p>
+    <pre>
+      <code>
+...
+14be:	48 8d 0d 2b 	lea    rcx,[rip+0x1e2b]
+14c2:	1e 00 00
+14c5:	e8 56 fb ff    	call   0x1020
+14c9:	ff
+...
+14d0:	48 8d 54 24     lea    rdx,[rsp+0x38]
+14d4:	38
+14d5:	48 8d 0d 24 	lea    rcx,[rip+0x1e24]
+14d9:	1e 00 00
+14dc:	e8 9f fb ff    	call   0x1080
+14e0:	ff
+...
+      </code>
+    </pre>
+    <p>The username (string on the stack at RSP + 0x20) is passed as the first
+       and only parameter to the function that will generate a string to
+       compare the user input id against. The code listing below shows the
+       calling of the function that is at address 0x10e0.</p>
+    <pre>
+      <code>
+...
+150f:	48 8d 4c 24     lea    rcx,[rsp+0x20]
+1513:	20
+1514:	e8 c7 fb ff     call   0x10e0
+1518:	ff
+...
+      </code>
+    </pre>
+    <p>I will explore the code inside the function mentioned above in a bit.
+       For the time being I will continue to explore the code flow in main.</p>
+    <p>After the function that generates the correct id string returns, a
+       loop is entered that compares each character of the user input id
+       string and the generated id string at the same index. The character
+       comparison loop is seen in the code listing below. Note the loop
+       iteration index variable is in the RBX register which is zeroed much
+       earlier in main.</p>
+    <pre>
+      <code>
+...
+1519:	48 8d 4c 24     lea    rcx,[rsp+0x38]
+151d:	38
+151e:	48 2b c1        sub    rax,rcx
+...
+1530:	48 8d 54 24	lea    rdx,[rsp+0x38]
+1534:	38
+1535:	48 03 d3        add    rdx,rbx
+1538:	0f b6 0a        movzx  ecx,BYTE PTR [rdx]
+153b:	38 0c 10        cmp    BYTE PTR [rax+rdx*1],cl
+153e:	75 0d           jne    0x154d
+1540:	48 ff c3        inc    rbx
+1543:	48 83 fb 10     cmp    rbx,0x10
+1547:	7c e7           jl     0x1530
+1549:	b0 01           mov    al,0x1
+154b:	eb 02           jmp    0x154f
+...
+      </code>
+    </pre>
+    <p>If the loop completes with each character being equal at each index
+       for both strings, the "\nValid ID!" message is output to ther user.</p>
+    <pre>
+      <code>
+...
+154d:	32 c0           xor    al,al
+154f:	84 c0           test   al,al
+1551:	48 8d 15 e8 	lea    rdx,[rip+0x1de8]
+1555:	1d 00 00
+1558:	48 8d 0d d1 	lea    rcx,[rip+0x1dd1]
+155c:	1d 00 00
+155f:	48 0f 44 ca     cmove  rcx,rdx
+1563:	e8 b8 fa ff     call   0x1020
+1567:	ff
+...
+      </code>
+    </pre>
+    <h3>Analyzing the Id Generation Function</h3>
+    <p>The function populates a string on the stack starting at address
+       RBP - 1. The string ends up containing 62 characters. There are 62
+       alphanumeric characters in the ASCII encoding. This gave me the idea to
+       check the presence of all the 62 alphanumeric characters vs having
+       duplicates. I wrote a program that verified there were only unique
+       characters in the 62. The characters are not in the correct sorted
+       lexigraphical order which is a component of the eventual correct key
+       generation algorithm. The code listing below shows the population of the
+       string. Going forward I will refer to the string as <code>s</code>.</p>
+    <pre>
+      <code>
+...
+1113:	66 0f 6f 05 	movdqa xmm0,XMMWORD PTR [rip+0x2265]
+1117:	65 22 00 00
+...
+111d:	66 0f 6f 0d	movdqa xmm1,XMMWORD PTR [rip+0x226b]
+1121:	6b 22 00 00
+...
+1128:	f3 0f 7f 45     movdqu XMMWORD PTR [rbp-0x1],xmm0
+112b:	ff
+...
+115e:	f3 0f 7f 4d     movdqu XMMWORD PTR [rbp+0xf],xmm1
+1162:	0f
+...
+1136:	66 0f 6f 05 	movdqa xmm0,XMMWORD PTR [rip+0x2222]
+113a:	22 22 00
+...
+113e:	f3 0f 7f 45     movdqu XMMWORD PTR [rbp+0x1f],xmm0
+1142:	1f
+...
+112f:	c7 45 2f 6a 	mov    DWORD PTR [rbp+0x2f],0x4e37366a
+1133:	36 37 4e
+...
+1143:	c7 45 33 62 	mov    DWORD PTR [rbp+0x33],0x73784d62
+1147:	4d 78 73
+...
+1157:	c7 45 37 6b 	mov    DWORD PTR [rbp+0x37],0x71516e6b
+115b:	6e 51 71
+...
+1163:	66 c7 45 3b    	mov    WORD PTR [rbp+0x3b],0x4963
+1167:	63 49
+...
+      </code>
+    </pre>
+    <p>Towards the end of populating <code>s</code>, another string is
+       populated. This string is on the stack starting at address RBP - 29 and
+       will contain 26 characters. The 26 characters are all the upper case
+       letters of the English alphabet. These characters are also scrambled
+       like the string above. The code listing below shows the population. The
+       string going forward will be refered to as <code>key</code>.</p>
+    <pre>
+      <code>
+...
+114a:	66 0f 6f 05 	movdqa xmm0,XMMWORD PTR [rip+0x221e]
+114e:	1e 22 00
+...
+1152:	f3 0f 7f 45     movdqu XMMWORD PTR [rbp-0x29],xmm0
+1156:	d7
+...
+1169:	c7 45 e7 41 	mov    DWORD PTR [rbp-0x19],0x4e524441
+116d:	44 52 4e
+...
+1170:	c7 45 eb 43 	mov    DWORD PTR [rbp-0x15],0x484c4243
+1174:	42 4c 48
+1177:	66 c7 45 ef    	mov    WORD PTR [rbp-0x11],0x555a
+117b:	5a 55
+...
+      </code>
+    </pre>
+    <p>Jumbled together with both string populations described above is the
+       setting of variables used to validate the user input username string
+       passed as a parameter to the current function. Since this appears to be
+       <code>__fastcall</code> calling conventions, the one and only parameter
+       to the function, the pointer to the username string from main, is passed
+       into the function via the RCX register. That pointer is copied to the
+       RDI register. The ECX and EBX register are initialized to zero. The
+       ECX register will act as the loop iteration index and the EBX register
+       will hold the length of the string by incrementing by 1 with each
+       iteration of the loop.</p>
+    <p>The validation loop simply checks that each character in the username
+       string is alphanumeric. It is a bit strange that it is being done here
+       after it was performed in the main function. But I guess belt and
+       suspenders just in case. The validation loop is shown in the code
+       listing below.</p>
+    <pre>
+      <code>
+...
+111b:	33 db          	xor    ebx,ebx
+1125:	48 8b f9        mov    rdi,rcx
+112d:	33 c9           xor    ecx,ecx
+...
+1180:	0f b6 04 39     movzx  eax,BYTE PTR [rcx+rdi*1]
+1184:	3c 0a           cmp    al,0xa
+1186:	74 23           je     0x11ab
+1188:	44 8d 40 bf     lea    r8d,[rax-0x41]
+118c:	8d 50 d0        lea    edx,[rax-0x30]
+118f:	2c 61           sub    al,0x61
+1191:	3c 19           cmp    al,0x19
+1193:	76 0b           jbe    0x11a0
+1195:	41 80 f8 19     cmp    r8b,0x19
+1199:	76 05           jbe    0x11a0
+119b:	80 fa 09        cmp    dl,0x9
+119e:	77 02           ja     0x11a2
+11a0:	ff c3           inc    ebx
+11a2:	48 ff c1        inc    rcx
+11a5:	48 83 f9 11     cmp    rcx,0x11
+11a9:	7c d5           jl     0x1180
+...
+      </code>
+    </pre>
+    <p>A heap memory allocation is performed using the <code>malloc</code>
+       function. The requested allocated space is 17 bytes. The resulting
+       pointer to the allocated space is stored in the R13 register.</p>
+    <p>The R14 register has the pointer address from the heap allocation offset
+       positive two copied to it. R11 has the value 2 copied to it. R15 is
+       zeroed out via the XOR operation. These operations are in all in
+       preparation for entering the id generation loop.</p>
+    <pre>
+      <code>
+...
+11ab:	b9 11 00 00     mov    ecx,0x11
+11af:	00
+11b0:	ff 15 fa 1e    	call   QWORD PTR [rip+0x1efa]
+11b4:	00 00
+...
+11b9:	41 bb 02 00    	mov    r11d,0x2
+11bd:	00 00
+...
+11bf:	4c 8b e8        mov    r13,rax
+11c2:	45 33 ff        xor    r15d,r15d
+11c5:	4c 8d 70 02     lea    r14,[rax+0x2]
+...
+      </code>
+    </pre>
+    <p>The loop begins at 0x11d0 by zeroing out the R10D and ECX registers.</p>
+    <pre>
+      <code>
+...
+11d0:	45 33 d2        xor    r10d,r10d
+11d3:	33 c9           xor    ecx,ecx
+...
+      </code>
+    </pre>
+    <p>The character at the current loop index in the string <code>s</code> is
+       checked to be an alphanumeric character (yes another one of these). The
+       following block of code from 0x11e0 to 0x121b is an inner loop in the
+       larger id generation loop.</p>
+    <pre>
+      <code>
+...
+11e0:	44 0f b6 44    	movzx  r8d,BYTE PTR [rbp+rcx*1-0x1]
+11e4:	0d ff
+11e6:	41 8d 40 9f     lea    eax,[r8-0x61]
+11ea:	41 8d 50 bf     lea    edx,[r8-0x41]
+11ee:	45 8d 48 d0     lea    r9d,[r8-0x30]
+11f2:	3c 19           cmp    al,0x19
+11f4:	76 0b           jbe    0x1201
+11f6:	80 fa 19        cmp    dl,0x19
+11f9:	76 06           jbe    0x1201
+11fb:	41 80 f9 09     cmp    r9b,0x9
+11ff:	77 10           ja     0x1211
+...
+      </code>
+    </pre>
+    <p>The R11 value is subtracted by 2 and then divided by the username length
+       in the EBX register. The character at the remainder of the division in
+       the username string is compared to the character at the current loop
+       index in the <code>s</code> string. When they are equal, <code>s</code>
+       contains every alphanumeric character and the username string contains
+       only alphanumeric characters at this point, the loop breaks and jumps
+       to 0x121f.</p>
+    <p>The loop is "programmed" to terminate at 62 iterations but will never
+       exit on that condition because the username will contain characaters in
+       the <code>s</code> string. The R10 register is used to store the index
+       of the character in <code>s</code> that matched the username string
+       character at the current loop index in ECX.</p>
+    <pre>
+      <code>
+...
+1201:	41 8d 43 fe     lea    eax,[r11-0x2]
+1205:	99              cdq    
+1206:	f7 fb           idiv   ebx
+1208:	48 63 c2        movsxd rax,edx
+120b:	44 3a 04 38     cmp    r8b,BYTE PTR [rax+rdi*1]
+120f:	74 0e           je     0x121f
+1211:	41 ff c2        inc    r10d
+1214:	48 ff c1        inc    rcx
+1217:	48 83 f9 3e     cmp    rcx,0x3e
+121b:	7c c3           jl     0x11e0
+...
+      </code>
+    </pre>
+    <p>The index of the character in <code>s</code> that matched the username
+       character is copied to the ESI register. The value in ESI is added to
+       the current value of the R15 register (initialized to zero before
+       entering the id generation loop). The EAX register stores the sum and
+       is multiplied by 65536. That product is then divided by 26 in a compiler
+       optimized division by multiplication. The remainder of the division is
+       used as an index into the <code>key</code> string.</p>
+    <p>Nerd Alert! I thought this was kind of cool on noticting what the code
+       is doing. The instruction at 0x122c will fill the bits in the EDX
+       register with the sign of the value in the EAX register. For positive
+       values this just converts a 32 bit number to its equivalent in 64 bit
+       space. For negative numbers it gets much cooler. The instruction at
+       0x1235 will perform the bitwise xor operation on the R8D and EDX
+       registers, storing the result back in the R8D register. R8D will contain
+       the value in EAX used in the <code>CDQ</code> instruction at 0x122c
+       mentioned previously. For positive values in EAX, EDX will be zero and
+       the xor will just keep the same value in EAX (R8D). The next instruction
+       will then subtract the result of the XOR by the value in EDX. Again
+       subtracting by zero will keep the same value. The negative value WILL
+       impact the value in R8D. For a negative value in EAX, EDX will contain
+       all ones or -1 (0xffffffff in 32 bits). XOR'ing a value by 1 has the
+       property of flipping the bit to its opposite
+       (0 ^ 1 - > 1, 1 ^ 1 -> 0). The XOR at 0x1235 will thus flip the bits
+       in R8D. This is a one's complement. The next instruction is the
+       subtracting that result by -1. Subtracting by negative one is the same
+       as adding by one. Adding one to a one's complement creates a two's
+       complement of the original number. The XOR followed by subtraction is
+       performing a two complement conversion on negative numbers to make them
+       their equivalent on the positive "scale". I thought that was a really
+       cool way to do two's complement on a number. Nerd alert over.</p>
+    <pre>
+      <code>
+...
+121f:	41 8b f2	mov    esi,r10d
+1222:	41 8d 04 37     lea    eax,[r15+rsi*1]
+1226:	45 33 d2       	xor    r10d,r10d
+1229:	c1 e0 10       	shl    eax,0x10
+122c:	99             	cdq    
+122d:	44 8b c0       	mov    r8d,eax
+1230:	b8 4f ec c4     mov    eax,0x4ec4ec4f
+1234:	4e
+1235:	44 33 c2        xor    r8d,edx
+1238:	44 2b c2        sub    r8d,edx
+123b:	41 f7 e8        imul   r8d
+123e:	c1 fa 03       	sar    edx,0x3
+1241:	8b ca          	mov    ecx,edx
+1243:	c1 e9 1f       	shr    ecx,0x1f
+1246:	03 d1          	add    edx,ecx
+1248:	6b ca 1a       	imul   ecx,edx,0x1a
+124b:	44 2b c1       	sub    r8d,ecx
+124e:	49 63 c0       	movsxd rax,r8d
+1251:	0f b6 4c 05     movzx  ecx,BYTE PTR [rbp+rax*1-0x29]
+1255:	d7
+...
+      </code>
+    </pre>
+    <p>The R14 register contains the address from the heap allocation advanced
+       two bytes in memory. The character in the <code>key</code> string at the
+       calculated index is copied to the R14 address minus 2 bytes. The ECX
+       register is set to zero after the copy.</p>
+    <pre>
+      <code>
+...
+1256:	41 88 4e fe     mov    BYTE PTR [r14-0x2],cl
+125a:	33 c9           xor    ecx,ecx
+...
+      </code>
+    </pre>
+    <p>The same character search in the <code>s</code> is performed again. The
+       character in the username string to be found in <code>s</code> for this
+       run is at index <code>(R11 - 1) % strlen(username)</code>.</p>
+    <p>When the character is found in <code>s</code>, the R10 register will
+       contain the index that the character is at in the <code>s</code>
+       string.</p>
+    <pre>
+      <code>
+...
+1260:	44 0f b6 44    	movzx  r8d,BYTE PTR [rbp+rcx*1-0x1]
+1264:	0d ff
+...
+1291:	41 ff c2        inc    r10d
+1294:	48 ff c1        inc    rcx
+1297:	48 83 f9 3e     cmp    rcx,0x3e
+129b:	7c c3           jl     0x1260
+...
+      </code>
+    </pre>
+    <p>The index is copied to the ESI register. The value has 1337 and the
+       value in the R15 added to it. The sum is then multiplied by 65536. The
+       product is then divided by 26. The remainder of the division is used as
+       an index into the <code>key</code> string. The character at the index is
+       copied to the byte at the address stored in R14 minus one.</p>
+    <pre>
+      <code>
+...
+129f:	41 8b f2        mov    esi,r10d
+12a2:	8d 86 39 05    	lea    eax,[rsi+0x539]
+12a6:	00 00
+...
+12ab:	41 03 c7	add	eax,r15d
+...
+12d6:	0f b6 4c 05     movzx  ecx,BYTE PTR [rbp+rax*1-0x29]
+12da:	d7
+12db:	41 88 4e ff     mov    BYTE PTR [r14-0x1],cl
+...
+      </code>
+    </pre>
+    <p>The character at the remainder of R11 divided username length in the
+       username string is searched in the <code>s</code> string. The index of
+       the character found in the <code>s</code> string (R10D register) is
+       copied to the ESI register. This is the exact character find in
+       <code>s</code> algorithm performed for the other two characters in the
+       username string.</p>
+    <p>The index in ESI has 2674 and the value in the R15 register added to it.
+       The sum is multiplied by 65536. The resulting product is divided by 26.
+       The remainder from the division is used as an index into the
+       <code>key</code> string. The character at the index is copied to the
+       byte at the R14 address (no offset).</p>
+    <pre>
+      <code>
+...
+131f:	41 8b f2        mov    esi,r10d
+1322:	8d 86 72 0a    	lea    eax,[rsi+0xa72]
+1326:	00 00
+...
+132b:	41 03 c7	add	eax,r15d
+...
+1356:	0f b6 4c 05     movzx  ecx,BYTE PTR [rbp+rax*1-0x29]
+135a:	d7
+135b:	41 88 0e        mov    BYTE PTR [r14],cl
+...
+      </code>
+    </pre>
+    <p>The same character find algorithm in the <code>s</code> string is
+       performed again for the character at index
+       <code>(R11 + 1) % strlen(username)</code> in the username string. The
+       index of the character in the <code>s</code> string is copied to the
+       ESI register. The value has 4011 and the value in R15 added to it. The
+       sum from the addition is then multiplied by 65536. The resulting product
+       is divided by 26. The remainder of the division is used as index into
+       the <code>key</code> string. That character is copied to the byte at the
+       address in R14 plus 1.</p>
+    <pre>
+      <code>
+...
+1381:	41 8d 43 01    	lea    eax,[r11+0x1]
+...
+139f:	41 8b f2       	mov    esi,r10d
+13a2:	8d 86 ab 0f    	lea    eax,[rsi+0xfab]
+13a6:	00 00
+...
+13ac:	41 03 c7        add    eax,r15d
+...
+13de:	0f b6 4c 05     movzx  ecx,BYTE PTR [rbp+rax*1-0x29]
+13e2:	d7
+13e3:	41 8d 43 fe     lea    eax,[r11-0x2]
+13e7:	41 88 4e 01     mov    BYTE PTR [r14+0x1],cl
+...
+      </code>
+    </pre>
+    <p>The value stored in R15 is incremented by 5348. The value stored in R11
+       is incremented by 4. The value stored in R14 is also incremented by 4.
+       The value in R11 is subtracted by 2 and compared to 16. If the R11 minus
+       two value is less than 16, the id generation loop continues.</p>
+    <p>R11 is initialized to 2 before entering the id generation loop. R11 - 2
+       will result in 0. Adding 4 to R11 with each iteration will result in 4
+       iterations of the loop total. (R11 - 2 -> 4, 8, 12, 16)</p>
+    <pre>
+      <code>
+...
+13a8:	41 83 c3 04     add    r11d,0x4
+...
+13af:	41 81 c7 e4 	add    r15d,0x14e4
+13b3:	14 00 00
+...
+13eb:	49 83 c6 04     add    r14,0x4
+13ef:	83 f8 10        cmp    eax,0x10
+13f2:	0f 8c d8 fd    	jl     0x11d0
+13f6:	ff ff
+...
+      </code>
+    </pre>
+    <p>The algorithm generated id string is NULL terminated and passed back
+       to the main function for comparison against the user input id string.</p>
+    <pre>
+      <code>
+...
+13f8:	41 c6 45 10 	mov    BYTE PTR [r13+0x10],0x0
+13fc:	00
+13fd:	49 8b c5       	mov    rax,r13
+...
+      </code>
+    </pre>
+    <h3>Id Generation Recap</h3>
+    <p>The algorithm for generating a correct id string is based on the
+       username string input by the user. The character set is alphanumeric
+       characters only for username string and upper case letters for the id
+       string generated in the algorithm.</p>
+    <p>Two hardcoded strings are used in the id generation algorithm to
+       generate the correct id per username string. The first string is
+       composed of every alphanumeric character. The second string contains
+       every upper case letter. Note both strings are NOT in any sorted
+       order.</p>
+    <p>A loop will operate on 4 character or byte chunks of the username input
+       string for each iteration. (That string has a length of 16 bytes.) The
+       first character of the 4 byte chunk is searched in the hardcoded string
+       containing all the alphanumeric characters. The index in the hardcoded
+       string where the character is found is used in the arithmetic operation
+       seen below.</p>
+    <pre>
+      <code>
+// val is R15 which is initialized to 0 and
+// incremented by 5348 with each iteration
+
+x = (65536 * (index + val));
+
+if (x < 0) {
+  // kind of cool way to do 2's complement 
+  x ^= -1; // -1 -> 0xffffffff
+  x -= -1; // -1 -> 0xffffffff
+}
+
+x %= 26;
+      </code>
+    </pre>
+    <p>The result in <code>x</code> above is used as an index into the second
+       hardcoded string to select a character from it. The character is then
+       copied to the generated id string at its first byte.</p>
+    <p>The generated id string is operated on 4 byte chunks with each iteration
+       just like the username string. Even better the index in the 4 byte is
+       the same with each search, find, calculate, and copy operation.</p>
+    <p>The second character in the 4 byte chunk is operated on next. The same
+       search and find operation is performed on the first hardcoded string
+       for the second character in the 4 byte chunk of the username string.
+       The listing shows the algorithm applied to the index once found.</p>
+    <pre>
+      <code>
+x = 65536 * (index + 1337 + val);
+
+if (x < 0) {
+  x ^= -1;
+  x -= -1;
+}
+
+x %= 26;
+      </code>
+    <p>The result in <code>x</code> is used as an index into the second
+       hardcoded string to select a character to copy to the second element
+       in the 4 byte chunk of the generated id string.</p> 
+    <p>The process is performed for the third and fourth characters in both
+       the username input string and generated id string. The listing below
+       shows the operation for the third character.</p>
+    <pre>
+      <code>
+x = 65536 * (index + 2674 + val);
+
+if (x < 0) {
+  x ^= -1;
+  x -= -1;
+}
+
+x %= 26;
+      </code>
+    </pre>
+    <p>The listing below shows the operations for the fourth character.</p>
+    <pre>
+      <code>
+x = 65536 * (index + 4011 + val);
+
+if (x < 0) {
+  x ^= -1;
+  x -= -1;
+}
+
+x %= 26;
+      </code>
+    </pre>
+    <p>The loop will continue 3 more times performing the operations listed
+       above advancing to the next 4 byte chunk each iteration.</p>
+    <p>The algorithm is pretty simple once analyzed. The weirdness is the
+       offset 2 initialization of the indexing into both the username string
+       and the generated id string. Also the unsorted hardcoded strings
+       containing the character sets makes it a little less straight
+       forward.</p>
+  </body>
+</html>
